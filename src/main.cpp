@@ -26,12 +26,7 @@ int f_initial = 0;
 int bloque = 0;
 
 int reception;
-int vitesse_droite_faible=0;
-int vitesse_gauche_faible=0;
-int vitesse_droite_fort=0;
-int vitesse_gauche_fort=0;
 
-int vitesse_gauche_fort_precedent=0;
 
 int8_t vitesse_droite_recep=0;
 int8_t vitesse_gauche_recep=0;
@@ -39,7 +34,6 @@ int8_t vitesse_gauche_recep=0;
 int vitesse_droite=0;
 int vitesse_gauche=0;
 
-unsigned long interval_m =10000;
 
 void moteur_droit(int vitesse,int sens){
   ledcWriteTone(1, vitesse);
@@ -54,10 +48,10 @@ void moteur_gauche(int vitesse,int sens){
 }
 
 
-void vcontrole_bluetooth(void *pvParameters) // <- une tâche
+void vcontrole_bluetooth(void *pvParameters)
 {
 
-    for( ;; ) // <- boucle infinie
+    for( ;; )
     {
       while(SerialBT.available()){
         vitesse_gauche_recep = SerialBT.read();
@@ -121,10 +115,6 @@ void setup() {
 
 void loop() {
 
-  if(millis()-interval_m>=0){
 
-    interval_m=millis();
-  }
-  
   
 }
