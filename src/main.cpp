@@ -54,6 +54,42 @@ void moteur_gauche(int vitesse,int sens){
 }
 
 
+void vcontrole_bluetooth(void *pvParameters) // <- une tâche
+{
+
+    for( ;; ) // <- boucle infinie
+    {
+      while(SerialBT.available()){
+        vitesse_gauche_recep = SerialBT.read();
+        vitesse_droite_recep = SerialBT.read();
+  
+        vitesse_droite = (int)vitesse_droite_recep*50;
+        vitesse_gauche = (int)vitesse_gauche_recep*50;
+        
+  
+        if(vitesse_droite>0){
+          moteur_droit(vitesse_droite,1);
+        }
+        else if(vitesse_droite<0){
+          moteur_droit(-vitesse_droite,0);
+        }
+        else{
+          moteur_droit(0,0);
+        }
+        if(vitesse_gauche>0){
+          moteur_gauche(vitesse_gauche,0); 
+        }
+        else if(vitesse_gauche<0){
+          moteur_gauche(-vitesse_gauche,1);
+        }
+        else{
+          moteur_droit(0,0);
+        }
+  
+      }
+    }
+}
+
 void setup() {
   Serial.begin(115200);
   startMillis = millis();
@@ -69,40 +105,23 @@ void setup() {
   ledcSetup(ENB, 1000,resolution);
   ledcAttachPin(ENB,2);
   pinMode(IN3,OUTPUT);
+
+  xTaskCreate(
+    vcontrole_bluetooth, /* Task function. */
+    "vcontrole_bluetooth", /* name of task. */
+    1000, /* Stack size of task */
+    NULL, /* parameter of the task */
+    1, /* priority of the task */
+    NULL); /* Task handle to keep track of created task */
+
 }
+
+
+
 
 void loop() {
 
   if(millis()-interval_m>=0){
-
-    while(SerialBT.available()){
-      vitesse_gauche_recep = SerialBT.read();
-      vitesse_droite_recep = SerialBT.read();
-
-      vitesse_droite = (int)vitesse_droite_recep*50;
-      vitesse_gauche = (int)vitesse_gauche_recep*50;
-      
-
-      if(vitesse_droite>0){
-        moteur_droit(vitesse_droite,1);
-      }
-      else if(vitesse_droite<0){
-        moteur_droit(-vitesse_droite,0);
-      }
-      else{
-        moteur_droit(0,0);
-      }
-      if(vitesse_gauche>0){
-        moteur_gauche(vitesse_gauche,0); 
-      }
-      else if(vitesse_gauche<0){
-        moteur_gauche(-vitesse_gauche,1);
-      }
-      else{
-        moteur_droit(0,0);
-      }
-
-    } 
 
     interval_m=millis();
   }
