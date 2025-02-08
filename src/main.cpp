@@ -15,20 +15,10 @@ BluetoothSerial SerialBT;
 
 unsigned long startMillis;
 
-/*
-int ENA = 19;
-int IN1 = 21;
-int IN2 = 22;
-int IN3 = 18;
-int IN4 = 17;
-int ENB = 16;
-*/
 
 int ENA = 18;
 int IN1 = 22;
-//int IN2 = 22;
 int IN3 = 21;
-//int IN4 = 17;
 int ENB = 19;
 
 int resolution = 8;
@@ -51,20 +41,16 @@ int vitesse_gauche=0;
 
 unsigned long interval_m =10000;
 
-void moteur_droit(int vitesse,int sens){  //probleme ici
+void moteur_droit(int vitesse,int sens){
   ledcWriteTone(1, vitesse);
   ledcWrite(1, 127);
-  //analogWrite(ENA, vitesse);
   digitalWrite(IN1, sens);
-  //digitalWrite(IN2, (1-sens));
 }
 
 void moteur_gauche(int vitesse,int sens){
   ledcWriteTone(2, vitesse);
   ledcWrite(2, 127);
-  //analogWrite(ENB, vitesse);
   digitalWrite(IN3, sens);
-  //digitalWrite(IN4, (1-sens));
 }
 
 
@@ -78,15 +64,11 @@ void setup() {
 
   ledcSetup(ENA, 1000,resolution);
   ledcAttachPin(ENA,1);
-  //pinMode(ENA, OUTPUT);
   pinMode(IN1,OUTPUT);
-  //pinMode(IN2,OUTPUT);
 
   ledcSetup(ENB, 1000,resolution);
   ledcAttachPin(ENB,2);
-  //pinMode(ENB, OUTPUT);
   pinMode(IN3,OUTPUT);
-  //pinMode(IN4,OUTPUT);
 }
 
 void loop() {
@@ -121,9 +103,6 @@ void loop() {
       }
 
     } 
-    
-    
-    
 
     interval_m=millis();
   }
