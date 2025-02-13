@@ -19,12 +19,12 @@ BluetoothSerial SerialBT;
 unsigned long startMillis;
 
 
-int ENA = 18;
-int IN1 = 22;
+#define STEPD 18  // anciennement ENA
+#define DIRD 22  // anciennement IN1
 //int IN2 = 22;
-int IN3 = 21;
+#define DIRG 21  // anciennement IN3
 //int IN4 = 17;
-int ENB = 19;
+#define STEPG 19  // anciennement ENB
 
 int resolution = 8;
 int f_initial = 0;
@@ -44,7 +44,7 @@ void moteur_droit(int vitesse,int sens){
   ledcWriteTone(1, vitesse);
   ledcWrite(1, 127);
   //analogWrite(ENA, vitesse);
-  digitalWrite(IN1, sens);
+  digitalWrite(DIRD, sens);
   //digitalWrite(IN2, (1-sens));
 }
 
@@ -52,35 +52,35 @@ void moteur_gauche(int vitesse,int sens){
   ledcWriteTone(2, vitesse);
   ledcWrite(2, 127);
   //analogWrite(ENB, vitesse);
-  digitalWrite(IN3, sens);
+  digitalWrite(DIRG, sens);
   //digitalWrite(IN4, (1-sens));
 }
 
 void vavancer(void *pvParameters){
-  digitalWrite(IN1,HIGH);
-  digitalWrite(IN3,HIGH);
+  digitalWrite(DIRD,HIGH);
+  digitalWrite(DIRG,HIGH);
   int steps = (*(int *)pvParameters / (3.14 * dRoues)) * stepPerRev;
   for(int k=0 ; k < steps; k++){
-    digitalWrite(ENA,HIGH);
-    digitalWrite(ENB,HIGH);
+    digitalWrite(STEPD,HIGH);
+    digitalWrite(STEPG,HIGH);
     delayMicroseconds(100);
-    digitalWrite(ENA,LOW);
-    digitalWrite(ENB,LOW);
+    digitalWrite(STEPD,LOW);
+    digitalWrite(STEPG,LOW);
     delayMicroseconds(1000);
   }
   vTaskDelete(NULL);
 }
 
 void vtourner(void *pvParameters){
-  digitalWrite(IN1,HIGH);
-  digitalWrite(IN3,LOW);
+  digitalWrite(DIRD,HIGH);
+  digitalWrite(DIRG,LOW);
   int steps = (*(int*)pvParameters / 360.0) * (3.14 * ecartRoues) * stepPerRev / (3.14 * dRoues);
   for(int k=0 ; k < steps; k++){
-    digitalWrite(ENA,HIGH);
-    digitalWrite(ENB,HIGH);
+    digitalWrite(STEPD,HIGH);
+    digitalWrite(STEPG,HIGH);
     delay(1);
-    digitalWrite(ENA,LOW);
-    digitalWrite(ENB,LOW);
+    digitalWrite(STEPD,LOW);
+    digitalWrite(STEPG,LOW);
     delay(1);
   }
   vTaskDelete(NULL);
@@ -133,16 +133,16 @@ void setup() {
 
   // ledcSetup(ENA, 1000,resolution);
   // ledcAttachPin(ENA,1);
-  pinMode(ENA,OUTPUT);
+  pinMode(STEPD,OUTPUT);
 
-  pinMode(IN1,OUTPUT);
+  pinMode(DIRD,OUTPUT);
   //pinMode(IN2,OUTPUT);
 
 
   // ledcSetup(ENB, 1000,resolution);
   // ledcAttachPin(ENB,2);
-  pinMode(ENB,OUTPUT);
-  pinMode(IN3,OUTPUT);
+  pinMode(STEPG,OUTPUT);
+  pinMode(DIRG,OUTPUT);
 
   // xTaskCreate(
   //   vcontrole_bluetooth, /* Task function. */
