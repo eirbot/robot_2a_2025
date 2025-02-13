@@ -1,6 +1,7 @@
 //Pour le PlatformIO
 
 #include "Arduino.h"
+#include "main.h"
 
 //Code de base
 
@@ -56,34 +57,84 @@ void moteur_gauche(int vitesse,int sens){
   //digitalWrite(IN4, (1-sens));
 }
 
-void vavancer(void *pvParameters){
-  digitalWrite(DIRD,HIGH);
-  digitalWrite(DIRG,HIGH);
-  int steps = (*(int *)pvParameters / (3.14 * dRoues)) * stepPerRev;
+TaskHandle_t vavancerHandle = NULL;  // Handle global pour suivre vavancer
+
+void vavancer(void *Parameters_temp){
+  TaskParams *Parameters = (TaskParams *)Parameters_temp;
+  if(Parameters->direction == 0){
+    digitalWrite(DIRD,LOW);
+    digitalWrite(DIRG,LOW);
+  }
+  else{
+    digitalWrite(DIRD,HIGH);
+    digitalWrite(DIRG,HIGH);
+  }
+  int steps = (*(int *)Parameters->distance / (3.14 * dRoues)) * stepPerRev;
   for(int k=0 ; k < steps; k++){
     digitalWrite(STEPD,HIGH);
     digitalWrite(STEPG,HIGH);
-    delayMicroseconds(100);
+    delayMicroseconds(500/Parameters->vitesse);
     digitalWrite(STEPD,LOW);
     digitalWrite(STEPG,LOW);
-    delayMicroseconds(1000);
+    delayMicroseconds(500/Parameters->vitesse);
   }
+
+  // Notification que la tâche est terminée
+  xTaskNotifyGive(vavancerHandle);
+
   vTaskDelete(NULL);
 }
 
-void vtourner(void *pvParameters){
-  digitalWrite(DIRD,HIGH);
-  digitalWrite(DIRG,LOW);
-  int steps = (*(int*)pvParameters / 360.0) * (3.14 * ecartRoues) * stepPerRev / (3.14 * dRoues);
+void avancer(int distance, char direction, int vitesse){
+  TaskParams Parameters = {distance, 0, direction, vitesse};
+  xTaskCreate(
+    vavancer, /* Task function. */
+    "vavancer", /* name of task. */
+    1000, /* Stack size of task */
+    &Parameters, /* parameter of the task */
+    1, /* priority of the task */
+    &vavancerHandle/* Task handle to keep track of created task */
+  ); 
+}
+
+TaskHandle_t vtournerHandle = NULL;  // Handle global pour suivre vavancer
+
+void vtourner(void *Parameters_temp){
+  TaskParams *Parameters = (TaskParams *)Parameters_temp;
+  if(Parameters->direction == 0){
+    digitalWrite(DIRD,LOW);
+    digitalWrite(DIRG,HIGH);
+  }
+  else{
+    digitalWrite(DIRD,HIGH);
+    digitalWrite(DIRG,LOW);
+  }
+  int steps = (*(int*)Parameters->angle / 360.0) * (3.14 * ecartRoues) * stepPerRev / (3.14 * dRoues);
   for(int k=0 ; k < steps; k++){
     digitalWrite(STEPD,HIGH);
     digitalWrite(STEPG,HIGH);
-    delay(1);
+    delayMicroseconds(500/Parameters->vitesse);
     digitalWrite(STEPD,LOW);
     digitalWrite(STEPG,LOW);
-    delay(1);
+    delayMicroseconds(500/Parameters->vitesse);
   }
+
+  // Notification que la tâche est terminée
+  xTaskNotifyGive(vtournerHandle);
+  
   vTaskDelete(NULL);
+}
+
+void tourner(int angle, char direction, int vitesse){
+  TaskParams Parameters = {0, angle, direction, vitesse};
+  xTaskCreate(
+    vtourner, /* Task function. */
+    "vtourner", /* name of task. */
+    1000, /* Stack size of task */
+    &Parameters,  /* parameter of the task */
+    1, /* priority of the task */
+    &vtournerHandle/* Task handle to keep track of created task */
+  ); 
 }
 
 
@@ -122,6 +173,17 @@ void vcontrole_bluetooth(void *pvParameters)
     }
 }
 
+void vStrat(void *pvParameters)
+{
+  while(1){
+    avancer(1000, 1, 1);
+    ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+    avancer(1000, 0, 1);
+    ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+  }
+}
+
+
 
 void setup() {
   Serial.begin(115200);
@@ -153,6 +215,14 @@ void setup() {
   //   NULL/* Task handle to keep track of created task */
   // ); 
   
+  xTaskCreate(
+    vStrat, /* Task function. */
+    "vStrat", /* name of task. */
+    1000, /* Stack size of task */
+    NULL, /* parameter of the task */
+    3, /* priority of the task */
+    NULL/* Task handle to keep track of created task */
+  ); 
   
   delay(2000);
   
@@ -162,8 +232,9 @@ void setup() {
 //un tour = 3200 step
 
 void loop() {
-  int distance = 1000;
-  int angle=90;
+  // int distance = 1000;
+  // int angle=90;
+
   // xTaskCreate(
   //   vavancer, /* Task function. */
   //   "vavancer", /* name of task. */
@@ -174,15 +245,15 @@ void loop() {
   // ); 
 
 
-  xTaskCreate(
-    vtourner, /* Task function. */
-    "vtourner", /* name of task. */
-    1000, /* Stack size of task */
-    &angle, /* parameter of the task */
-    1, /* priority of the task */
-    NULL/* Task handle to keep track of created task */
-  ); 
-  delay(1000000);
+  // xTaskCreate(
+  //   vtourner, /* Task function. */
+  //   "vtourner", /* name of task. */
+  //   1000, /* Stack size of task */
+  //   &angle, /* parameter of the task */
+  //   1, /* priority of the task */
+  //   NULL/* Task handle to keep track of created task */
+  // ); 
+  // delay(1000000);
 
   
 }
