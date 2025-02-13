@@ -24,12 +24,12 @@ int IN4 = 17;
 int ENB = 16;
 */
 
-int ENA = 18;
-int IN1 = 22;
+#define STEPD 18 // anciennement ENA
+#define DIRD 22 // anciennement IN1
 //int IN2 = 22;
-int IN3 = 21;
+#define DIRG 21 // anciennement IN2
 //int IN4 = 17;
-int ENB = 19;
+#define STEPG 19 // anciennement ENB
 
 int resolution = 8;
 int f_initial = 0;
@@ -55,7 +55,7 @@ void moteur_droit(int vitesse,int sens){  //probleme ici
   ledcWriteTone(1, vitesse);
   ledcWrite(1, 127);
   //analogWrite(ENA, vitesse);
-  digitalWrite(IN1, sens);
+  digitalWrite(DIRD, sens);
   //digitalWrite(IN2, (1-sens));
 }
 
@@ -63,7 +63,7 @@ void moteur_gauche(int vitesse,int sens){
   ledcWriteTone(2, vitesse);
   ledcWrite(2, 127);
   //analogWrite(ENB, vitesse);
-  digitalWrite(IN3, sens);
+  digitalWrite(DIRG, sens);
   //digitalWrite(IN4, (1-sens));
 }
 
@@ -76,16 +76,16 @@ void setup() {
   SerialBT.setTimeout(50);
 
 
-  ledcSetup(ENA, 1000,resolution);
-  ledcAttachPin(ENA,1);
+  ledcSetup(STEPD, 1000,resolution);
+  ledcAttachPin(STEPD,1);
   //pinMode(ENA, OUTPUT);
-  pinMode(IN1,OUTPUT);
+  pinMode(DIRD,OUTPUT);
   //pinMode(IN2,OUTPUT);
 
-  ledcSetup(ENB, 1000,resolution);
-  ledcAttachPin(ENB,2);
+  ledcSetup(STEPG, 1000,resolution);
+  ledcAttachPin(STEPG,2);
   //pinMode(ENB, OUTPUT);
-  pinMode(IN3,OUTPUT);
+  pinMode(DIRG,OUTPUT);
   //pinMode(IN4,OUTPUT);
 }
 
@@ -117,7 +117,7 @@ void loop() {
         moteur_gauche(-vitesse_gauche,1);
       }
       else{
-        moteur_droit(0,0);
+        moteur_gauche(0,0);
       }
 
     } 
