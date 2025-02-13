@@ -21,7 +21,9 @@ unsigned long startMillis;
 
 int ENA = 18;
 int IN1 = 22;
+//int IN2 = 22;
 int IN3 = 21;
+//int IN4 = 17;
 int ENB = 19;
 
 int resolution = 8;
@@ -41,13 +43,17 @@ int vitesse_gauche=0;
 void moteur_droit(int vitesse,int sens){
   ledcWriteTone(1, vitesse);
   ledcWrite(1, 127);
+  //analogWrite(ENA, vitesse);
   digitalWrite(IN1, sens);
+  //digitalWrite(IN2, (1-sens));
 }
 
 void moteur_gauche(int vitesse,int sens){
   ledcWriteTone(2, vitesse);
   ledcWrite(2, 127);
+  //analogWrite(ENB, vitesse);
   digitalWrite(IN3, sens);
+  //digitalWrite(IN4, (1-sens));
 }
 
 void vavancer(void *pvParameters){
@@ -79,6 +85,7 @@ void vtourner(void *pvParameters){
   }
   vTaskDelete(NULL);
 }
+
 
 void vcontrole_bluetooth(void *pvParameters)
 {
@@ -115,6 +122,7 @@ void vcontrole_bluetooth(void *pvParameters)
     }
 }
 
+
 void setup() {
   Serial.begin(115200);
   startMillis = millis();
@@ -122,10 +130,14 @@ void setup() {
   SerialBT.begin("ESP32test");
   SerialBT.setTimeout(50);
 
+
   // ledcSetup(ENA, 1000,resolution);
   // ledcAttachPin(ENA,1);
   pinMode(ENA,OUTPUT);
+
   pinMode(IN1,OUTPUT);
+  //pinMode(IN2,OUTPUT);
+
 
   // ledcSetup(ENB, 1000,resolution);
   // ledcAttachPin(ENB,2);
@@ -171,5 +183,6 @@ void loop() {
     NULL/* Task handle to keep track of created task */
   ); 
   delay(1000000);
+
   
 }
