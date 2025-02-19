@@ -102,6 +102,7 @@ void vtourner(void *Parameters_temp){
 }
 
 
+
 void vcontrole_bluetooth(void *pvParameters)
 {
     for( ;; )
@@ -131,8 +132,7 @@ void vcontrole_bluetooth(void *pvParameters)
         }
         else{
           moteur_droit(0,0);
-        }
-  
+        }     
       }
     }
 }
