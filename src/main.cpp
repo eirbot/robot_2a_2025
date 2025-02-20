@@ -10,19 +10,26 @@
 #define stepPerRev 3200
 #define ecartRoues 253.0
 
-
+#define STEPD 18  // anciennement STEPD
+#define DIRD 22  // anciennement DIRD
+//int IN2 = 22;
+#define DIRG 21  // anciennement DIRG
+//int IN4 = 17;
+#define STEPG 19  // anciennement STEPG
 
 #define tourner(angle,direction,vitesse) \
   Parameters = {0, angle, direction, vitesse};\
-  xTaskCreate(vtourner,"vtourner", 1000, &Parameters, 1, &vtournerHandle); 
+  xTaskCreate(vtourner,"vtourner", 1000, &Parameters, 1, &vtournerHandle); \
+  ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
 #define avancer(distance,direction,vitesse) \
   Parameters = {distance, 0, direction, vitesse};\
-  xTaskCreate(vavancer,"vavancer", 1000, &Parameters, 1, &vavancerHandle); 
+  xTaskCreate(vavancer,"vavancer", 1000, &Parameters, 1, &vavancerHandle); \
+  ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
 
-#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
-#error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
+#if !defined(CONFIG_BT_STEPDBLED) || !defined(CONFIG_BLUEDROID_STEPDBLED)
+//#error Bluetooth is not STEPDbled! Please run `make menuconfig` to and STEPDble it
 #endif
 
 BluetoothSerial SerialBT;
@@ -30,12 +37,8 @@ BluetoothSerial SerialBT;
 unsigned long startMillis;
 
 
-int ENA = 18;
-int IN1 = 22;
-//int IN2 = 22;
-int IN3 = 21;
-//int IN4 = 17;
-int ENB = 19;
+
+
 
 int resolution = 8;
 int f_initial = 0;
@@ -65,16 +68,16 @@ TaskHandle_t vstratHandle = NULL;
 void moteur_droit(int vitesse,int sens){
   ledcWriteTone(1, vitesse);
   ledcWrite(1, 127);
-  //analogWrite(ENA, vitesse);
-  digitalWrite(IN1, sens);
+  //analogWrite(STEPD, vitesse);
+  digitalWrite(DIRD, sens);
   //digitalWrite(IN2, (1-sens));
 }
 
 void moteur_gauche(int vitesse,int sens){
   ledcWriteTone(2, vitesse);
   ledcWrite(2, 127);
-  //analogWrite(ENB, vitesse);
-  digitalWrite(IN3, sens);
+  //analogWrite(STEPG, vitesse);
+  digitalWrite(DIRG, sens);
   //digitalWrite(IN4, (1-sens));
 }
 
@@ -82,15 +85,15 @@ TaskHandle_t vavancerHandle = NULL;
 
 void vavancer(void *Parameters_temp){
   TaskParams *Parameters = (TaskParams *)Parameters_temp;
-  digitalWrite(IN1,HIGH);
-  digitalWrite(IN3,HIGH);
+  digitalWrite(DIRD,HIGH);
+  digitalWrite(DIRG,HIGH);
   int steps = ((int)Parameters->distance / (3.14 * dRoues)) * stepPerRev;
   for(int k=0 ; k < steps; k++){
-    digitalWrite(ENA,HIGH);
-    digitalWrite(ENB,HIGH);
+    digitalWrite(STEPD,HIGH);
+    digitalWrite(STEPG,HIGH);
     vTaskDelay(1);
-    digitalWrite(ENA,LOW);
-    digitalWrite(ENB,LOW);
+    digitalWrite(STEPD,LOW);
+    digitalWrite(STEPG,LOW);
     vTaskDelay(1);
   }
   Serial.println("fin de avancer");
@@ -103,15 +106,21 @@ TaskHandle_t vtournerHandle = NULL;
 
 void vtourner(void *Parameters_temp){
   TaskParams *Parameters = (TaskParams *)Parameters_temp;
-  digitalWrite(IN1,HIGH);
-  digitalWrite(IN3,LOW);
+  if(Parameters->direction == 0){
+    digitalWrite(DIRD,LOW);
+    digitalWrite(DIRG,HIGH);
+  }
+  else{
+    digitalWrite(DIRD,HIGH);
+    digitalWrite(DIRG,LOW);
+  }
   int steps = ((int)Parameters->angle / 360.0) * (3.14 * ecartRoues) * stepPerRev / (3.14 * dRoues);
   for(int k=0 ; k < steps; k++){
-    digitalWrite(ENA,HIGH);
-    digitalWrite(ENB,HIGH);
+    digitalWrite(STEPD,HIGH);
+    digitalWrite(STEPG,HIGH);
     vTaskDelay(1);
-    digitalWrite(ENA,LOW);
-    digitalWrite(ENB,LOW);
+    digitalWrite(STEPD,LOW);
+    digitalWrite(STEPG,LOW);
     vTaskDelay(1);
   }
   xTaskNotifyGive(vstratHandle);
@@ -156,20 +165,16 @@ void vcontrole_bluetooth(void *pvParameters)
 }
 
 void vstrat(void *pvParameters){
-  int distance = 1000;
+  int distance = 100;
   int angle=90;
   
   Serial.println("commence");
   avancer(distance,0,10);
-  //tourner(angle,0,0);
-  ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-  Serial.println("fin tache 1");
+
   tourner(angle,0,0);
-  ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-  Serial.println("fin tache 2");
-  tourner(angle,0,0);
-  ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-  Serial.println("fin tache 3");
+
+  tourner(angle,1,0);
+
   vTaskDelete(NULL);
 }
 
@@ -181,18 +186,18 @@ void setup() {
   SerialBT.setTimeout(50);
 
 
-  // ledcSetup(ENA, 1000,resolution);
-  // ledcAttachPin(ENA,1);
-  pinMode(ENA,OUTPUT);
+  // ledcSetup(STEPD, 1000,resolution);
+  // ledcAttachPin(STEPD,1);
+  pinMode(STEPD,OUTPUT);
 
-  pinMode(IN1,OUTPUT);
+  pinMode(DIRD,OUTPUT);
   //pinMode(IN2,OUTPUT);
 
 
-  // ledcSetup(ENB, 1000,resolution);
-  // ledcAttachPin(ENB,2);
-  pinMode(ENB,OUTPUT);
-  pinMode(IN3,OUTPUT);
+  // ledcSetup(STEPG, 1000,resolution);
+  // ledcAttachPin(STEPG,2);
+  pinMode(STEPG,OUTPUT);
+  pinMode(DIRG,OUTPUT);
 
   // xTaskCreate(
   //   vcontrole_bluetooth, /* Task function. */
