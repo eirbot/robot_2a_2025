@@ -10,6 +10,17 @@
 #define stepPerRev 3200
 #define ecartRoues 253.0
 
+
+
+#define tourner(angle,direction,vitesse) \
+  Parameters = {0, angle, direction, vitesse};\
+  xTaskCreate(vtourner,"vtourner", 1000, &Parameters, 1, &vtournerHandle); 
+
+#define avancer(distance,direction,vitesse) \
+  Parameters = {distance, 0, direction, vitesse};\
+  xTaskCreate(vavancer,"vavancer", 1000, &Parameters, 1, &vavancerHandle); 
+
+
 #if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
 #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
 #endif
@@ -46,6 +57,8 @@ typedef struct {
   int vitesse;
 } TaskParams;
 
+TaskParams Parameters = {0, 0, 0, 0};
+
 TaskHandle_t vstratHandle = NULL;
 
 
@@ -67,22 +80,26 @@ void moteur_gauche(int vitesse,int sens){
 
 TaskHandle_t vavancerHandle = NULL;
 
-void vavancer(void *pvParameters){
+void vavancer(void *Parameters_temp){
+  TaskParams *Parameters = (TaskParams *)Parameters_temp;
   digitalWrite(IN1,HIGH);
   digitalWrite(IN3,HIGH);
-  int steps = (*(int *)pvParameters / (3.14 * dRoues)) * stepPerRev;
+  int steps = ((int)Parameters->distance / (3.14 * dRoues)) * stepPerRev;
   for(int k=0 ; k < steps; k++){
     digitalWrite(ENA,HIGH);
     digitalWrite(ENB,HIGH);
-    delayMicroseconds(100);
+    vTaskDelay(1);
     digitalWrite(ENA,LOW);
     digitalWrite(ENB,LOW);
-    delayMicroseconds(1000);
+    vTaskDelay(1);
   }
+  Serial.println("fin de avancer");
+  xTaskNotifyGive(vstratHandle);
   vTaskDelete(NULL);
 }
 
 TaskHandle_t vtournerHandle = NULL;
+
 
 void vtourner(void *Parameters_temp){
   TaskParams *Parameters = (TaskParams *)Parameters_temp;
@@ -92,14 +109,15 @@ void vtourner(void *Parameters_temp){
   for(int k=0 ; k < steps; k++){
     digitalWrite(ENA,HIGH);
     digitalWrite(ENB,HIGH);
-    delay(1);
+    vTaskDelay(1);
     digitalWrite(ENA,LOW);
     digitalWrite(ENB,LOW);
-    delay(1);
+    vTaskDelay(1);
   }
   xTaskNotifyGive(vstratHandle);
   vTaskDelete(NULL);
 }
+
 
 
 
@@ -141,19 +159,17 @@ void vstrat(void *pvParameters){
   int distance = 1000;
   int angle=90;
   
-  TaskParams Parameters = {distance, angle, 0, 0};
-  xTaskCreate(
-    vtourner, /* Task function. */
-    "vtourner", /* name of task. */
-    4096, /* Stack size of task */
-    &Parameters, /* parameter of the task */
-    1, /* priority of the task */
-    &vtournerHandle/* Task handle to keep track of created task */
-  ); 
   Serial.println("commence");
-  
+  avancer(distance,0,10);
+  //tourner(angle,0,0);
   ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-  Serial.println("fini");
+  Serial.println("fin tache 1");
+  tourner(angle,0,0);
+  ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+  Serial.println("fin tache 2");
+  tourner(angle,0,0);
+  ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+  Serial.println("fin tache 3");
   vTaskDelete(NULL);
 }
 
