@@ -85,8 +85,14 @@ TaskHandle_t vavancerHandle = NULL;
 
 void vavancer(void *Parameters_temp){
   TaskParams *Parameters = (TaskParams *)Parameters_temp;
-  digitalWrite(DIRD,HIGH);
-  digitalWrite(DIRG,HIGH);
+  if(Parameters->direction == 1){
+    digitalWrite(DIRD,LOW);
+    digitalWrite(DIRG,LOW);
+  }
+  else{
+    digitalWrite(DIRD,HIGH);
+    digitalWrite(DIRG,HIGH);
+  }
   int steps = ((int)Parameters->distance / (3.14 * dRoues)) * stepPerRev;
   for(int k=0 ; k < steps; k++){
     digitalWrite(STEPD,HIGH);
@@ -169,12 +175,19 @@ void vstrat(void *pvParameters){
   int angle=90;
   
   Serial.println("commence");
-  avancer(distance,0,10);
-
-  tourner(angle,0,0);
-
-  tourner(angle,1,0);
-
+  avancer(500,0,10);
+  tourner(90,1,0); //0 droite, 1 gauche
+  avancer(400,0,10);
+  tourner(90,0,0);
+  avancer(650,0,10);
+  tourner(90,0,0);
+  avancer(1100,0,10);
+  tourner(90,0,0);
+  avancer(600,0,10);
+  tourner(90,0,0);
+  avancer(600,0,10);
+  tourner(90,0,0);
+  avancer(500,1,10);
   vTaskDelete(NULL);
 }
 
