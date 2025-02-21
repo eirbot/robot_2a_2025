@@ -6,6 +6,8 @@
 
 #include "BluetoothSerial.h"
 
+#include "esp_task_wdt.h"
+
 #define dRoues 100.0
 #define stepPerRev 3200
 #define ecartRoues 253.0
@@ -32,12 +34,10 @@
 //#error Bluetooth is not STEPDbled! Please run `make menuconfig` to and STEPDble it
 #endif
 
+
 BluetoothSerial SerialBT;
 
 unsigned long startMillis;
-
-
-
 
 
 int resolution = 8;
@@ -97,12 +97,13 @@ void vavancer(void *Parameters_temp){
   for(int k=0 ; k < steps; k++){
     digitalWrite(STEPD,HIGH);
     digitalWrite(STEPG,HIGH);
-    vTaskDelay(1);
+    esp_rom_delay_us(300);
     digitalWrite(STEPD,LOW);
     digitalWrite(STEPG,LOW);
-    vTaskDelay(1);
+    esp_rom_delay_us(300);
   }
   Serial.println("fin de avancer");
+  vTaskDelay(1);
   xTaskNotifyGive(vstratHandle);
   vTaskDelete(NULL);
 }
@@ -124,11 +125,12 @@ void vtourner(void *Parameters_temp){
   for(int k=0 ; k < steps; k++){
     digitalWrite(STEPD,HIGH);
     digitalWrite(STEPG,HIGH);
-    vTaskDelay(1);
+    esp_rom_delay_us(300);
     digitalWrite(STEPD,LOW);
     digitalWrite(STEPG,LOW);
-    vTaskDelay(1);
+    esp_rom_delay_us(300);
   }
+  vTaskDelay(1);
   xTaskNotifyGive(vstratHandle);
   vTaskDelete(NULL);
 }
@@ -181,7 +183,7 @@ void vstrat(void *pvParameters){
   tourner(90,0,0);
   avancer(650,0,10);
   tourner(90,0,0);
-  avancer(1100,0,10);
+  avancer(1000,0,10);
   tourner(90,0,0);
   avancer(600,0,10);
   tourner(90,0,0);
@@ -192,6 +194,8 @@ void vstrat(void *pvParameters){
 }
 
 void setup() {
+  esp_task_wdt_init(10,true);
+
   Serial.begin(115200);
   startMillis = millis();
 
