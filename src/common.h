@@ -13,6 +13,8 @@
 #define stepPerRev 3200
 #define ecartRoues 253.0
 
+
+
 extern TaskHandle_t vstratHandle;
 
 #endif

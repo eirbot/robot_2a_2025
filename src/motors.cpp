@@ -1,5 +1,7 @@
 #include "motors.h"
 
+//un tour = 3200 step
+
 void vavancer(void *Parameters_temp){
     TaskParams *Parameters = (TaskParams *)Parameters_temp;
     if(Parameters->direction == 1){
@@ -27,7 +29,7 @@ void vavancer(void *Parameters_temp){
 
 void vtourner(void *Parameters_temp){
     TaskParams *Parameters = (TaskParams *)Parameters_temp;
-    if(Parameters->direction == 0){
+    if(Parameters->direction == 0){//0 droite, 1 gauche
         digitalWrite(DIRD,LOW);
         digitalWrite(DIRG,HIGH);
     }

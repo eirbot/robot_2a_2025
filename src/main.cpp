@@ -1,64 +1,6 @@
-//Pour le PlatformIO
-
-#include "Arduino.h"
-
-#include "common.h"
-#include "bluetooth.h"
-#include "motors.h"
-//Code de base
-
-
-BluetoothSerial SerialBT;
-
-
-bool modeBluetooth = false;
+#include "main.h"
 
 TaskHandle_t vstratHandle = NULL;
-
-#define tourner(angle,direction,vitesse) \
-  Parameters = {0, angle, direction, vitesse};\
-  xTaskCreate(vtourner,"vtourner", 1000, &Parameters, 1, &vtournerHandle); \
-  ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-
-#define avancer(distance,direction,vitesse) \
-  Parameters = {distance, 0, direction, vitesse};\
-  xTaskCreate(vavancer,"vavancer", 1000, &Parameters, 1, &vavancerHandle); \
-  ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-
-
-#if !defined(CONFIG_BT_STEPDBLED) || !defined(CONFIG_BLUEDROID_STEPDBLED)
-//#error Bluetooth is not STEPDbled! Please run `make menuconfig` to and STEPDble it
-#endif
-
-
-
-unsigned long startMillis;
-
-
-int resolution = 8;
-int f_initial = 0;
-int bloque = 0;
-
-int reception;
-
-
-
-TaskParams Parameters = {0, 0, 0, 0};
-
-
-
-TaskHandle_t vavancerHandle = NULL;
-
-
-
-
-
-
-TaskHandle_t vtournerHandle = NULL;
-
-
-
-
 
 void vstrat(void *pvParameters){
   int distance = 100;
@@ -66,7 +8,7 @@ void vstrat(void *pvParameters){
   
   Serial.println("commence");
   avancer(500,0,10);
-  tourner(90,1,0); //0 droite, 1 gauche
+  tourner(90,1,0); 
   avancer(400,0,10);
   tourner(90,0,0);
   avancer(650,0,10);
@@ -106,39 +48,15 @@ void setup() {
 
   SerialBT.begin("ESP32test");
   SerialBT.setTimeout(50);
-  
-  
-  //delay(2000);
-  int distance = 1000;
-  int angle=90;
+
   
   if(modeBluetooth){
-    xTaskCreate(
-      vcontrole_bluetooth, /* Task function. */
-      "vcontrole_bluetooth", /* name of task. */
-      1000, /* Stack size of task */
-      NULL, /* parameter of the task */
-      1, /* priority of the task */
-      NULL/* Task handle to keep track of created task */
-    ); 
+    xTaskCreate(vcontrole_bluetooth,"vcontrole_bluetooth", 1000, NULL, 1, NULL); 
   }
   else{
-    xTaskCreate(
-      vstrat, /* Task function. */
-      "vstrat", /* name of task. */
-      4096, /* Stack size of task */
-      &angle, /* parameter of the task */
-      1, /* priority of the task */
-      &vstratHandle/* Task handle to keep track of created task */
-    ); 
+    xTaskCreate(vstrat,"vstrat", 4096, NULL, 1, &vstratHandle ); 
   }
-
-
 }
 
-
-//un tour = 3200 step
-
 void loop() {
-
 }
