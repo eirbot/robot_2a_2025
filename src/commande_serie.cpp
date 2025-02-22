@@ -34,12 +34,15 @@ void commande(){ // sert à entrer des commandes via le port serial
         else if(commande.substring(0,5)=="stop"){
             if(vavancerHandle != NULL){
                 vTaskDelete(vavancerHandle);
+                vavancerHandle = NULL;
             }
             if(vtournerHandle != NULL){
                 vTaskDelete(vtournerHandle);
+                vtournerHandle = NULL;
             }
             if(vstratHandle != NULL){
-                vTaskDelete(vstratHandle);
+                vTaskDelete(vstratHandle);   
+                vstratHandle = NULL;
             }
             pinMode(STEPD,OUTPUT);
             pinMode(STEPG,OUTPUT);

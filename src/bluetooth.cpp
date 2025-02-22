@@ -33,9 +33,7 @@ void vcontrole_bluetooth(void *pvParameters){
   
         vitesse_droite = (int)vitesse_droite_recep*50;
         vitesse_gauche = (int)vitesse_gauche_recep*50;
-
-        Serial.println(vitesse_droite);
-        
+    
   
         if(vitesse_droite>0){
           moteur_droit(vitesse_droite,1);
