@@ -8,28 +8,14 @@
 #include "motors.h"
 #include "commande_serie.h"
 
-BluetoothSerial SerialBT;
+extern BluetoothSerial SerialBT;
 
-TaskParams Parameters = {0, 0, 0, 0};
+extern TaskParams Parameters;
 
-TaskHandle_t vavancerHandle = NULL;
-TaskHandle_t vtournerHandle = NULL;
+extern int resolution;
+extern int bloque;
+extern bool modeBluetooth;
 
-unsigned long startMillis;
-int resolution = 8;
-int bloque = 0;
-bool modeBluetooth = false;//choix du mode bluetooth ou strategique
-
-
-#define tourner(angle,direction,vitesse) \
-  Parameters = {0, angle, direction, vitesse};\
-  xTaskCreate(vtourner,"vtourner", 1000, &Parameters, 1, &vtournerHandle); \
-  ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-
-#define avancer(distance,direction,vitesse) \
-  Parameters = {distance, 0, direction, vitesse};\
-  xTaskCreate(vavancer,"vavancer", 1000, &Parameters, 1, &vavancerHandle); \
-  ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-
+extern unsigned long startMillis;
 
 #endif

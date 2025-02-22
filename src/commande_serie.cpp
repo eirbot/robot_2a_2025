@@ -15,11 +15,19 @@ void commande(){ // sert à entrer des commandes via le port serial
         else if(commande.substring(0,3)=="rep"){
             Serial.println(var.substring(0,3).toInt());
         }
-        else if(commande.substring(0,9)=="bluetooth"){
+        else if(commande.substring(0,9)=="bluetooth"){            
             Serial.println("Mode bluetooth active");
+            ledcSetup(STEPD, 1000,resolution);
+            ledcAttachPin(STEPD,1);
+            ledcSetup(STEPG, 1000,resolution);
+            ledcAttachPin(STEPG,2);
+            xTaskCreate(vcontrole_bluetooth,"vcontrole_bluetooth", 1000, NULL, 1, NULL);
         }
         else if(commande.substring(0,5)=="strat"){
             Serial.println(commande.substring(5).substring(0,3).toInt());
+            pinMode(STEPD,OUTPUT);
+            pinMode(STEPG,OUTPUT);
+            xTaskCreate(vstrat,"vstrat", 4096, NULL, 1, &vstratHandle ); 
         }
     }
   }
