@@ -1,22 +1,19 @@
 //Pour le PlatformIO
 
 #include "Arduino.h"
+
+#include "common.h"
 #include "bluetooth.h"
+#include "motors.h"
 //Code de base
 
 
 BluetoothSerial SerialBT;
 
-#include "esp_task_wdt.h"
 
-#define dRoues 100.0
-#define stepPerRev 3200
-#define ecartRoues 253.0
+bool modeBluetooth = false;
 
-
-bool modeBluetooth = true;
-
-
+TaskHandle_t vstratHandle = NULL;
 
 #define tourner(angle,direction,vitesse) \
   Parameters = {0, angle, direction, vitesse};\
@@ -44,73 +41,23 @@ int bloque = 0;
 
 int reception;
 
-typedef struct {
-  int distance;
-  int angle;
-  int direction;
-  int vitesse;
-} TaskParams;
+
 
 TaskParams Parameters = {0, 0, 0, 0};
 
-TaskHandle_t vstratHandle = NULL;
+
 
 TaskHandle_t vavancerHandle = NULL;
 
 
 
 
-void vavancer(void *Parameters_temp){
-  TaskParams *Parameters = (TaskParams *)Parameters_temp;
-  if(Parameters->direction == 1){
-    digitalWrite(DIRD,LOW);
-    digitalWrite(DIRG,LOW);
-  }
-  else{
-    digitalWrite(DIRD,HIGH);
-    digitalWrite(DIRG,HIGH);
-  }
-  int steps = ((int)Parameters->distance / (3.14 * dRoues)) * stepPerRev;
-  for(int k=0 ; k < steps; k++){
-    digitalWrite(STEPD,HIGH);
-    digitalWrite(STEPG,HIGH);
-    esp_rom_delay_us(300);
-    digitalWrite(STEPD,LOW);
-    digitalWrite(STEPG,LOW);
-    esp_rom_delay_us(300);
-  }
-  Serial.println("fin de avancer");
-  vTaskDelay(1);
-  xTaskNotifyGive(vstratHandle);
-  vTaskDelete(NULL);
-}
+
 
 TaskHandle_t vtournerHandle = NULL;
 
 
-void vtourner(void *Parameters_temp){
-  TaskParams *Parameters = (TaskParams *)Parameters_temp;
-  if(Parameters->direction == 0){
-    digitalWrite(DIRD,LOW);
-    digitalWrite(DIRG,HIGH);
-  }
-  else{
-    digitalWrite(DIRD,HIGH);
-    digitalWrite(DIRG,LOW);
-  }
-  int steps = ((int)Parameters->angle / 360.0) * (3.14 * ecartRoues) * stepPerRev / (3.14 * dRoues);
-  for(int k=0 ; k < steps; k++){
-    digitalWrite(STEPD,HIGH);
-    digitalWrite(STEPG,HIGH);
-    esp_rom_delay_us(300);
-    digitalWrite(STEPD,LOW);
-    digitalWrite(STEPG,LOW);
-    esp_rom_delay_us(300);
-  }
-  vTaskDelay(1);
-  xTaskNotifyGive(vstratHandle);
-  vTaskDelete(NULL);
-}
+
 
 
 void vstrat(void *pvParameters){
