@@ -10,6 +10,8 @@ void commande(){ // sert à entrer des commandes via le port serial
             "   bluetooth\n\n"
             "Mode execution d'une strategie\n"
             "   strat [0,...]\n"
+            "Stoper le robot\n"
+            "   stop"
             );
         }
         else if(commande.substring(0,3)=="rep"){
@@ -28,6 +30,21 @@ void commande(){ // sert à entrer des commandes via le port serial
             pinMode(STEPD,OUTPUT);
             pinMode(STEPG,OUTPUT);
             xTaskCreate(vstrat,"vstrat", 4096, NULL, 1, &vstratHandle ); 
+        }
+        else if(commande.substring(0,5)=="stop"){
+            if(vavancerHandle != NULL){
+                vTaskDelete(vavancerHandle);
+            }
+            if(vtournerHandle != NULL){
+                vTaskDelete(vtournerHandle);
+            }
+            if(vstratHandle != NULL){
+                vTaskDelete(vstratHandle);
+            }
+            pinMode(STEPD,OUTPUT);
+            pinMode(STEPG,OUTPUT);
+            digitalWrite(STEPG,LOW);
+            digitalWrite(STEPD,LOW);
         }
     }
   }
