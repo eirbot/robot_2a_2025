@@ -49,7 +49,7 @@ void setup() {
   SerialBT.begin("ESP32test");
   SerialBT.setTimeout(50);
 
-  
+   
   if(modeBluetooth){
     xTaskCreate(vcontrole_bluetooth,"vcontrole_bluetooth", 1000, NULL, 1, NULL); 
   }
@@ -59,4 +59,6 @@ void setup() {
 }
 
 void loop() {
+  commande();
+  vTaskDelay(pdMS_TO_TICKS(1000));
 }

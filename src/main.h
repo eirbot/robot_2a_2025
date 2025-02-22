@@ -6,6 +6,7 @@
 #include "common.h"
 #include "bluetooth.h"
 #include "motors.h"
+#include "commande_serie.h"
 
 BluetoothSerial SerialBT;
 
@@ -17,7 +18,7 @@ TaskHandle_t vtournerHandle = NULL;
 unsigned long startMillis;
 int resolution = 8;
 int bloque = 0;
-bool modeBluetooth = true;//choix du mode bluetooth ou strategique
+bool modeBluetooth = false;//choix du mode bluetooth ou strategique
 
 
 #define tourner(angle,direction,vitesse) \

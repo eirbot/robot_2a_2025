@@ -21,7 +21,6 @@ void vavancer(void *Parameters_temp){
       digitalWrite(STEPG,LOW);
       esp_rom_delay_us(300);
     }
-    Serial.println("fin de avancer");
     vTaskDelay(1);
     xTaskNotifyGive(vstratHandle);
     vTaskDelete(NULL);
