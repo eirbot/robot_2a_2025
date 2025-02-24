@@ -1,5 +1,5 @@
-#ifndef MAIN_H
-#define MAIN_H
+#ifndef ACTIONNEUR_H
+#define ACTIONNEUR_H
 
 #include <Arduino.h>
 #include <ESP32Servo.h>
@@ -22,5 +22,5 @@ void stop();
 void freeWheel(char onOff);
 void setDir(char dir);
 
-#endif // MAIN_H
+#endif
 
