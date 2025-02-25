@@ -9,18 +9,14 @@
 #include "BluetoothSerial.h"
 
 // Function declarations
-void setSpeed(int motor, int frequency);
-void avancer(int distance_mm, int speed);
-void reculer(int distance_mm, int speed);
-void gauche(int angle, int speed);
-void droite(int angle, int speed);
 void pousserCanettes();
 void avancerCanettes();
 void reculerCanettes();
 void arreterCanettes();
-void stop();
-void freeWheel(char onOff);
-void setDir(char dir);
+void gServof(int angle);
+void dServof(int angle);
+void hServof(int angle);
+void vsetup_actionneurs(void *pvParameters);
 
 #endif
 

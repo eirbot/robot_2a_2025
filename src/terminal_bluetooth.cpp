@@ -1,13 +1,14 @@
 #include "terminal_bluetooth.h"
-#include "actionneur.h"
 
-#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
-#error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
-#endif
-BluetoothSerial SerialBT;
+void vterminal_bluetooth(void *pvParameters){
+  int vit = 100;
+  String id;
+  String valueStr;
+  int value;
 
-void loop() {
-    if(SerialBT.available()){
+  for(;;){
+    
+    while(SerialBT.available()){
       String receivedData = SerialBT.readStringUntil('\n');
       Serial.println(receivedData);
       int separatorIndex = receivedData.indexOf(' ');
@@ -46,18 +47,18 @@ void loop() {
           arreterCanettes();
       }
       else if (id.startsWith("servog")) {      
-          gServo.write(value);
+          gServof(value);
       }
       else if (id.startsWith("servod")) {      
-          dServo.write(value);
+          dServof(value);
       }
       else if (id.startsWith("servoh")) {      
-          hServo.write(value);
+          hServof(value);
       }
       else if (id.startsWith("reset")) {      
-          hServo.write(400);
-          gServo.write(0);
-          dServo.write(60);
+          hServof(160);
+          gServof(0);
+          dServof(60);
       }
       else if (id.startsWith("pousser")) {      
           pousserCanettes();
@@ -81,58 +82,34 @@ void loop() {
   
         for(int i = 0; i<4; i++){
   
-          avancer(value, vit);
-          delay(800);
+          // avancer(value, vit);
+          // delay(800);
   
-          gauche(90, vit);
-          delay(800);
+          // gauche(90, vit);
+          // delay(800);
         }
       }
       else if (id.startsWith("a-r")) {      
-          avancer(value, vit);
-          delay(2000);
+          // avancer(value, vit);
+          // delay(2000);
   
-          reculer(value, vit);
-          delay(2000);
+          // reculer(value, vit);
+          // delay(2000);
       }
       else if (id.startsWith("gauchedroite")) {      
-        gauche(90, vit);
-        delay(2000);
+        // gauche(90, vit);
+        // delay(2000);
   
-        droite(180, vit);
-        delay(2000);
+        // droite(180, vit);
+        // delay(2000);
   
-        gauche(90, vit);
-        delay(2000);
+        // gauche(90, vit);
+        // delay(2000);
       }
       else if (id.startsWith("strat")) {      
-        avancer(500, vit);
-        delay(800);
-  
-        droite(90, vit);
-        delay(800);
-  
-        avancer(450, vit);
-        delay(800);
-  
-        droite(90, vit);
-        delay(800);
-  
-        avancer(330, vit);
-        delay(800);
-  
-        pousserCanettes();
-        delay(800);
-  
-        reculer(500, vit);
-        delay(800);
-  
-        gauche(165, vit);
-        delay(800);
-  
-        // avancer(1300, vit);
-        // delay(800);
+        xTaskCreate(vstrat2,"vstrat2", 4096, NULL, 1, NULL);
       }
     }
-    stop();
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
+}
