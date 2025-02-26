@@ -84,7 +84,7 @@ void vavancer(void *Parameters_temp){
   vTaskDelete(NULL);
 }
 
-void avancer(int distance, char direction, int vitesse){
+void vavancer(int distance, char direction, int vitesse){
   TaskParams Parameters = {distance, 0, direction, vitesse};
   xTaskCreate(
     vavancer, /* Task function. */
@@ -124,7 +124,7 @@ void vtourner(void *Parameters_temp){
   vTaskDelete(NULL);
 }
 
-void tourner(int angle, char direction, int vitesse){
+void vtourner(int angle, char direction, int vitesse){
   TaskParams Parameters = {0, angle, direction, vitesse};
   xTaskCreate(
     vtourner, /* Task function. */
