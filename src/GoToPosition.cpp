@@ -33,8 +33,8 @@ void vgoto(void *Parameters_temp){
 void GoToPosition::Go(){
     CalculPolar();
     tourner((int)((pangle)*180/M_PI), 1, 10);
-    vTaskDelay(1000);
+    vTaskDelay(2000);
     avancer((int)r,1,10);
-
+    //vTaskDelay(2000);
 }
 
