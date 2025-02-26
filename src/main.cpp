@@ -28,7 +28,6 @@ unsigned long startMillis;
 #define STEPG 19  // anciennement ENB
 
 int resolution = 8;
-int f_initial = 0;
 int bloque = 0;
 
 int reception;
