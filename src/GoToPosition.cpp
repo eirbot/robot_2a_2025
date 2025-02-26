@@ -11,30 +11,27 @@ GoToPosition::GoToPosition(const float &x_i,const float &y_i,const float &cangle
 }
 
 void GoToPosition::CalculPolar(){
-    int delta_x=x_final-x_initial;
-    int delta_y=y_final-y_initial;
-    r = sqrt(delta_x^delta_x + delta_y^delta_y);
-    int sigma = std::atan(delta_y/delta_x);
+    float delta_x=x_final-x_initial;
+    float delta_y=y_final-y_initial;
+    r = sqrt(delta_x*delta_x + delta_y*delta_y);
+    float sigma = std::atan(delta_y/delta_x);
     pangle = M_PI/2 + cangle_initial - sigma;
-    Serial.println(r);
-    Serial.println(pangle);
 }
 
-void vgoto(void *Parameters_temp){
-    TaskParams* Parameters2 = (TaskParams *) Parameters_temp;
-    int angle= Parameters2->angle;
-    int r =Parameters2->distance;
-    tourner((int)angle,1,10);
-    avancer((int)(r*3.2*5),0,1);
+// void vgoto(void *Parameters_temp){
+//     TaskParams* Parameters2 = (TaskParams *) Parameters_temp;
+//     float angle= Parameters2->angle;
+//     float r =Parameters2->distance;
+//     tourner((int)angle,1,10);
+//     avancer((int)(r*3.2*5),0,1);
 
-    vTaskDelete(NULL);
-}
+//     vTaskDelete(NULL);
+// }
 
 void GoToPosition::Go(){
     CalculPolar();
-    tourner((int)((pangle)*180/M_PI), 1, 10);
+    tourner((int)((pangle)*180.0/M_PI), 1, 10);
     vTaskDelay(2000);
     avancer((int)r,1,10);
-    //vTaskDelay(2000);
 }
 
