@@ -22,7 +22,9 @@ void vavancer(void *Parameters_temp){
       esp_rom_delay_us(300);
     }
     vTaskDelay(1);
-    xTaskNotifyGive(vstratHandle);
+    if(vstratHandle!=NULL){
+      xTaskNotifyGive(vstratHandle);
+    } 
     vTaskDelete(NULL);
 }
 
@@ -46,6 +48,8 @@ void vtourner(void *Parameters_temp){
         esp_rom_delay_us(300);
     }
     vTaskDelay(1);
-    xTaskNotifyGive(vstratHandle);
+    if(vstratHandle!=NULL){
+      xTaskNotifyGive(vstratHandle);
+    }  
     vTaskDelete(NULL);
 }
