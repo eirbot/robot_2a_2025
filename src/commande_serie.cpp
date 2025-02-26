@@ -49,5 +49,9 @@ void commande(){ // sert à entrer des commandes via le port serial
             digitalWrite(STEPG,LOW);
             digitalWrite(STEPD,LOW);
         }
+        else if(commande.substring(0,5)=="goto"){
+            GoToPosition serialGoto {0,0,0,1,1,0};
+            serialGoto.Go();
+        }
     }
   }

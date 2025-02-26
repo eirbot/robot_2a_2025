@@ -32,11 +32,7 @@ void vgoto(void *Parameters_temp){
 
 void GoToPosition::Go(){
     CalculPolar();
-    // TaskHandle_t vgotoHandle = NULL;
-    // Parameters = {(int)r, (int)pangle, 0, 10};
-    // xTaskCreate(vgoto,"vgoto", 1000, &Parameters, 1, &vgotoHandle);
-    TaskParams Parameters2 = {0, (int)pangle, 1, 10};
-    xTaskCreate(vtourner,"vtourner", 1000, &Parameters2, 1, &vtournerHandle);
+    //tourner((int)pangle, 1, 10);
 
 }
 
