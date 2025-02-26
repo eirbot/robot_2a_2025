@@ -5,6 +5,7 @@
 #include "bluetooth.h"
 #include "strat.h"
 #include "main.h"
+#include "terminal_bluetooth.h"
 
 extern int resolution;
 extern int bloque;

@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 #include "motors.h"
+#include "actionneur.h"
 
 extern TaskHandle_t vavancerHandle;
 extern TaskHandle_t vtournerHandle;
@@ -17,6 +18,7 @@ extern TaskHandle_t vtournerHandle;
   xTaskCreate(vavancer,"vavancer", 1000, &Parameters, 1, &vavancerHandle); \
   ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
-void vstrat(void *pvParameters);
+void vstrat1(void *pvParameters);
+void vstrat2(void *pvParameters);
 
 #endif
