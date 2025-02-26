@@ -55,6 +55,9 @@ void vterminal_bluetooth(void *pvParameters){
       else if (id.startsWith("servoh")) {      
           hServof(value);
       }
+      else if (id.startsWith("servob")) {      
+        bServof(value);
+    }
       else if (id.startsWith("reset")) {      
           hServof(160);
           gServof(0);

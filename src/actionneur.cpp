@@ -1,16 +1,9 @@
 #include "actionneur.h"
 
-
-#define dRoues 100.0
-#define ecartRoues 253.0
-#define stepPerRev 3200
-
 Servo gServo;
 Servo dServo;
 Servo hServo;
-
-#define motorIN1 13
-#define motorIN2 12
+Servo bServo;
 
 void vsetup_actionneurs(void *pvParameters){
 
@@ -26,9 +19,13 @@ void vsetup_actionneurs(void *pvParameters){
   hServo.setPeriodHertz(50); // standard 50 hz servo
 	hServo.attach(25, 1000, 2000); // Attach the servo after it has been detatched
 
+  bServo.setPeriodHertz(50); // standard 50 hz servo
+  bServo.attach(32, 1000, 2000); // Attach the servo after it has been detatched
+
   hServo.write(160);
   gServo.write(0);
   dServo.write(60);
+  bServo.write(110);
 
   vTaskDelete(NULL);
 }
@@ -72,4 +69,8 @@ void dServof(int angle){
 
 void hServof(int angle){
   hServo.write(angle);
+}
+
+void bServof(int angle){
+  bServo.write(angle);
 }

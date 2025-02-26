@@ -1,16 +1,16 @@
 #include "bluetooth.h"
 
 void moteur_droit(int vitesse,int sens){
-    ledcWriteTone(1, vitesse);
-    ledcWrite(1, 127);
+    ledcWriteTone(MOTOR_D, vitesse);
+    ledcWrite(MOTOR_D, 127);
     //analogWrite(STEPD, vitesse);
     digitalWrite(DIRD, sens);
     //digitalWrite(IN2, (1-sens));
 }
 
 void moteur_gauche(int vitesse,int sens){
-    ledcWriteTone(2, vitesse);
-    ledcWrite(2, 127);
+    ledcWriteTone(MOTOR_G, vitesse);
+    ledcWrite(MOTOR_G, 127);
     //analogWrite(STEPG, vitesse);
     digitalWrite(DIRG, sens);
     //digitalWrite(IN4, (1-sens));

@@ -22,9 +22,10 @@ void commande(){ // sert à entrer des commandes via le port serial
         else if(commande.substring(0,10)=="jbluetooth"){            
             Serial.println("Mode joystick bluetooth active");
             ledcSetup(STEPD, 1000,resolution);
-            ledcAttachPin(STEPD,1);
+            ledcAttachPin(STEPD, MOTOR_D);
+
             ledcSetup(STEPG, 1000,resolution);
-            ledcAttachPin(STEPG,2);
+            ledcAttachPin(STEPG, MOTOR_G);
             xTaskCreate(vcontrole_bluetooth,"vcontrole_bluetooth", 1000, NULL, 1, NULL);
         }
         else if(commande.substring(0,10)=="tbluetooth"){            
