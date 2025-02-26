@@ -11,7 +11,7 @@ typedef struct {
     int angle;
     int direction;
     int vitesse;
-  } TaskParams;
+} TaskParams;
 
 extern TaskParams Parameters;
 

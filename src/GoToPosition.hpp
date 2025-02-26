@@ -1,10 +1,11 @@
 #ifndef GOTOPOSITION_H
 #define GOTOPOSITION_H
 
+#include "Arduino.h"
 #include <cmath>
 #include <iostream>
-#include "strat.h"
 #include "common.h"
+#include "motors.h"
 
 
 
