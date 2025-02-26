@@ -1,8 +1,7 @@
 #include "strat.h"
 
 
-TaskHandle_t vavancerHandle = NULL;
-TaskHandle_t vtournerHandle = NULL;
+
 
 void vstrat(void *pvParameters){
     int distance = 100;

@@ -13,6 +13,18 @@
 #define stepPerRev 3200
 #define ecartRoues 253.0
 
+extern TaskHandle_t vavancerHandle;
+extern TaskHandle_t vtournerHandle;
+
+#define tourner(angle,direction,vitesse) \
+  Parameters = {0, angle, direction, vitesse};\
+  xTaskCreate(vtourner,"vtourner", 1000, &Parameters, 1, &vtournerHandle); \
+  ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+
+#define avancer(distance,direction,vitesse) \
+  Parameters = {distance, 0, direction, vitesse};\
+  xTaskCreate(vavancer,"vavancer", 1000, &Parameters, 1, &vavancerHandle); \
+  ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
 
 extern TaskHandle_t vstratHandle;
