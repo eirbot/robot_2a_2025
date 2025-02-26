@@ -25,7 +25,7 @@ void vsetup_actionneurs(void *pvParameters){
   hServo.write(160);
   gServo.write(0);
   dServo.write(60);
-  bServo.write(110);
+  bServo.write(0);
 
   vTaskDelete(NULL);
 }
