@@ -24,7 +24,7 @@ class GoToPosition{
     float r;
     float pangle;
 
-    void Go();
+    void Go(float x_f,float y_f,float cangle_f);
 
     private:
     void CalculPolar();

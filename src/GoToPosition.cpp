@@ -28,10 +28,18 @@ void GoToPosition::CalculPolar(){
 //     vTaskDelete(NULL);
 // }
 
-void GoToPosition::Go(){
+void GoToPosition::Go(float x_f,float y_f,float cangle_f){
+    x_final = x_f;
+    y_final = y_f;
+    cangle_final = cangle_f;
+    
+    Serial.println(x_final);
+    Serial.println(y_final);
+    Serial.println(cangle_final);
+
     CalculPolar();
-    tourner((int)((pangle)*180.0/M_PI), 1, 10);
+    tourner((int)((pangle)*180.0/M_PI), 0, 10);
     vTaskDelay(2000);
-    avancer((int)r,1,10);
+    avancer((int)r,0,10);
 }
 
