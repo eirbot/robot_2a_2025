@@ -4,7 +4,9 @@
 #include "Arduino.h"
 #include "motors.h"
 #include "common.h"
+#include "actionneur.h"
 
-void vstrat(void *pvParameters);
+void vstrat1(void *pvParameters);
+void vstrat2(void *pvParameters);
 
 #endif

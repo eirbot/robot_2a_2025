@@ -8,6 +8,8 @@
 #define DIRG 21
 #define STEPG 19
 
+#define MOTOR_G 6
+#define MOTOR_D 5
 
 #define dRoues 100.0
 #define stepPerRev 3200

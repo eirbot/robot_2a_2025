@@ -6,6 +6,7 @@
 #include "strat.h"
 #include "main.h"
 #include "GoToPosition.hpp"
+#include "terminal_bluetooth.h"
 
 extern int resolution;
 extern int bloque;
