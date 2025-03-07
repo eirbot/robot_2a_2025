@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "cfr-2025-2a-embedded-ai"
+version = "0.1.0"
+description = "Embedded strategy logic to pilot at a high-level the robot of 2A in the Coupe de France de Robotique"
+authors = ["Convolutio <79534557+Convolutio@users.noreply.github.com>"]
+license = "UNLICENSED"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
