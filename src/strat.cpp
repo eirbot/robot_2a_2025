@@ -33,7 +33,12 @@ void vstrat1(void *pvParameters){
     ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
   avancer(500,1,10);
     ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-  vTaskDelete(NULL);
+
+  if(vterminal_bluetoothHandle!=NULL){
+    xTaskNotifyGive(vterminal_bluetoothHandle);
+  } 
+
+  vTaskDelete(vstratHandle);
 }
 
 void vstrat2(void *pvParameters){
@@ -55,5 +60,10 @@ void vstrat2(void *pvParameters){
   ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
   avancer(1300, 0, vit);
   ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-  vTaskDelete(NULL);
+
+  if(vterminal_bluetoothHandle!=NULL){
+    xTaskNotifyGive(vterminal_bluetoothHandle);
+  } 
+
+  vTaskDelete(vstratHandle);
 }
