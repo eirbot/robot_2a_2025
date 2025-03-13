@@ -112,7 +112,7 @@ void vterminal_bluetooth(void *pvParameters){
       else if (id.startsWith("strat")) {      
         xTaskCreate(vstrat2,"vstrat2", 4096, NULL, 1, NULL);
       }
-      else if(id.startsWith("goto")){
+      else if(receivedData.substring(0,4)=="goto"){
         Serial.println("stert goto");
 
         pinMode(STEPD,OUTPUT);

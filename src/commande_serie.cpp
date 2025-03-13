@@ -30,7 +30,7 @@ void commande(){ // sert à entrer des commandes via le port serial
         }
         else if(commande.substring(0,10)=="tbluetooth"){            
             Serial.println("Mode terminal bluetooth active");
-            xTaskCreate(vterminal_bluetooth,"vterminal_bluetooth", 1000, NULL, 1, NULL);
+            xTaskCreate(vterminal_bluetooth,"vterminal_bluetooth", 5000, NULL, 1, NULL);
         }
         else if(commande.substring(0,5)=="strat"){
             if(commande.substring(6,7)=="1"){
