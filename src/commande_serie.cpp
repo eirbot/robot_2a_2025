@@ -28,7 +28,8 @@ void commande(){ // sert à entrer des commandes via le port serial
             ledcAttachPin(STEPG, MOTOR_G);
             xTaskCreate(vcontrole_bluetooth,"vcontrole_bluetooth", 1000, NULL, 1, NULL);
         }
-        else if(commande.substring(0,10)=="tbluetooth"){            
+        else if(commande.substring(0,10)=="tbluetooth" || initial_tbluetooth){      
+            initial_tbluetooth=false;      
             Serial.println("Mode terminal bluetooth active");
             xTaskCreate(vterminal_bluetooth,"vterminal_bluetooth", 5000, NULL, 1, NULL);
         }

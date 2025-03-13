@@ -113,15 +113,15 @@ void vterminal_bluetooth(void *pvParameters){
         xTaskCreate(vstrat2,"vstrat2", 4096, NULL, 1, NULL);
       }
       else if(receivedData.substring(0,4)=="goto"){
-        Serial.println("stert goto");
+        SerialBT.println("start goto");
 
         pinMode(STEPD,OUTPUT);
         pinMode(STEPG,OUTPUT);
         GoToPosition serialGoto {0,0,0,1000,1000,0};
 
-        // Serial.println((float)receivedData.substring(5,9).toInt());
-        // Serial.println((float)receivedData.substring(10,14).toInt());
-        // Serial.println((float)receivedData.substring(15,18).toInt());
+        SerialBT.println((float)receivedData.substring(5,9).toInt());
+        SerialBT.println((float)receivedData.substring(10,14).toInt());
+        SerialBT.println((float)receivedData.substring(15,18).toInt());
 
         serialGoto.Go((float)receivedData.substring(5,9).toInt(),(float)receivedData.substring(10,14).toInt(),(float)receivedData.substring(15,18).toInt());
       }

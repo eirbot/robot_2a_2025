@@ -19,4 +19,6 @@ extern bool modeBluetooth;
 
 extern unsigned long startMillis;
 
+extern bool initial_tbluetooth;
+
 #endif
