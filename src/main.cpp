@@ -1,6 +1,7 @@
 #include "main.h"
 
 TaskHandle_t vstratHandle = NULL;
+TaskHandle_t vterminal_bluetoothHandle = NULL;
 
 int resolution = 8;
 int bloque = 0;
@@ -18,6 +19,8 @@ void setup() {
 
   pinMode(DIRD,OUTPUT);
   pinMode(DIRG,OUTPUT);
+  pinMode(STEPD,OUTPUT);
+  pinMode(STEPG,OUTPUT);
 
 
   Serial.begin(115200);

@@ -23,8 +23,18 @@ void vterminal_bluetooth(void *pvParameters){
       else {
         id = receivedData;
       }
-      if (id.startsWith("debug")) {
-        
+      if (id.startsWith("help")) {
+        SerialBT.println("ar");
+        SerialBT.println("deploy *value* : value between 0 and 900");
+        SerialBT.println("retract *value* : value between 0 and 900");
+        SerialBT.println("fuck");
+        SerialBT.println("servog *value* : value between 0 and 180, resets at 0");
+        SerialBT.println("servod *value* : value between 0 and 180, resets at 60");
+        SerialBT.println("servoh *value* : value between 0 and 180, resets at 160");
+        SerialBT.println("reset");
+        SerialBT.println("pousser");
+        SerialBT.println("vit *value*");
+        SerialBT.println("strat *value*: 1 pitit tour autour des planches, 2 strat de base à 18 points");
       }
       if (id.startsWith("ar")) {
           arreterCanettes();
@@ -109,8 +119,21 @@ void vterminal_bluetooth(void *pvParameters){
         // gauche(90, vit);
         // delay(2000);
       }
-      else if (id.startsWith("strat")) {      
-        xTaskCreate(vstrat2,"vstrat2", 4096, NULL, 1, NULL);
+      else if (id.startsWith("strat")) {    
+        if (value == 1) {
+          xTaskCreate(vstrat1,"vstrat1", 4096, NULL, 1, &vstratHandle);
+          ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+        }
+        else {
+          xTaskCreate(vstrat2,"vstrat2", 4096, NULL, 1, &vstratHandle);
+          ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+        }  
+      }
+      else if (id.startsWith("quit")) {      
+        vTaskDelete(vterminal_bluetoothHandle);
+      }
+      else if (id.startsWith("stop")) {      
+        vTaskDelete(vterminal_bluetoothHandle);
       }
       else if(receivedData.substring(0,4)=="goto"){
         SerialBT.println("start goto");
