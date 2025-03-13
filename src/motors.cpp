@@ -3,6 +3,7 @@
 //un tour = 3200 step
 
 void vavancer(void *Parameters_temp){
+  Serial.println("lancement tache avancer");
     TaskParams *Parameters = (TaskParams *)Parameters_temp;
     if(Parameters->direction == 1){
       digitalWrite(DIRD,LOW);
@@ -29,6 +30,7 @@ void vavancer(void *Parameters_temp){
 }
 
 void vtourner(void *Parameters_temp){
+    Serial.println("lancement tache tourner");
     TaskParams *Parameters = (TaskParams *)Parameters_temp;
     if(Parameters->direction == 0){//0 droite, 1 gauche
         digitalWrite(DIRD,LOW);
@@ -40,16 +42,38 @@ void vtourner(void *Parameters_temp){
     }
     int steps = ((int)Parameters->angle / 360.0) * (3.14 * ecartRoues) * stepPerRev / (3.14 * dRoues);
     for(int k=0 ; k < steps; k++){
-        digitalWrite(STEPD,HIGH);
-        digitalWrite(STEPG,HIGH);
-        esp_rom_delay_us(300);
-        digitalWrite(STEPD,LOW);
-        digitalWrite(STEPG,LOW);
-        esp_rom_delay_us(300);
+      digitalWrite(STEPD,HIGH);
+      digitalWrite(STEPG,HIGH);
+      esp_rom_delay_us(300);
+      digitalWrite(STEPD,LOW);
+      digitalWrite(STEPG,LOW);
+      esp_rom_delay_us(300);
     }
     vTaskDelay(1);
     if(vstratHandle!=NULL){
       xTaskNotifyGive(vstratHandle);
     }  
     vTaskDelete(NULL);
+}
+
+void vtournerGoTo(void *Parameters_temp){
+  TaskParams *Parameters = (TaskParams *)Parameters_temp;
+  if(Parameters->direction == 0){//0 droite, 1 gauche
+      digitalWrite(DIRD,LOW);
+      digitalWrite(DIRG,HIGH);
+  }
+  else{
+      digitalWrite(DIRD,HIGH);
+      digitalWrite(DIRG,LOW);
+  }
+  int steps = ((int)Parameters->angle / 360.0) * (3.14 * ecartRoues) * stepPerRev / (3.14 * dRoues);
+  for(int k=0 ; k < steps; k++){
+      digitalWrite(STEPD,HIGH);
+      digitalWrite(STEPG,HIGH);
+      esp_rom_delay_us(300);
+      digitalWrite(STEPD,LOW);
+      digitalWrite(STEPG,LOW);
+      esp_rom_delay_us(300);
+  }
+  //vTaskDelay(1);
 }

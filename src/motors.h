@@ -18,4 +18,6 @@ extern TaskParams Parameters;
 void vavancer(void *Parameters_temp);
 void vtourner(void *Parameters_temp);
 
+void vtournerGoTo(void *Parameters_temp);
+
 #endif

@@ -33,13 +33,21 @@ void GoToPosition::Go(float x_f,float y_f,float cangle_f){
     y_final = y_f;
     cangle_final = cangle_f;
     
-    Serial.println(x_final);
-    Serial.println(y_final);
-    Serial.println(cangle_final);
-
     CalculPolar();
+
+    Serial.print(x_final);
+    Serial.print("   ");
+    Serial.print(y_final);
+    Serial.print("   ");
+    Serial.print(cangle_final);
+    Serial.print("    r :");
+    Serial.print((int)r);
+    Serial.print("   pangle: ");
+    Serial.println((int)((pangle)*180.0/M_PI));
+
+
     tourner((int)((pangle)*180.0/M_PI), 0, 10);
     vTaskDelay(2000);
-    avancer((int)r,0,10);
+    //avancer((int)r,0,10);
 }
 
