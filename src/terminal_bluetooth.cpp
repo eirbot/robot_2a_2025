@@ -123,7 +123,7 @@ void vterminal_bluetooth(void *pvParameters){
         // Serial.println((float)receivedData.substring(10,14).toInt());
         // Serial.println((float)receivedData.substring(15,18).toInt());
 
-        serialGoto.Go(250.0,250.0,0.0);
+        serialGoto.Go((float)receivedData.substring(5,9).toInt(),(float)receivedData.substring(10,14).toInt(),(float)receivedData.substring(15,18).toInt());
       }
     }
     vTaskDelay(pdMS_TO_TICKS(100));
