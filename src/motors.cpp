@@ -30,7 +30,6 @@ void vavancer(void *Parameters_temp){
 
 void vtourner(void *Parameters_temp){
     TaskParams *Parameters = (TaskParams *)Parameters_temp;
-    Serial.println(Parameters->direction);
     if(Parameters->direction == 0){//0 droite, 1 gauche
         digitalWrite(DIRD,LOW);
         digitalWrite(DIRG,HIGH);
