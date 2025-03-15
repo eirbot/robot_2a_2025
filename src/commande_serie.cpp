@@ -85,6 +85,12 @@ void commande(){ // sert à entrer des commandes via le port serial
 
             serialGoto.Go((float)commande.substring(5,9).toInt(),(float)commande.substring(10,14).toInt(),(float)commande.substring(15,18).toInt());
         }
+        else if(commande.substring(0,4)=="test"){
+            mot.StartMotors();
+            vTaskDelay(1000);
+            mot.EnvoyerDonnees(12);
+        }
+
     }
     else{
         xTaskCreate(vterminal_bluetooth,"vterminal_bluetooth", 4000, NULL, 1, &vterminal_bluetoothHandle);

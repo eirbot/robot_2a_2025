@@ -2,6 +2,7 @@
 #define COMMON_H
 
 #include "esp_task_wdt.h"
+#include "ClassMotors.hpp"
 
 #define STEPD 18 
 #define DIRD 22  
@@ -31,5 +32,7 @@ extern TaskHandle_t vtournerHandle;
 
 extern TaskHandle_t vstratHandle;
 extern TaskHandle_t vterminal_bluetoothHandle;
+
+extern ClassMotors mot;
 
 #endif
