@@ -87,8 +87,11 @@ void commande(){ // sert à entrer des commandes via le port serial
         }
         else if(commande.substring(0,4)=="test"){
             mot.StartMotors();
-            vTaskDelay(1000);
-            mot.EnvoyerDonnees(12);
+        }
+        else if(commande.substring(0,4)=="tes1"){
+            pinMode(STEPD,OUTPUT);
+            pinMode(STEPG,OUTPUT);
+            mot.EnvoyerDonnees(commande.substring(5,9).toInt());
         }
 
     }

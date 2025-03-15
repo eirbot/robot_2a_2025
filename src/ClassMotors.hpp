@@ -4,6 +4,8 @@
 #include "Arduino.h"
 #include <cmath>
 
+#include "common.h"
+
 class ClassMotors{
 public:
     ClassMotors();
@@ -16,6 +18,6 @@ private:
 };
 
 
-
+extern ClassMotors mot;
 
 #endif
