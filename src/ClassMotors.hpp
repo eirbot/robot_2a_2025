@@ -5,6 +5,7 @@
 #include <cmath>
 
 #include "common.h"
+#include "motors.h"
 
 class ClassMotors{
 public:
@@ -12,7 +13,7 @@ public:
     static void vMotors(void* pvParameters);
 
     void StartMotors();
-    void EnvoyerDonnees(int value);
+    void EnvoyerDonnees(void * Params);
 private:
     QueueHandle_t xQueue;
 };

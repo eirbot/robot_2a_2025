@@ -32,6 +32,7 @@ void ClassMotors::StartMotors(){
     xTaskCreate(vMotors, "vMotors", 5000, this, 1, NULL);
 }
 
-void ClassMotors::EnvoyerDonnees(int value){
-    xQueueSend(xQueue, &value, portMAX_DELAY);
+void ClassMotors::EnvoyerDonnees(void* Params){
+    TaskParams* tasParams = (TaskParams*)(Params); //Merci au patron de l'année derrnière en dépit de ses maigres performances concernant la coupe
+    xQueueSend(xQueue, &tasParams->distance, portMAX_DELAY);
 }

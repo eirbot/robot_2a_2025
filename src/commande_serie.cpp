@@ -74,7 +74,6 @@ void commande(){ // sert à entrer des commandes via le port serial
             digitalWrite(STEPD,LOW);
         }
         else if(commande.substring(0,4)=="goto"){
-
             pinMode(STEPD,OUTPUT);
             pinMode(STEPG,OUTPUT);
             GoToPosition serialGoto {0,0,0,1000,1000,0};
@@ -91,7 +90,10 @@ void commande(){ // sert à entrer des commandes via le port serial
         else if(commande.substring(0,4)=="tes1"){
             pinMode(STEPD,OUTPUT);
             pinMode(STEPG,OUTPUT);
-            mot.EnvoyerDonnees(commande.substring(5,9).toInt());
+
+            TaskParams Params = {commande.substring(5,9).toInt(), 0, 0, 10};
+
+            mot.EnvoyerDonnees(&Params);
         }
 
     }
