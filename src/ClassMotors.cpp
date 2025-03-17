@@ -6,15 +6,15 @@ ClassMotors::ClassMotors(){
 
 void ClassMotors::vMotors(void* pvParameters){
     ClassMotors* instance = (ClassMotors*)pvParameters;
-    Serial.println("tache qui tourne");
+    Serial.println("tache lance");
     TaskParams taskParams;
     int step = 0;
     int steps = 0;
     while (1) {
         if(xQueueReceive(instance->xQueue, &taskParams, portMAX_DELAY)==pdPASS){
-            Serial.println("tache lance");
+            Serial.println("tache reception data");
 
-            if(taskParams.angle==0){
+            if(taskParams.angle==0){ //Pour avancer
                 Serial.println("tache de ligne droite");
                 steps = ((int)taskParams.distance / (3.14 * dRoues)) * stepPerRev;
                 step = 0;
@@ -37,11 +37,10 @@ void ClassMotors::vMotors(void* pvParameters){
                     esp_rom_delay_us(300);
                 }
             }
-            else if(taskParams.distance==0){
+            else if(taskParams.distance==0){ //Pour tourner
                 Serial.println("tache de virage");
-                int steps = ((int)std::abs(Parameters.angle) / 360.0) * (3.14 * ecartRoues) * stepPerRev / (3.14 * dRoues);
+                steps = ((int)std::abs(taskParams.angle) / 360.0) * (3.14 * ecartRoues) * stepPerRev / (3.14 * dRoues);
                 step = 0;
-
                 if(taskParams.direction == 0){//0 droite, 1 gauche
                     digitalWrite(DIRD,LOW);
                     digitalWrite(DIRG,HIGH);
@@ -52,6 +51,7 @@ void ClassMotors::vMotors(void* pvParameters){
                 }
 
                 for(step=0 ; step < steps; step++){
+                    
                     digitalWrite(STEPD,HIGH);
                     digitalWrite(STEPG,HIGH);
                     esp_rom_delay_us(300);

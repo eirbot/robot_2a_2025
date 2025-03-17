@@ -91,7 +91,7 @@ void commande(){ // sert à entrer des commandes via le port serial
             pinMode(STEPD,OUTPUT);
             pinMode(STEPG,OUTPUT);
 
-            TaskParams Params = {commande.substring(5,9).toInt(), 0, 0, 10};
+            TaskParams Params = {commande.substring(5,9).toInt(), commande.substring(10,14).toInt(), 0, 10};
 
             mot.EnvoyerDonnees(&Params);
         }
