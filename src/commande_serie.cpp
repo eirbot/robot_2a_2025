@@ -74,10 +74,6 @@ void commande(){ // sert à entrer des commandes via le port serial
             digitalWrite(STEPD,LOW);
         }
         else if(commande.substring(0,4)=="goto"){
-            pinMode(STEPD,OUTPUT);
-            pinMode(STEPG,OUTPUT);
-            GoToPosition serialGoto {0,0,0,1000,1000,0};
-
             serialGoto.Go((float)commande.substring(5,9).toInt(),(float)commande.substring(10,14).toInt(),(float)commande.substring(15,18).toInt());
         }
 

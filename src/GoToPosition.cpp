@@ -19,6 +19,10 @@ void GoToPosition::CalculPolar(){
 }
 
 void GoToPosition::Go(float x_f,float y_f,float cangle_f){
+
+    pinMode(STEPD,OUTPUT);
+    pinMode(STEPG,OUTPUT);
+
     x_final = x_f;
     y_final = y_f;
     cangle_final = cangle_f;
@@ -42,7 +46,6 @@ void GoToPosition::Go(float x_f,float y_f,float cangle_f){
         Params = {0, (int)((pangle)*180.0/M_PI), 1, 10};
         mot.EnvoyerDonnees(&Params);
     }
-    vTaskDelay(5000);
     Params = {(int)r, 0, 0, 10};
     mot.EnvoyerDonnees(&Params);
 }

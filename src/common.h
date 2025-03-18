@@ -3,6 +3,7 @@
 
 #include "esp_task_wdt.h"
 #include "ClassMotors.hpp"
+#include "GoToPosition.hpp"
 
 #define STEPD 18 
 #define DIRD 22  
