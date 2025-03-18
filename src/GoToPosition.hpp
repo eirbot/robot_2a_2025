@@ -24,6 +24,7 @@ class GoToPosition{
 
     float r;
     float pangle;
+    float pangleFin;
 
     void Go(float x_f,float y_f,float cangle_f);
 

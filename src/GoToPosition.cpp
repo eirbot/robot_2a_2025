@@ -16,6 +16,17 @@ void GoToPosition::CalculPolar(){
     r = sqrt(delta_x*delta_x + delta_y*delta_y);
     float sigma = std::atan2(delta_y,delta_x);
     pangle = M_PI/2 + cangle_initial - sigma;
+    pangleFin = cangle_initial - pangle + cangle_final*M_PI/180.0;
+    
+    Serial.print("cangle_initial: ");
+    Serial.print(cangle_initial);
+    Serial.print("  pangle: ");
+    Serial.print(pangle);
+    Serial.print("  cangle_final: ");
+    Serial.print(cangle_final*M_PI/180.0);
+    Serial.print("  pangleFin: ");
+    Serial.println(pangleFin);
+    
 }
 
 void GoToPosition::Go(float x_f,float y_f,float cangle_f){
@@ -29,24 +40,39 @@ void GoToPosition::Go(float x_f,float y_f,float cangle_f){
     
     CalculPolar();
 
-    Serial.print("    r :");
+    Serial.print("r :");
     Serial.print((int)r);
     Serial.print("   pangle: ");
-    Serial.println((int)((pangle)*180.0/M_PI));
+    Serial.print((int)((pangle)*180.0/M_PI));
+    Serial.print("   pangleFin: ");
+    Serial.println((int)((pangleFin)*180.0/M_PI));
 
     TaskParams Params;
 
     if(pangle>=0){
-        Serial.println("pangle <= 0");
+        Serial.println("pangle >= 0");
         Params = {0, (int)((pangle)*180.0/M_PI), 0, 10};
         mot.EnvoyerDonnees(&Params);
     }
     else{
-        Serial.println("pangle > 0");
+        Serial.println("pangle < 0");
         Params = {0, (int)((pangle)*180.0/M_PI), 1, 10};
         mot.EnvoyerDonnees(&Params);
     }
+
     Params = {(int)r, 0, 0, 10};
     mot.EnvoyerDonnees(&Params);
+
+    //Params = {0, (int)((pangleFin)*180.0/M_PI), 0, 10};
+    if(pangleFin>=0){
+        Serial.println("pangleFin >= 0");
+        Params = {0, (int)((pangleFin)*180.0/M_PI), 0, 10};
+        mot.EnvoyerDonnees(&Params);
+    }
+    else{
+        Serial.println("pangleFin < 0");
+        Params = {0, (int)((pangleFin)*180.0/M_PI), 1, 10};
+        mot.EnvoyerDonnees(&Params);
+    }
 }
 

@@ -1,18 +1,16 @@
 #include "ClassMotors.hpp"
 
 ClassMotors::ClassMotors(){
-    xQueue = xQueueCreate(5, sizeof(TaskParams));
+    xQueue = xQueueCreate(30, sizeof(TaskParams));
 }
 
 void ClassMotors::vMotors(void* pvParameters){
     ClassMotors* instance = (ClassMotors*)pvParameters;
-    Serial.println("tache lance");
     TaskParams taskParams;
     int step = 0;
     int steps = 0;
     while (1) {
         if(xQueueReceive(instance->xQueue, &taskParams, portMAX_DELAY)==pdPASS){
-            Serial.println("tache reception data");
 
             pinMode(STEPD,OUTPUT);
             pinMode(STEPG,OUTPUT);
@@ -21,7 +19,6 @@ void ClassMotors::vMotors(void* pvParameters){
                 Serial.println("Tout les parametres a 0");
             }
             else if(taskParams.angle==0){ //Pour avancer
-                Serial.println("tache de ligne droite");
                 steps = ((int)taskParams.distance / (3.14 * dRoues)) * stepPerRev;
                 step = 0;
 
@@ -44,7 +41,6 @@ void ClassMotors::vMotors(void* pvParameters){
                 }
             }
             else if(taskParams.distance==0){ //Pour tourner
-                Serial.println("tache de virage");
                 steps = ((int)std::abs(taskParams.angle) / 360.0) * (3.14 * ecartRoues) * stepPerRev / (3.14 * dRoues);
                 step = 0;
                 if(taskParams.direction == 0){//0 droite, 1 gauche
@@ -79,9 +75,5 @@ void ClassMotors::StartMotors(){
 
 void ClassMotors::EnvoyerDonnees(void* Params){
     TaskParams* ptaskParams = (TaskParams*)(Params); //Merci au patron de l'année derrnière en dépit de ses maigres performances concernant la coupe
-    Serial.print("Dans class motors -> distance:  ");
-    Serial.print(ptaskParams->distance);
-    Serial.print("  angle:  ");
-    Serial.println(ptaskParams->angle);
     xQueueSend(xQueue, ptaskParams, portMAX_DELAY);
 }
