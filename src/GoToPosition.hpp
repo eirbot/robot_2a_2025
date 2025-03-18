@@ -6,6 +6,7 @@
 #include <iostream>
 #include "common.h"
 #include "motors.h"
+#include "ClassMotors.hpp"
 
 
 

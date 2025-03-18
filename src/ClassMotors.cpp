@@ -14,7 +14,13 @@ void ClassMotors::vMotors(void* pvParameters){
         if(xQueueReceive(instance->xQueue, &taskParams, portMAX_DELAY)==pdPASS){
             Serial.println("tache reception data");
 
-            if(taskParams.angle==0){ //Pour avancer
+            pinMode(STEPD,OUTPUT);
+            pinMode(STEPG,OUTPUT);
+
+            if(taskParams.angle==0 && taskParams.distance==0){
+                Serial.println("Tout les parametres a 0");
+            }
+            else if(taskParams.angle==0){ //Pour avancer
                 Serial.println("tache de ligne droite");
                 steps = ((int)taskParams.distance / (3.14 * dRoues)) * stepPerRev;
                 step = 0;
@@ -61,7 +67,7 @@ void ClassMotors::vMotors(void* pvParameters){
                 }
             }
             else{
-                Serial.println("il faut au moins un paramètre à 0 entre angle et distance");
+                Serial.println("il faut au moins un parametre a 0 entre angle et distance");
             }
         }
     }
@@ -73,5 +79,9 @@ void ClassMotors::StartMotors(){
 
 void ClassMotors::EnvoyerDonnees(void* Params){
     TaskParams* ptaskParams = (TaskParams*)(Params); //Merci au patron de l'année derrnière en dépit de ses maigres performances concernant la coupe
+    Serial.print("Dans class motors -> distance:  ");
+    Serial.print(ptaskParams->distance);
+    Serial.print("  angle:  ");
+    Serial.println(ptaskParams->angle);
     xQueueSend(xQueue, ptaskParams, portMAX_DELAY);
 }

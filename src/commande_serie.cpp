@@ -78,22 +78,7 @@ void commande(){ // sert à entrer des commandes via le port serial
             pinMode(STEPG,OUTPUT);
             GoToPosition serialGoto {0,0,0,1000,1000,0};
 
-            Serial.println((float)commande.substring(5,9).toInt());
-            Serial.println((float)commande.substring(10,14).toInt());
-            Serial.println((float)commande.substring(15,18).toInt());
-
             serialGoto.Go((float)commande.substring(5,9).toInt(),(float)commande.substring(10,14).toInt(),(float)commande.substring(15,18).toInt());
-        }
-        else if(commande.substring(0,4)=="test"){
-            mot.StartMotors();
-        }
-        else if(commande.substring(0,4)=="tes1"){
-            pinMode(STEPD,OUTPUT);
-            pinMode(STEPG,OUTPUT);
-
-            TaskParams Params = {commande.substring(5,9).toInt(), commande.substring(10,14).toInt(), 0, 10};
-
-            mot.EnvoyerDonnees(&Params);
         }
 
     }

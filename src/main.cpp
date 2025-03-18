@@ -9,7 +9,7 @@ int bloque = 0;
 bool modeBluetooth = false;//choix du mode bluetooth ou strategique
 unsigned long startMillis;
 
-bool initial_tbluetooth=true;
+bool initial_tbluetooth=false;
 
 BluetoothSerial SerialBT;
 TaskParams Parameters = {0, 0, 0, 0};
@@ -30,6 +30,8 @@ void setup() {
   SerialBT.setTimeout(50);
 
   xTaskCreate(vsetup_actionneurs,"vsetup_actionneurs", 1000, NULL, 1, NULL);
+
+  mot.StartMotors();
 }
 
 void loop() {
