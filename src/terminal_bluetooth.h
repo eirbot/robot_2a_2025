@@ -5,6 +5,7 @@
 #include "bluetooth.h"
 #include "strat.h"
 #include "GoToPosition.hpp"
+#include "main.h"
 
 void vterminal_bluetooth(void *pvParameters);
 
