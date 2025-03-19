@@ -40,6 +40,10 @@ void GoToPosition::Go(float x_f,float y_f,float cangle_f){
     
     CalculPolar();
 
+    x_initial = x_final;
+    y_initial = y_final;
+    cangle_initial = cangle_final;
+
     Serial.print("r :");
     Serial.print((int)r);
     Serial.print("   pangle: ");
