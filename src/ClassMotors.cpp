@@ -9,6 +9,7 @@ void ClassMotors::vMotors(void* pvParameters){
     TaskParams taskParams;
     int step = 0;
     int steps = 0;
+    float delayMicrosVitesse = 300.0;
     while (1) {
         if(xQueueReceive(instance->xQueue, &taskParams, portMAX_DELAY)==pdPASS){
 
@@ -21,7 +22,9 @@ void ClassMotors::vMotors(void* pvParameters){
             else if(taskParams.angle==0){ //Pour avancer
                 steps = ((int)taskParams.distance / (3.14 * dRoues)) * stepPerRev;
                 step = 0;
-
+                delayMicrosVitesse=850.0;
+                Serial.print("Steps de la ligne droite:   ");
+                Serial.println(steps);
                 if(taskParams.direction == 1){
                     digitalWrite(DIRD,LOW);
                     digitalWrite(DIRG,LOW);
@@ -32,17 +35,32 @@ void ClassMotors::vMotors(void* pvParameters){
                 }
 
                 for(step=0; step<steps; step++){
+
+
+                    if(steps-step<=2800){
+                        delayMicrosVitesse += 0.25;
+                    }
+                    else if(step<2800){
+                        delayMicrosVitesse -= 0.25;
+                    }
+                    
+
+                    // Serial.print("delayMicrosVitesse:   ");
+                    // Serial.println(delayMicrosVitesse);
                     digitalWrite(STEPD,HIGH);
                     digitalWrite(STEPG,HIGH);
-                    esp_rom_delay_us(300);
+                    esp_rom_delay_us((int)delayMicrosVitesse);
                     digitalWrite(STEPD,LOW);
                     digitalWrite(STEPG,LOW);
-                    esp_rom_delay_us(300);
+                    esp_rom_delay_us((int)delayMicrosVitesse);
                 }
             }
             else if(taskParams.distance==0){ //Pour tourner
                 steps = ((int)std::abs(taskParams.angle) / 360.0) * (3.14 * ecartRoues) * stepPerRev / (3.14 * dRoues);
                 step = 0;
+
+                delayMicrosVitesse = 300.0;
+
                 if(taskParams.direction == 0){//0 droite, 1 gauche
                     digitalWrite(DIRD,LOW);
                     digitalWrite(DIRG,HIGH);
@@ -56,10 +74,10 @@ void ClassMotors::vMotors(void* pvParameters){
                     
                     digitalWrite(STEPD,HIGH);
                     digitalWrite(STEPG,HIGH);
-                    esp_rom_delay_us(300);
+                    esp_rom_delay_us((int)delayMicrosVitesse);
                     digitalWrite(STEPD,LOW);
                     digitalWrite(STEPG,LOW);
-                    esp_rom_delay_us(300);
+                    esp_rom_delay_us((int)delayMicrosVitesse);
                 }
             }
             else{
