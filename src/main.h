@@ -8,6 +8,7 @@
 #include "motors.h"
 #include "commande_serie.h"
 #include "actionneur.h"
+#include "tofs.h"
 
 extern BluetoothSerial SerialBT;
 
