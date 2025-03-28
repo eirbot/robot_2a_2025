@@ -9,8 +9,12 @@ int bloque = 0;
 bool modeBluetooth = false;//choix du mode bluetooth ou strategique
 unsigned long startMillis;
 
+bool initial_tbluetooth=true;
+
 BluetoothSerial SerialBT;
 TaskParams Parameters = {0, 0, 0, 0};
+
+GoToPosition serialGoto {0,0,0,1000,1000,0};
 
 void setup() {
   esp_task_wdt_init(10,true);
@@ -30,6 +34,8 @@ void setup() {
   xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
 
   xTaskCreate(vsetup_actionneurs,"vsetup_actionneurs", 1000, NULL, 1, NULL);
+
+  mot.StartMotors();
   
 }
 

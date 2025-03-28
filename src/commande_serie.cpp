@@ -28,9 +28,12 @@ void commande(){ // sert à entrer des commandes via le port serial
             ledcAttachPin(STEPG, MOTOR_G);
             xTaskCreate(vcontrole_bluetooth,"vcontrole_bluetooth", 1000, NULL, 1, NULL);
         }
-        else if(commande.substring(0,10)=="tbluetooth"){            
+        else if(commande.substring(0,10)=="tbluetooth" || initial_tbluetooth){      
+            initial_tbluetooth=false;      
             Serial.println("Mode terminal bluetooth active");
+
             xTaskCreate(vterminal_bluetooth,"vterminal_bluetooth", 4000, NULL, 1, &vterminal_bluetoothHandle);
+
         }
         else if(commande.substring(0,5)=="strat"){
             if(commande.substring(6,7)=="1"){
@@ -71,14 +74,9 @@ void commande(){ // sert à entrer des commandes via le port serial
             digitalWrite(STEPD,LOW);
         }
         else if(commande.substring(0,4)=="goto"){
-            GoToPosition serialGoto {0,0,0,1000,1000,0};
-
-            Serial.println((float)commande.substring(5,9).toInt());
-            Serial.println((float)commande.substring(10,14).toInt());
-            Serial.println((float)commande.substring(15,18).toInt());
-
-            serialGoto.Go((float)commande.substring(5,9).toInt(),(float)commande.substring(10,14).toInt(),(float)commande.substring(15,18).toInt());
+            serialGoto.Go((float)commande.substring(5,9).toInt(),(float)commande.substring(10,14).toInt(),(float)commande.substring(15,19).toInt());
         }
+
     }
     else{
         xTaskCreate(vterminal_bluetooth,"vterminal_bluetooth", 4000, NULL, 1, &vterminal_bluetoothHandle);

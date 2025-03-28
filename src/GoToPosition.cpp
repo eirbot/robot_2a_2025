@@ -14,32 +14,65 @@ void GoToPosition::CalculPolar(){
     float delta_x=x_final-x_initial;
     float delta_y=y_final-y_initial;
     r = sqrt(delta_x*delta_x + delta_y*delta_y);
-    float sigma = std::atan(delta_y/delta_x);
+    float sigma = std::atan2(delta_y,delta_x);
     pangle = M_PI/2 + cangle_initial - sigma;
+    pangleFin = cangle_initial - pangle + cangle_final*M_PI/180.0;
+    
+    Serial.print("cangle_initial: ");
+    Serial.print(cangle_initial);
+    Serial.print("  pangle: ");
+    Serial.print(pangle);
+    Serial.print("  cangle_final: ");
+    Serial.print(cangle_final*M_PI/180.0);
+    Serial.print("  pangleFin: ");
+    Serial.println(pangleFin);
+    
 }
 
-// void vgoto(void *Parameters_temp){
-//     TaskParams* Parameters2 = (TaskParams *) Parameters_temp;
-//     float angle= Parameters2->angle;
-//     float r =Parameters2->distance;
-//     tourner((int)angle,1,10);
-//     avancer((int)(r*3.2*5),0,1);
-
-//     vTaskDelete(NULL);
-// }
-
 void GoToPosition::Go(float x_f,float y_f,float cangle_f){
+
+    pinMode(STEPD,OUTPUT);
+    pinMode(STEPG,OUTPUT);
+
     x_final = x_f;
     y_final = y_f;
     cangle_final = cangle_f;
     
-    Serial.println(x_final);
-    Serial.println(y_final);
-    Serial.println(cangle_final);
-
     CalculPolar();
-    tourner((int)((pangle)*180.0/M_PI), 0, 10);
-    vTaskDelay(2000);
-    avancer((int)r,0,10);
+
+    Serial.print("r :");
+    Serial.print((int)r);
+    Serial.print("   pangle: ");
+    Serial.print((int)((pangle)*180.0/M_PI));
+    Serial.print("   pangleFin: ");
+    Serial.println((int)((pangleFin)*180.0/M_PI));
+
+    TaskParams Params;
+
+    if(pangle>=0){
+        Serial.println("pangle >= 0");
+        Params = {0, (int)((pangle)*180.0/M_PI), 0, 10};
+        mot.EnvoyerDonnees(&Params);
+    }
+    else{
+        Serial.println("pangle < 0");
+        Params = {0, (int)((pangle)*180.0/M_PI), 1, 10};
+        mot.EnvoyerDonnees(&Params);
+    }
+
+    Params = {(int)r, 0, 0, 10};
+    mot.EnvoyerDonnees(&Params);
+
+    //Params = {0, (int)((pangleFin)*180.0/M_PI), 0, 10};
+    if(pangleFin>=0){
+        Serial.println("pangleFin >= 0");
+        Params = {0, (int)((pangleFin)*180.0/M_PI), 0, 10};
+        mot.EnvoyerDonnees(&Params);
+    }
+    else{
+        Serial.println("pangleFin < 0");
+        Params = {0, (int)((pangleFin)*180.0/M_PI), 1, 10};
+        mot.EnvoyerDonnees(&Params);
+    }
 }
 

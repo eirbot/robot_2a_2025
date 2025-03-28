@@ -38,7 +38,7 @@ void vtourner(void *Parameters_temp){
         digitalWrite(DIRD,HIGH);
         digitalWrite(DIRG,LOW);
     }
-    int steps = ((int)Parameters->angle / 360.0) * (3.14 * ecartRoues) * stepPerRev / (3.14 * dRoues);
+    int steps = ((int)std::abs(Parameters->angle) / 360.0) * (3.14 * ecartRoues) * stepPerRev / (3.14 * dRoues);
     for(int k=0 ; k < steps; k++){
         digitalWrite(STEPD,HIGH);
         digitalWrite(STEPG,HIGH);

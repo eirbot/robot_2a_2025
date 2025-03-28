@@ -3,6 +3,7 @@
 
 
 #include "Arduino.h"
+#include <cmath>
 
 #include "common.h"
 #include "tofs.h"

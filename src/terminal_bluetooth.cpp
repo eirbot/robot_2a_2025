@@ -67,7 +67,7 @@ void vterminal_bluetooth(void *pvParameters){
       }
       else if (id.startsWith("servob")) {      
         bServof(value);
-    }
+      }
       else if (id.startsWith("reset")) {      
           hServof(160);
           gServof(0);
@@ -134,6 +134,19 @@ void vterminal_bluetooth(void *pvParameters){
       }
       else if (id.startsWith("stop")) {      
         vTaskDelete(vterminal_bluetoothHandle);
+      }
+      else if(receivedData.substring(0,4)=="goto"){
+        SerialBT.println("start goto");
+        serialGoto.Go((float)receivedData.substring(5,9).toInt(),(float)receivedData.substring(10,14).toInt(),(float)receivedData.substring(15,19).toInt());
+        // pinMode(STEPD,OUTPUT);
+        // pinMode(STEPG,OUTPUT);
+        // GoToPosition serialGoto {0,0,0,1000,1000,0};
+
+        // SerialBT.println((float)receivedData.substring(5,9).toInt());
+        // SerialBT.println((float)receivedData.substring(10,14).toInt());
+        // SerialBT.println((float)receivedData.substring(15,18).toInt());
+
+        // serialGoto.Go((float)receivedData.substring(5,9).toInt(),(float)receivedData.substring(10,14).toInt(),(float)receivedData.substring(15,18).toInt());
       }
     }
     vTaskDelay(pdMS_TO_TICKS(100));
