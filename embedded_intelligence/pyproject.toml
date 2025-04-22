@@ -8,8 +8,8 @@ readme = "README.md"
 package-mode = false
 
 [tool.poetry.dependencies]
-python = "3.12.3"
-async-pyserial = "^0.2.3"
+python = "3.11.2"
+async-pyserial = "0.2.3"
 
 
 [build-system]
