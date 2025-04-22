@@ -1,0 +1,1 @@
+async-pyserial==0.2.3 ; python_full_version == "3.11.2"
