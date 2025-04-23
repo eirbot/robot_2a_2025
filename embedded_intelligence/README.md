@@ -5,49 +5,24 @@ dans une carte de type Raspberry Pi.
 
 ## Requirements
 
-Avoir la version `3.11.2` de Python installée sur la machine.
+<!-- TODO: Renseigner cette section -->
 
 ## Installation des dépendances
 
-```sh
-# $PYTHON désigne l'exécutable de python 3.11.2
-$PYTHON -m venv eirbot_venv
-source eirbot_venv/bin/activate
-pip install -r requirements.txt
-```
+<!-- TODO: Renseigner cette section -->
 
 ## Configuration du port série
 
 Cet automate communique avec la carte STM-32 via un port série qui est à
-définir dans la variable `PORT` du fichier `esp_serial.py`
+définir dans  <!-- TODO: Renseigner où le définir -->
 
 ## Exécuter le script expérimental de communication full-duplex
 
-Si ce n'est déjà fait, sourcer le terminal dans l'`eirbot_venv`
-
-```sh
-source eirbot_venv/bin/activate
-```
-
-Enfin, lancer le programme
-
-```sh
-python esp_serial.py
-```
+<!-- TODO: Renseigner cette section -->
 
 ## Exécuter l'automate
 
-Si ce n'est déjà fait, sourcer le terminal dans l'`eirbot_venv`
-
-```sh
-source eirbot_venv/bin/activate
-```
-
-Enfin, lancer le programme
-
-```sh
-python main.py
-```
+<!-- TODO: Renseigner cette section -->
 
 ## TODO
 
