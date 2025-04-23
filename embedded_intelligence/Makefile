@@ -1,2 +1,2 @@
 transfer:
-	rsync -r . rasp:~/coupe/embedded_intelligence/
+	rsync --filter=':- .gitignore' -r ./ rasp:~/coupe/embedded_intelligence/
