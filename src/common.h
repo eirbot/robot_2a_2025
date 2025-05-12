@@ -4,11 +4,15 @@
 #include "esp_task_wdt.h"
 #include "ClassMotors.hpp"
 #include "GoToPosition.hpp"
+#include "AccelStepper.h"
 
 #define STEPD 18 
 #define DIRD 23  
 #define DIRG 5
 #define STEPG 19
+
+#define SPEEDMAX 5000
+#define ACCELMAX 1000
 
 #define MOTOR_G 6
 #define MOTOR_D 5
@@ -22,6 +26,10 @@
 
 extern TaskHandle_t vavancerHandle;
 extern TaskHandle_t vtournerHandle;
+
+// Déclaration des deux moteurs (type DRIVER = step/dir)
+extern AccelStepper moteurGauche; 
+extern AccelStepper moteurDroit; 
 
 //angle en degres
 #define tourner(angle,direction,vitesse) \

@@ -24,6 +24,12 @@ void setup() {
   pinMode(STEPD,OUTPUT);
   pinMode(STEPG,OUTPUT);
 
+  // Config des vitesses max et accélérations
+  moteurGauche.setMaxSpeed(SPEEDMAX);
+  moteurGauche.setAcceleration(ACCELMAX);
+
+  moteurDroit.setMaxSpeed(SPEEDMAX);
+  moteurDroit.setAcceleration(ACCELMAX);
 
   Serial.begin(115200);
   startMillis = millis();
@@ -31,7 +37,7 @@ void setup() {
   SerialBT.begin("ESP32test");
   SerialBT.setTimeout(50);
 
-  xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
+  // xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
 
   xTaskCreate(vsetup_actionneurs,"vsetup_actionneurs", 1000, NULL, 1, NULL);
 
@@ -41,6 +47,6 @@ void setup() {
 
 void loop() {
   commande();
-  Serial.println(frontClear_tof); // This will now work correctly
+  // Serial.println(frontClear_tof); // This will now work correctly
   vTaskDelay(pdMS_TO_TICKS(1000));
 }

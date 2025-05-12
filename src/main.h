@@ -2,9 +2,7 @@
 #define MAIN_H
 
 #include "Arduino.h"
-
 #include "common.h"
-#include "bluetooth.h"
 #include "motors.h"
 #include "commande_serie.h"
 #include "actionneur.h"
