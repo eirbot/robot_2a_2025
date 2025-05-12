@@ -31,6 +31,8 @@ void setup() {
   SerialBT.begin("ESP32test");
   SerialBT.setTimeout(50);
 
+  xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
+
   xTaskCreate(vsetup_actionneurs,"vsetup_actionneurs", 1000, NULL, 1, NULL);
 
   mot.StartMotors();
@@ -39,5 +41,6 @@ void setup() {
 
 void loop() {
   commande();
+  Serial.println(frontClear_tof); // This will now work correctly
   vTaskDelay(pdMS_TO_TICKS(1000));
 }

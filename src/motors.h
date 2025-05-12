@@ -6,6 +6,7 @@
 #include <cmath>
 
 #include "common.h"
+#include "tofs.h"
 
 typedef struct {
     int distance;

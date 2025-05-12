@@ -6,8 +6,8 @@
 #include "GoToPosition.hpp"
 
 #define STEPD 18 
-#define DIRD 22  
-#define DIRG 21
+#define DIRD 23  
+#define DIRG 5
 #define STEPG 19
 
 #define MOTOR_G 6
@@ -16,6 +16,9 @@
 #define dRoues 100.0
 #define stepPerRev 3200
 #define ecartRoues 253.0
+
+#define vitesse_nominale 100
+#define stop_distance 200
 
 extern TaskHandle_t vavancerHandle;
 extern TaskHandle_t vtournerHandle;
