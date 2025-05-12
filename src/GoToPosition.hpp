@@ -13,6 +13,16 @@
 class GoToPosition{
 
     public:
+    /**
+     * @brief Construct a new Go To Position object
+     * 
+     * @param x_i para
+     * @param y_i 
+     * @param cangle_i 
+     * @param x_f 
+     * @param y_f 
+     * @param cangle_f 
+     */
     GoToPosition(const float &x_i,const float &y_i,const float &cangle_i, const float &x_f,const float &y_f,const float &cangle_f);
     float x_initial;
     float y_initial;
