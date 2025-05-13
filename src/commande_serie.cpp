@@ -6,14 +6,14 @@ void commande(){ // sert à entrer des commandes via le port serial
         String var = commande.substring(4);
         if(commande.substring(0,4)=="help"){
             Serial.println("TUTO utilisation bas niveau\n\n"
-            "Mode teleguide a la manette bluetooth\n"
-            "   jbluetooth\n\n"
             "Mode terminal bluetooth\n"
             "   tbluetooth\n\n"
             "Mode execution d'une strategie\n"
             "   strat [0,...]\n"
-            "Stoper le robot\n"
-            "   stop"
+            "Envoie une pos au robot pour s'y rendre\n"
+            "   goto [x] [y] [angle]\n"
+            "Mode carre\n"
+            "   carre\n"
             );
         }
         else if(commande.substring(0,3)=="rep"){
@@ -27,47 +27,28 @@ void commande(){ // sert à entrer des commandes via le port serial
 
         }
         else if(commande.substring(0,5)=="strat"){
+            if(commande.substring(6,7)=="0"){
+                Serial.println(commande.substring(5).substring(0,3).toInt());
+                vstrat0();
+            }
             if(commande.substring(6,7)=="1"){
                 Serial.println(commande.substring(5).substring(0,3).toInt());
-                pinMode(STEPD,OUTPUT);
-                pinMode(STEPG,OUTPUT);
-                xTaskCreate(vstrat1,"vstrat1", 4096, NULL, 1, &vstratHandle ); 
+                vstrat1();
             }
-            else if(commande.substring(6,7)=="2"){
+            if(commande.substring(6,7)=="2"){
                 Serial.println(commande.substring(5).substring(0,3).toInt());
-                pinMode(STEPD,OUTPUT);
-                pinMode(STEPG,OUTPUT);
-                xTaskCreate(vstrat2,"vstrat2", 4096, NULL, 1, &vstratHandle ); 
+                vstrat2(); 
             }
-            
-        }
-        else if(commande.substring(0,5)=="stop"){
-            if(vavancerHandle != NULL){
-                vTaskDelete(vavancerHandle);
-                vavancerHandle = NULL;
-            }
-            if(vtournerHandle != NULL){
-                vTaskDelete(vtournerHandle);
-                vtournerHandle = NULL;
-            }
-            if(vstratHandle != NULL){
-                vTaskDelete(vstratHandle);   
-                vstratHandle = NULL;
-            }
-            if(vterminal_bluetoothHandle != NULL){
-                vTaskDelete(vterminal_bluetoothHandle);
-                vterminal_bluetoothHandle = NULL;
-            }
-            
-            pinMode(STEPD,OUTPUT);
-            pinMode(STEPG,OUTPUT);
-            digitalWrite(STEPG,LOW);
-            digitalWrite(STEPD,LOW);
         }
         else if(commande.substring(0,4)=="goto"){
-            serialGoto.Go((float)commande.substring(5,9).toInt(),(float)commande.substring(10,14).toInt(),(float)commande.substring(15,19).toInt());
+            serialGoto.Go((float)commande.substring(5,9).toInt(),(float)commande.substring(10,14).toInt(),(float)commande.substring(15,19).toInt(), commande.substring(20,21).toInt());
         }
-
+        else if(commande.substring(0,5)=="carre"){
+            serialGoto.Go(0,300,90);
+            serialGoto.Go(300,300,180);
+            serialGoto.Go(300,0,270);
+            serialGoto.Go(0,0,0);
+        }
     }
     else{
         xTaskCreate(vterminal_bluetooth,"vterminal_bluetooth", 4000, NULL, 1, &vterminal_bluetoothHandle);

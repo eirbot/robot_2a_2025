@@ -3,7 +3,6 @@
 
 #include "Arduino.h"
 #include "common.h"
-#include "motors.h"
 #include "commande_serie.h"
 #include "actionneur.h"
 #include "tofs.h"

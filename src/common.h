@@ -24,6 +24,13 @@
 #define vitesse_nominale 100
 #define stop_distance 200
 
+typedef struct {
+    int distance;
+    int angle;
+    int direction;
+    int vitesse;
+} TaskParams;
+
 extern TaskHandle_t vavancerHandle;
 extern TaskHandle_t vtournerHandle;
 

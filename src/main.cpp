@@ -19,17 +19,14 @@ GoToPosition serialGoto {0,0,0,1000,1000,0};
 void setup() {
   esp_task_wdt_init(10,true);
 
-  pinMode(DIRD,OUTPUT);
-  pinMode(DIRG,OUTPUT);
-  pinMode(STEPD,OUTPUT);
-  pinMode(STEPG,OUTPUT);
-
   // Config des vitesses max et accélérations
   moteurGauche.setMaxSpeed(SPEEDMAX);
   moteurGauche.setAcceleration(ACCELMAX);
+  moteurDroit.setCurrentPosition(0);
 
   moteurDroit.setMaxSpeed(SPEEDMAX);
   moteurDroit.setAcceleration(ACCELMAX);
+  moteurGauche.setCurrentPosition(0);
 
   Serial.begin(115200);
   startMillis = millis();
