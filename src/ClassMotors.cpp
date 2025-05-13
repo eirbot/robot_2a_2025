@@ -12,6 +12,10 @@ void ClassMotors::vMotors(void* pvParameters){
     while (1) {
         if(xQueueReceive(instance->xQueue, &taskParams, portMAX_DELAY)==pdPASS){
 
+            float speed = (taskParams.vitesse * stepPerRev)/((3.14 * dRoues));
+            moteurGauche.setMaxSpeed(speed);
+            moteurDroit.setMaxSpeed(speed);
+
             if(taskParams.angle==0 && taskParams.distance==0){
                 Serial.println("Tout les parametres a 0");
             }

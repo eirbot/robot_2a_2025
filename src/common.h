@@ -11,8 +11,8 @@
 #define DIRG 5
 #define STEPG 19
 
-#define SPEEDMAX 5000
-#define ACCELMAX 1000
+#define SPEEDMAX 10000
+#define ACCELMAX 3000
 
 #define MOTOR_G 6
 #define MOTOR_D 5

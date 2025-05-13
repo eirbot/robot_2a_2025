@@ -13,17 +13,18 @@ GoToPosition::GoToPosition(const float &x_i,const float &y_i,const float &cangle
 void GoToPosition::CalculPolar(){
     float delta_x=x_final-x_initial;
     float delta_y=y_final-y_initial;
+
     r = sqrt(delta_x*delta_x + delta_y*delta_y);
-    float sigma = std::atan2(delta_y,delta_x);
-    pangle = M_PI/2 + cangle_initial - sigma;
-    pangleFin = cangle_initial - pangle + cangle_final*M_PI/180.0;
+    float sigma = std::atan2(delta_y,delta_x) * RAD_TO_DEG;
+    pangle = 90 + cangle_initial - sigma;
+    pangleFin = -(cangle_initial - pangle + cangle_final);
     
     Serial.print("cangle_initial: ");
     Serial.print(cangle_initial);
     Serial.print("  pangle: ");
     Serial.print(pangle);
     Serial.print("  cangle_final: ");
-    Serial.print(cangle_final*M_PI/180.0);
+    Serial.print(cangle_final);
     Serial.print("  pangleFin: ");
     Serial.println(pangleFin);
     
@@ -31,52 +32,32 @@ void GoToPosition::CalculPolar(){
 
 void GoToPosition::Go(float x_f,float y_f,float cangle_f){
 
-    pinMode(STEPD,OUTPUT);
-    pinMode(STEPG,OUTPUT);
-
     x_final = x_f;
     y_final = y_f;
     cangle_final = cangle_f;
     
     CalculPolar();
 
-    x_initial = x_final;
-    y_initial = y_final;
-    cangle_initial = cangle_final;
-
     Serial.print("r :");
     Serial.print((int)r);
     Serial.print("   pangle: ");
-    Serial.print((int)((pangle)*180.0/M_PI));
+    Serial.print(pangle);
     Serial.print("   pangleFin: ");
-    Serial.println((int)((pangleFin)*180.0/M_PI));
+    Serial.println(pangleFin);
 
     TaskParams Params;
 
-    if(pangle>=0){
-        Serial.println("pangle >= 0");
-        Params = {0, (int)((pangle)*180.0/M_PI), 0, 10};
-        mot.EnvoyerDonnees(&Params);
-    }
-    else{
-        Serial.println("pangle < 0");
-        Params = {0, (int)((pangle)*180.0/M_PI), 1, 10};
-        mot.EnvoyerDonnees(&Params);
-    }
-
-    Params = {(int)r, 0, 0, 10};
+    Params = {0, (int)((pangle)), (pangle > 0) ? 1 : 0, 500};
     mot.EnvoyerDonnees(&Params);
 
-    //Params = {0, (int)((pangleFin)*180.0/M_PI), 0, 10};
-    if(pangleFin>=0){
-        Serial.println("pangleFin >= 0");
-        Params = {0, (int)((pangleFin)*180.0/M_PI), 0, 10};
-        mot.EnvoyerDonnees(&Params);
-    }
-    else{
-        Serial.println("pangleFin < 0");
-        Params = {0, (int)((pangleFin)*180.0/M_PI), 1, 10};
-        mot.EnvoyerDonnees(&Params);
-    }
+    Params = {(int)r, 0, 0, 600};
+    mot.EnvoyerDonnees(&Params);
+
+    Params = {0, (int)((pangleFin)), (pangleFin > 0) ? 1 : 0, 500};
+    mot.EnvoyerDonnees(&Params);
+
+    x_initial = x_final;
+    y_initial = y_final;
+    cangle_initial = cangle_final;
 }
 
