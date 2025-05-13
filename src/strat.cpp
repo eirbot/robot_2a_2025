@@ -1,7 +1,7 @@
 #include "strat.h"
 
-void vstrat0(){
-  Serial.println("Stratégie 2 en cours d'exécution...");
+void vstrat0(){ // 1 Canette (bleue)
+  Serial.println("Stratégie 0 en cours d'exécution...");
   // Position initiale
   float x = 0, y = 0;
   float angle = 0;
@@ -43,7 +43,7 @@ void vstrat0(){
   } 
 }
 
-void vstrat1(){
+void vstrat1(){ // 2 Canettes (bleue)
   Serial.println("Stratégie 1 en cours d'exécution...");
   // Position initiale
   float x = 0, y = 0;
@@ -113,6 +113,6 @@ void vstrat1(){
   serialGoto.Go(x, y, angle, 0);
 }
 
-void vstrat2(){
-  
+void vstrat2(){ // 2 Cannettes + Banniere (blue)
+
 }

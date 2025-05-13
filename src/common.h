@@ -6,6 +6,14 @@
 #include "GoToPosition.hpp"
 #include "AccelStepper.h"
 
+// a determiner pour les pins des btn et switch
+#define BTNG 34
+#define BTND 35
+#define SWITCH1 39 //Gauche
+#define SWITCH2 36
+#define SWITCH3 37
+#define SWITCH4 38 //Droite
+
 #define STEPD 18 
 #define DIRD 23  
 #define DIRG 5
