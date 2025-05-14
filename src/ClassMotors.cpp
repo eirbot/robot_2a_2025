@@ -36,6 +36,7 @@ void ClassMotors::vMotors(void* pvParameters){
                 while (moteurGauche.distanceToGo() != 0 || moteurDroit.distanceToGo() != 0) { //Goooo
                     moteurGauche.run();
                     moteurDroit.run();
+                    
                 }
                 
             }
@@ -54,20 +55,29 @@ void ClassMotors::vMotors(void* pvParameters){
                 while (moteurGauche.distanceToGo() != 0 || moteurDroit.distanceToGo() != 0) { //Goooo
                     moteurGauche.run();
                     moteurDroit.run();
+           
                 }
             }
             else{
                 Serial.println("il faut au moins un parametre a 0 entre angle et distance");
             }
+            vTaskDelay(100);
         }
     }
 }
 
 void ClassMotors::StartMotors(){
-    xTaskCreate(vMotors, "vMotors", 5000, this, 1, NULL);
+    xTaskCreate(vMotors, "vMotors", 10000, this, 1, NULL);
 }
 
 void ClassMotors::EnvoyerDonnees(void* Params){
     TaskParams* ptaskParams = (TaskParams*)(Params); //Merci au patron de l'année derrnière en dépit de ses maigres performances concernant la coupe
     xQueueSend(xQueue, ptaskParams, portMAX_DELAY);
+}
+
+void ClassMotors::WaitUntilDone() {
+    // Boucle bloquante tant que la file contient des messages
+    while (uxQueueMessagesWaiting(xQueue) > 0) {
+        vTaskDelay(pdMS_TO_TICKS(10)); // Petite pause pour ne pas bloquer l'ordonnanceur
+    }
 }

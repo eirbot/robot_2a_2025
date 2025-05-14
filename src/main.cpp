@@ -44,6 +44,7 @@ void setup() {
 
 void loop() {
   commande();
+  
   // Serial.println(frontClear_tof); // This will now work correctly
   vTaskDelay(pdMS_TO_TICKS(1000));
 }

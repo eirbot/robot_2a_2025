@@ -32,6 +32,19 @@ void GoToPosition::CalculPolar() {
     if (pangleFin > 180) pangleFin -= 360;
     if (pangleFin < -180) pangleFin += 360;
 
+    if (abs(pangle) > 90){
+        pangle += 180.0;
+        pangleFin += 180.0;
+        r = -r;
+
+        // Normalisation dans [-180 ; 180]
+        if (pangle > 180) pangle -= 360;
+        if (pangle < -180) pangle += 360;
+
+        if (pangleFin > 180) pangleFin -= 360;
+        if (pangleFin < -180) pangleFin += 360;
+    }
+
     Serial.print("cangle_initial: ");
     Serial.print(cangle_initial);
     Serial.print("  sigma: ");
@@ -44,39 +57,19 @@ void GoToPosition::CalculPolar() {
     Serial.println(pangleFin);
 }
 
-void GoToPosition::Go(float x_f,float y_f,float cangle_f, int reculer) {
+void GoToPosition::Go(float x_f,float y_f,float cangle_f) {
 
+    TaskParams Params;
     x_final = x_f;
     y_final = y_f;
     cangle_final = cangle_f;
     
     CalculPolar();
 
-    if (reculer) {
-        pangle += 180.0;
-        pangleFin += 180.0;
-        
-        // Normalisation dans [-180 ; 180]
-        if (pangle > 180) pangle -= 360;
-        if (pangle < -180) pangle += 360;
-
-        if (pangleFin > 180) pangleFin -= 360;
-        if (pangleFin < -180) pangleFin += 360;
-    }
-
-    Serial.print("r :");
-    Serial.print((int)r);
-    Serial.print("   pangle: ");
-    Serial.print(pangle);
-    Serial.print("   pangleFin: ");
-    Serial.println(pangleFin);
-
-    TaskParams Params;
-
     Params = {0, (int)(abs(pangle)), (pangle > 0) ? 1 : 0, 500};
     mot.EnvoyerDonnees(&Params);
 
-    Params = {(int)r, 0, reculer, 600};
+    Params = {(int)r, 0, 0, 600};
     mot.EnvoyerDonnees(&Params);
 
     Params = {0, (int)(abs(pangleFin)), (pangleFin > 0) ? 1 : 0, 500};
@@ -100,8 +93,4 @@ void GoToPosition::AllerEtSet(float x_f, float y_f, float cangle_f, float x_set,
     Serial.print("x_set: "); Serial.print(x_set);
     Serial.print("  y_set: "); Serial.print(y_set);
     Serial.print("  cangle_set: "); Serial.println(cangle_set);
-}
-
-void GoToPosition::waitPos() {
-    while (moteurGauche.distanceToGo() != 0 || moteurDroit.distanceToGo() != 0);
 }

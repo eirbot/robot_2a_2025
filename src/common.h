@@ -46,17 +46,6 @@ extern TaskHandle_t vtournerHandle;
 extern AccelStepper moteurGauche; 
 extern AccelStepper moteurDroit; 
 
-//angle en degres
-#define tourner(angle,direction,vitesse) \
-  Parameters = {0, angle, direction, vitesse};\
-  xTaskCreate(vtourner,"vtourner", 1000, &Parameters, 1, &vtournerHandle); 
-  
-//distance en cm
-#define avancer(distance,direction,vitesse) \
-  Parameters = {distance, 0, direction, vitesse};\
-  xTaskCreate(vavancer,"vavancer", 1000, &Parameters, 1, &vavancerHandle); 
-
-
 extern TaskHandle_t vstratHandle;
 extern TaskHandle_t vterminal_bluetoothHandle;
 

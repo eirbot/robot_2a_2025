@@ -11,6 +11,7 @@ public:
     ClassMotors();
     static void vMotors(void* pvParameters);
 
+    void WaitUntilDone();
     void StartMotors();
     void EnvoyerDonnees(void * Params);
 private:

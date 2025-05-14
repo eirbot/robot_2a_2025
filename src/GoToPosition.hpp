@@ -36,9 +36,8 @@ class GoToPosition{
     float pangle;
     float pangleFin;
 
-    void Go(float x_f,float y_f,float cangle_f, int reculer=0);
+    void Go(float x_f,float y_f,float cangle_f);
     void AllerEtSet(float x_f, float y_f, float cangle_f, float x_set, float y_set, float cangle_set);
-    void waitPos();
 
     private:
     void CalculPolar();

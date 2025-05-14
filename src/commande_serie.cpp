@@ -41,7 +41,7 @@ void commande(){ // sert à entrer des commandes via le port serial
             }
         }
         else if(commande.substring(0,4)=="goto"){
-            serialGoto.Go((float)commande.substring(5,9).toInt(),(float)commande.substring(10,14).toInt(),(float)commande.substring(15,19).toInt(), commande.substring(20,21).toInt());
+            serialGoto.Go((float)commande.substring(5,9).toInt(),(float)commande.substring(10,14).toInt(),(float)commande.substring(15,19).toInt());
         }
         else if(commande.substring(0,5)=="carre"){
             serialGoto.Go(0,300,90);
