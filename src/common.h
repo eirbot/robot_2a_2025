@@ -4,11 +4,23 @@
 #include "esp_task_wdt.h"
 #include "ClassMotors.hpp"
 #include "GoToPosition.hpp"
+#include "AccelStepper.h"
+
+// a determiner pour les pins des btn et switch
+#define BTNG 34
+#define BTND 35
+#define SWITCH1 39 //Gauche
+#define SWITCH2 36
+#define SWITCH3 37
+#define SWITCH4 38 //Droite
 
 #define STEPD 18 
 #define DIRD 23  
 #define DIRG 5
 #define STEPG 19
+
+#define SPEEDMAX 10000
+#define ACCELMAX 3000
 
 #define MOTOR_G 6
 #define MOTOR_D 5
@@ -20,8 +32,19 @@
 #define vitesse_nominale 100
 #define stop_distance 200
 
+typedef struct {
+    int distance;
+    int angle;
+    int direction;
+    int vitesse;
+} TaskParams;
+
 extern TaskHandle_t vavancerHandle;
 extern TaskHandle_t vtournerHandle;
+
+// Déclaration des deux moteurs (type DRIVER = step/dir)
+extern AccelStepper moteurGauche; 
+extern AccelStepper moteurDroit; 
 
 //angle en degres
 #define tourner(angle,direction,vitesse) \

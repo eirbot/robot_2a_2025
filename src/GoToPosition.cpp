@@ -10,29 +10,41 @@ GoToPosition::GoToPosition(const float &x_i,const float &y_i,const float &cangle
     cangle_final = cangle_f;
 }
 
-void GoToPosition::CalculPolar(){
-    float delta_x=x_final-x_initial;
-    float delta_y=y_final-y_initial;
-    r = sqrt(delta_x*delta_x + delta_y*delta_y);
-    float sigma = std::atan2(delta_y,delta_x);
-    pangle = M_PI/2 + cangle_initial - sigma;
-    pangleFin = cangle_initial - pangle + cangle_final*M_PI/180.0;
-    
+void GoToPosition::CalculPolar() {
+    float delta_x = x_final - x_initial;
+    float delta_y = y_final - y_initial;
+
+    r = sqrt(delta_x * delta_x + delta_y * delta_y);
+
+    // Angle vers la cible en degrés
+    float sigma = atan2(delta_x, delta_y) * RAD_TO_DEG;
+
+    // Angle à tourner pour faire face à la cible
+    pangle = sigma - cangle_initial;
+
+    // Angle à tourner une fois arrivé pour atteindre la bonne orientation
+    pangleFin = cangle_final - sigma;
+
+    // Normalisation dans [-180 ; 180]
+    if (pangle > 180) pangle -= 360;
+    if (pangle < -180) pangle += 360;
+
+    if (pangleFin > 180) pangleFin -= 360;
+    if (pangleFin < -180) pangleFin += 360;
+
     Serial.print("cangle_initial: ");
     Serial.print(cangle_initial);
+    Serial.print("  sigma: ");
+    Serial.print(sigma);
     Serial.print("  pangle: ");
     Serial.print(pangle);
     Serial.print("  cangle_final: ");
-    Serial.print(cangle_final*M_PI/180.0);
+    Serial.print(cangle_final);
     Serial.print("  pangleFin: ");
     Serial.println(pangleFin);
-    
 }
 
-void GoToPosition::Go(float x_f,float y_f,float cangle_f){
-
-    pinMode(STEPD,OUTPUT);
-    pinMode(STEPG,OUTPUT);
+void GoToPosition::Go(float x_f,float y_f,float cangle_f, int reculer) {
 
     x_final = x_f;
     y_final = y_f;
@@ -40,43 +52,56 @@ void GoToPosition::Go(float x_f,float y_f,float cangle_f){
     
     CalculPolar();
 
-    x_initial = x_final;
-    y_initial = y_final;
-    cangle_initial = cangle_final;
+    if (reculer) {
+        pangle += 180.0;
+        pangleFin += 180.0;
+        
+        // Normalisation dans [-180 ; 180]
+        if (pangle > 180) pangle -= 360;
+        if (pangle < -180) pangle += 360;
+
+        if (pangleFin > 180) pangleFin -= 360;
+        if (pangleFin < -180) pangleFin += 360;
+    }
 
     Serial.print("r :");
     Serial.print((int)r);
     Serial.print("   pangle: ");
-    Serial.print((int)((pangle)*180.0/M_PI));
+    Serial.print(pangle);
     Serial.print("   pangleFin: ");
-    Serial.println((int)((pangleFin)*180.0/M_PI));
+    Serial.println(pangleFin);
 
     TaskParams Params;
 
-    if(pangle>=0){
-        Serial.println("pangle >= 0");
-        Params = {0, (int)((pangle)*180.0/M_PI), 0, 10};
-        mot.EnvoyerDonnees(&Params);
-    }
-    else{
-        Serial.println("pangle < 0");
-        Params = {0, (int)((pangle)*180.0/M_PI), 1, 10};
-        mot.EnvoyerDonnees(&Params);
-    }
-
-    Params = {(int)r, 0, 0, 10};
+    Params = {0, (int)(abs(pangle)), (pangle > 0) ? 1 : 0, 500};
     mot.EnvoyerDonnees(&Params);
 
-    //Params = {0, (int)((pangleFin)*180.0/M_PI), 0, 10};
-    if(pangleFin>=0){
-        Serial.println("pangleFin >= 0");
-        Params = {0, (int)((pangleFin)*180.0/M_PI), 0, 10};
-        mot.EnvoyerDonnees(&Params);
-    }
-    else{
-        Serial.println("pangleFin < 0");
-        Params = {0, (int)((pangleFin)*180.0/M_PI), 1, 10};
-        mot.EnvoyerDonnees(&Params);
-    }
+    Params = {(int)r, 0, reculer, 600};
+    mot.EnvoyerDonnees(&Params);
+
+    Params = {0, (int)(abs(pangleFin)), (pangleFin > 0) ? 1 : 0, 500};
+    mot.EnvoyerDonnees(&Params);
+
+    x_initial = x_final;
+    y_initial = y_final;
+    cangle_initial = cangle_final;
 }
 
+void GoToPosition::AllerEtSet(float x_f, float y_f, float cangle_f, float x_set, float y_set, float cangle_set) {
+    // D'abord on va à la position demandée
+    Go(x_f, y_f, cangle_f);
+
+    // Puis on force la position interne du robot
+    x_initial = x_set;
+    y_initial = y_set;
+    cangle_initial = cangle_set;
+
+    Serial.println("Position interne mise à jour manuellement après déplacement.");
+    Serial.print("x_set: "); Serial.print(x_set);
+    Serial.print("  y_set: "); Serial.print(y_set);
+    Serial.print("  cangle_set: "); Serial.println(cangle_set);
+}
+
+void GoToPosition::waitPos() {
+    while (moteurGauche.distanceToGo() != 0 || moteurDroit.distanceToGo() != 0);
+}

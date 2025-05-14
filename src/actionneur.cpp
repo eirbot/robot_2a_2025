@@ -32,16 +32,16 @@ void vsetup_actionneurs(void *pvParameters){
 
 void pousserCanettes(){
   hServo.write(0);
-  delay(500);
+  vTaskDelay(500);
   avancerCanettes();
-  delay(900);
+  vTaskDelay(900);
   reculerCanettes();
-  delay(900);
+  vTaskDelay(900);
   arreterCanettes();
   gServo.write(60);
   dServo.write(0);
   hServo.write(160);
-  delay(800);
+  vTaskDelay(800);
 }
 
 void avancerCanettes() {

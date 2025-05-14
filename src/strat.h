@@ -2,11 +2,14 @@
 #define STRAT_H
 
 #include "Arduino.h"
-#include "motors.h"
+#include "ClassMotors.hpp"
+#include "GoToPosition.hpp"
+#include "main.h"
 #include "common.h"
 #include "actionneur.h"
 
-void vstrat1(void *pvParameters);
-void vstrat2(void *pvParameters);
+void vstrat0();
+void vstrat1();
+void vstrat2();
 
 #endif

@@ -120,13 +120,14 @@ void vterminal_bluetooth(void *pvParameters){
         // delay(2000);
       }
       else if (id.startsWith("strat")) {    
-        if (value == 1) {
-          xTaskCreate(vstrat1,"vstrat1", 4096, NULL, 1, &vstratHandle);
-          ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+        if (value == 0) {
+          vstrat0();
+        }        
+        else if (value == 1) {
+          vstrat1();
         }
         else {
-          xTaskCreate(vstrat2,"vstrat2", 4096, NULL, 1, &vstratHandle);
-          ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+          vstrat2();
         }  
       }
       else if (id.startsWith("quit")) {      

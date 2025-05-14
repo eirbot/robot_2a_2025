@@ -19,11 +19,14 @@ GoToPosition serialGoto {0,0,0,1000,1000,0};
 void setup() {
   esp_task_wdt_init(10,true);
 
-  pinMode(DIRD,OUTPUT);
-  pinMode(DIRG,OUTPUT);
-  pinMode(STEPD,OUTPUT);
-  pinMode(STEPG,OUTPUT);
+  // Config des vitesses max et accélérations
+  moteurGauche.setMaxSpeed(SPEEDMAX);
+  moteurGauche.setAcceleration(ACCELMAX);
+  moteurDroit.setCurrentPosition(0);
 
+  moteurDroit.setMaxSpeed(SPEEDMAX);
+  moteurDroit.setAcceleration(ACCELMAX);
+  moteurGauche.setCurrentPosition(0);
 
   Serial.begin(115200);
   startMillis = millis();
@@ -31,7 +34,7 @@ void setup() {
   SerialBT.begin("ESP32test");
   SerialBT.setTimeout(50);
 
-  xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
+  // xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
 
   xTaskCreate(vsetup_actionneurs,"vsetup_actionneurs", 1000, NULL, 1, NULL);
 
@@ -41,6 +44,6 @@ void setup() {
 
 void loop() {
   commande();
-  Serial.println(frontClear_tof); // This will now work correctly
+  // Serial.println(frontClear_tof); // This will now work correctly
   vTaskDelay(pdMS_TO_TICKS(1000));
 }
