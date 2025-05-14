@@ -69,9 +69,7 @@ void vterminal_bluetooth(void *pvParameters){
         bServof(value);
       }
       else if (id.startsWith("reset")) {      
-          hServof(160);
-          gServof(0);
-          dServof(60);
+          resetActionneurs();
       }
       else if (id.startsWith("pousser")) {      
           pousserCanettes();

@@ -26,6 +26,7 @@ void dServof(int angle);
 void hServof(int angle);
 void bServof(int angle);
 void vsetup_actionneurs(void *pvParameters);
+void resetActionneurs();
 
 #endif
 

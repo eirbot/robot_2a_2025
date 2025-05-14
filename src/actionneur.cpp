@@ -1,47 +1,55 @@
 #include "actionneur.h"
 
-Servo gServo;
-Servo dServo;
-Servo hServo;
-Servo bServo;
+Servo bgServo;
+Servo bdServo;
+Servo hdServo;
+Servo hgServo;
 
 void vsetup_actionneurs(void *pvParameters){
 
   pinMode(motorIN1, OUTPUT);
   pinMode(motorIN2, OUTPUT);
 
-  gServo.setPeriodHertz(50); // standard 50 hz servo
-	gServo.attach(14, 1000, 2000); // Attach the servo after it has been detatched
+  bgServo.setPeriodHertz(50); // standard 50 hz servo
+	bgServo.attach(14, 1000, 2000); // Attach the servo after it has been detatched
 
-  dServo.setPeriodHertz(50); // standard 50 hz servo
-	dServo.attach(27, 1000, 2000); // Attach the servo after it has been detatched
+  bdServo.setPeriodHertz(50); // standard 50 hz servo
+	bdServo.attach(27, 1000, 2000); // Attach the servo after it has been detatched
 
-  hServo.setPeriodHertz(50); // standard 50 hz servo
-	hServo.attach(25, 1000, 2000); // Attach the servo after it has been detatched
+  hdServo.setPeriodHertz(50); // standard 50 hz servo
+	hdServo.attach(25, 1000, 2000); // Attach the servo after it has been detatched
 
-  bServo.setPeriodHertz(50); // standard 50 hz servo
-  bServo.attach(32, 1000, 2000); // Attach the servo after it has been detatched
+  hgServo.setPeriodHertz(50); // standard 50 hz servo
+  hgServo.attach(32, 1000, 2000); // Attach the servo after it has been detatched
 
-  hServo.write(160);
-  gServo.write(0);
-  dServo.write(60);
-  bServo.write(0);
+  resetActionneurs();
 
   vTaskDelete(NULL);
 }
 
 void pousserCanettes(){
-  hServo.write(0);
-  vTaskDelay(500);
+  hgServo.write(160);
+  hdServo.write(0);
+  bgServo.write(0);
+  bdServo.write(170);
+  vTaskDelay(800);
   avancerCanettes();
   vTaskDelay(900);
   reculerCanettes();
   vTaskDelay(900);
   arreterCanettes();
-  gServo.write(60);
-  dServo.write(0);
-  hServo.write(160);
+  bgServo.write(170);
+  bdServo.write(0);
+  hgServo.write(0);
+  hdServo.write(160);
   vTaskDelay(800);
+}
+
+void resetActionneurs(){
+  hgServo.write(0);
+  bgServo.write(0);
+  bdServo.write(170);
+  hdServo.write(160);
 }
 
 void avancerCanettes() {
@@ -60,17 +68,17 @@ void arreterCanettes() {
 }
 
 void gServof(int angle){
-  gServo.write(angle);
+  bgServo.write(angle);
 }
 
 void dServof(int angle){
-  dServo.write(angle);
+  bdServo.write(angle);
 }
 
 void hServof(int angle){
-  hServo.write(angle);
+  hgServo.write(angle);
 }
 
 void bServof(int angle){
-  bServo.write(angle);
+  hdServo.write(angle);
 }
