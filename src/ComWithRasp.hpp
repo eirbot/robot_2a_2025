@@ -1,28 +1,29 @@
-#ifndef COM_WITH_RASP_H
-#define COM_WITH_RASP_H
+#ifndef COM_WITH_RASP_HPP
+#define COM_WITH_RASP_HPP
 
-#include "Arduino.h"
+#include <Arduino.h>
+#include <vector>
 #include "common.h"
-#include "main.h"
 #include "ClassMotors.hpp"
 #include "GoToPosition.hpp"
-#include "vector"
+#include "actionneur.h"
+#include "main.h"
 
-#define MAX_COMMAND_LENGTH 20
+class ComWithRasp {
+public:
+    ComWithRasp();
+    void StartCom();         // Lance la tâche FreeRTOS
+    void Send();             // Envoie la commande (debug/test)
+    
+private:
+    void Receive();          // Lecture UART dans une boucle
+    void processLine();      // Découpe et traite la commande
+    void processCommand(const String& cmd, const std::vector<int>& params);
 
-class ComWithRasp{
-    public:
-        ComWithRasp();
-        void StartCom();
-
-        void Receive();
-        void Send();
-
-        void processLine();
-        void processCommand(const String& cmd, const std::vector<int>& params);
-    private:
-        char rcv;
-        String commande; ;
+    String commande;
+    char rcv;
+    static constexpr int MAX_COMMAND_LENGTH = 64;
 };
+
 
 #endif

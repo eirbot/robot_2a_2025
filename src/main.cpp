@@ -18,6 +18,7 @@ GoToPosition serialGoto {0,0,0,1000,1000,0};
 
 void setup() {
   esp_task_wdt_init(10,true);
+  ComWithRasp comRasp;
 
   // Config des vitesses max et accélérations
   moteurGauche.setMaxSpeed(SPEEDMAX);
@@ -39,6 +40,7 @@ void setup() {
   xTaskCreate(vsetup_actionneurs,"vsetup_actionneurs", 1000, NULL, 1, NULL);
 
   mot.StartMotors();
+  comRasp.StartCom();
   
 }
 
