@@ -80,11 +80,14 @@ void GoToPosition::Go(float x_f,float y_f,float cangle_f) {
     
     if (FLAG_STOP) {
         Serial.println("Le robot a été arrêté avant d'atteindre la position finale.");
-        Serial.print("Distance restante: ");
-        Serial.println(mot.GetDistanceDid());
-
         UpdateFinalPoseAfterStop(mot.GetDistanceDid());
         FLAG_STOP = false;
+
+        if (Evitement()) {
+            Serial.println("Reprise de la stratégie initiale après évitement.");
+            Go(x_final, y_final, cangle_final);  // relance le déplacement principal
+            return;
+        }
     } else{
         Serial.println("Le robot a atteint la position finale.");
 
@@ -124,3 +127,41 @@ void GoToPosition::UpdateFinalPoseAfterStop(float distanceDid) {
     y_initial += dy;
 }
 
+bool GoToPosition::Evitement() {
+    Serial.println("Début de la stratégie d'évitement.");
+
+    float dx = 0, dy = -200;  // reculer de 50 mm
+    float x_backup = x_initial + dx * cos(cangle_initial) - dy * sin(cangle_initial);
+    float y_backup = y_initial + dx * sin(cangle_initial) + dy * cos(cangle_initial);
+
+    GoToPosition recul(x_initial, y_initial, cangle_initial, x_backup, y_backup, cangle_initial);
+    recul.Go(x_backup, y_backup, cangle_initial);
+
+    // Tester zone interdite
+    if (IsInForbiddenZone(x_backup, y_backup)) {
+        Serial.println("Zone interdite détectée, évitement par la gauche.");
+
+        // Essai vers la gauche
+        float x_left = x_backup + 0 * cos(cangle_initial) - 100 * sin(cangle_initial);
+        float y_left = y_backup + 0 * sin(cangle_initial) + 100 * cos(cangle_initial);
+
+        GoToPosition gauche(x_backup, y_backup, cangle_initial, x_left, y_left, cangle_initial);
+        gauche.Go(x_left, y_left, cangle_initial);
+    } else {
+        Serial.println("Zone libre, évitement par la droite.");
+
+        // Essai vers la droite
+        float x_right = x_backup + 0 * cos(cangle_initial) + 100 * sin(cangle_initial);
+        float y_right = y_backup + 0 * sin(cangle_initial) - 100 * cos(cangle_initial);
+
+        GoToPosition droite(x_backup, y_backup, cangle_initial, x_right, y_right, cangle_initial);
+        droite.Go(x_right, y_right, cangle_initial);
+    }
+
+    return true;
+}
+
+bool GoToPosition::IsInForbiddenZone(float x, float y) {
+    // Exemple simple : zone interdite si dans rectangle (100,100) à (200,200)
+    return (x >= 100 && x <= 200 && y >= 100 && y <= 200);
+}

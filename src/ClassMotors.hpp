@@ -22,7 +22,8 @@ public:
     void WaitUntilDone();
     void StartMotors();
     void EnvoyerDonnees(void * Params);
-    void ViderQueue();
+    void TransferQueueBuffer();
+    void RestoreQueueBuffer();
 
     long GetStepDid() const { return stepDid; }
     long GetCurrentStep() const { return currentStep; }
@@ -30,6 +31,8 @@ public:
 
 private:
     QueueHandle_t xQueue;
+    QueueHandle_t xQueueBuffer; // File tampon
+
     long stepDid;
     long currentStep;
     float distanceDid;

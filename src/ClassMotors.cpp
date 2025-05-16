@@ -2,6 +2,7 @@
 
 ClassMotors::ClassMotors(){
     xQueue = xQueueCreate(30, sizeof(TaskParams));
+    xQueueBuffer = xQueueCreate(30, sizeof(TaskParams));
 }
 
 void ClassMotors::vMotors(void* pvParameters){
@@ -74,7 +75,7 @@ void ClassMotors::vMotors(void* pvParameters){
                             instance->stepDid = moteurGauche.currentPosition() - instance->GetCurrentStep();  
                             instance->distanceDid = (instance->GetStepDid() * M_PI * dRoues) / stepPerRev;  
 
-                            instance->ViderQueue();
+                            instance->TransferQueueBuffer();
                             break; // sort de la boucle de mouvement
                         }
                     } 
@@ -148,9 +149,18 @@ void ClassMotors::WaitUntilDone() {
     }
 }
 
-void ClassMotors::ViderQueue() {
+void ClassMotors::TransferQueueBuffer() {
     TaskParams tmp;
-    while (xQueueReceive(xQueue, &tmp, 0) == pdTRUE);
+    while (xQueueReceive(xQueue, &tmp, 0) == pdTRUE) {
+        xQueueSend(xQueueBuffer, &tmp, 0); // Sauvegarde dans le tampon
+    }
+}
+
+void ClassMotors::RestoreQueueBuffer() {
+    TaskParams tmp;
+    while (xQueueReceive(xQueueBuffer, &tmp, 0) == pdTRUE) {
+        xQueueSend(xQueue, &tmp, 0); // Recharge
+    }
 }
 
 void RampDownAccelStepper(AccelStepper& moteur1, AccelStepper& moteur2) {
