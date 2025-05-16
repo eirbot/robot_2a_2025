@@ -19,7 +19,7 @@
 #define DIRG 5
 #define STEPG 19
 
-#define SPEEDMAX 10000
+#define SPEEDMAX 1000
 #define ACCELMAX 3000
 
 #define MOTOR_G 6
@@ -48,5 +48,8 @@ extern AccelStepper moteurDroit;
 
 extern TaskHandle_t vstratHandle;
 extern TaskHandle_t vterminal_bluetoothHandle;
+
+extern volatile bool* FLAG_CLEAR;
+extern bool FLAG_STOP;
 
 #endif

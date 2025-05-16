@@ -35,12 +35,12 @@ void setup() {
   SerialBT.begin("ESP32test");
   SerialBT.setTimeout(50);
 
-  // xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
+  xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
 
   xTaskCreate(vsetup_actionneurs,"vsetup_actionneurs", 1000, NULL, 1, NULL);
 
   mot.StartMotors();
-  comRasp.StartCom();
+  //comRasp.StartCom();
   
 }
 

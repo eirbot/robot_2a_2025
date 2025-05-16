@@ -49,8 +49,17 @@ void commande(){ // sert à entrer des commandes via le port serial
             serialGoto.Go(300,0,270);
             serialGoto.Go(0,0,0);
         }
+        else if(commande.substring(0,4)=="flag"){
+            Serial.println("Flag");
+            if(commande.substring(5,7)=="On"){
+                //FLAG_STOP = 1;
+            }
+            else if(commande.substring(5,8)=="Off"){
+                //FLAG_STOP = 0;
+            }
+        }
+        else{
+            xTaskCreate(vterminal_bluetooth,"vterminal_bluetooth", 4000, NULL, 1, &vterminal_bluetoothHandle);
+        }
     }
-    else{
-        xTaskCreate(vterminal_bluetooth,"vterminal_bluetooth", 4000, NULL, 1, &vterminal_bluetoothHandle);
-    }
-  }
+}

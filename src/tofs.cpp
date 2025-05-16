@@ -1,7 +1,7 @@
 #include "tofs.h"
 
-bool frontClear_tof = true; // Define the variable here
-bool backClear_tof = true;  // Define the variable here
+volatile bool frontClear_tof = true; // Define the variable here
+volatile bool backClear_tof = true;  // Define the variable here
 
 void readTofs(void *Parameters_temp){
     // tofQueue = xQueueCreate(1, sizeof(int));

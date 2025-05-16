@@ -53,14 +53,12 @@ void vstrat1(){ // 2 Canettes (bleue)
   x = -480;
   y = 300;
   angle = 180;
-
   serialGoto.Go(x, y, angle);
 
   // Se met en position pour pousser les canettes
   x = -480;
-  y = 0;
+  y = -100;
   angle = 180;
-
   serialGoto.Go(x, y, angle);
 
   // Action mécanique
@@ -71,21 +69,30 @@ void vstrat1(){ // 2 Canettes (bleue)
   x = -480;
   y = 300;
   angle = 180;
-
   serialGoto.Go(x, y, angle);
 
   // Position intermediaire
   x = -900;
   y = 950;
   angle = 90;
+  serialGoto.Go(x, y, angle);
 
+  // Va devant les canettes
+  x = -200;
+  y = 870;
+  angle = 180;
   serialGoto.Go(x, y, angle);
 
   // Se met en position pour pousser les canettes
   x = -200;
-  y = 870;
+  y = 700;
   angle = 180;
+  serialGoto.Go(x, y, angle);
 
+    // On pousse les canettes
+  x = 0;
+  y = 150;
+  angle = 180;
   serialGoto.Go(x, y, angle);
 
   // On pousse les canettes
@@ -115,5 +122,29 @@ void vstrat1(){ // 2 Canettes (bleue)
 }
 
 void vstrat2(){ // 2 Cannettes + Banniere (blue)
+  Serial.println("Stratégie 2 en cours d'exécution...");
+  // Position initiale
+  float x = 0, y = 0;
+  float angle = 0;
 
+  // Postion pour bannière
+  x = 0;
+  y = -200;
+  angle = 0;
+
+  serialGoto.Go(x, y, angle);
+
+  mot.WaitUntilDone();
+  //Met en position la bannière
+  // Banniere();
+
+  // Repart pour les canettes
+  x = 0;
+  y = 100;
+  angle = 0;
+
+  serialGoto.Go(x, y, angle);
+
+  // Fait la stratégie 1
+  vstrat1();
 }
