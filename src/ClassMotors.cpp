@@ -28,7 +28,7 @@ void ClassMotors::vMotors(void* pvParameters){
             }
             else if(taskParams.angle==0){ //Pour avancer
                 steps = ((int)taskParams.distance / (M_PI * dRoues)) * stepPerRev;
-                instance->stepRemain = steps;
+                instance->stepDid = 0;
 
                 Serial.print("Steps de la ligne droite:   ");
                 Serial.println(steps);
@@ -58,29 +58,30 @@ void ClassMotors::vMotors(void* pvParameters){
                             stopStartTime = xTaskGetTickCount(); // Première fois qu'on détecte l'arrêt
                             wasStopped = true;
 
-                            instance->stepRemain = instance->GetCurrentStep() - moteurGauche.currentPosition();  
-                            instance->distanceRemain = (instance->GetStepRemain() * M_PI * dRoues) / stepPerRev;
+                            instance->stepDid = moteurGauche.currentPosition() - instance->GetCurrentStep();  
+                            instance->distanceDid = (instance->GetStepDid() * M_PI * dRoues) / stepPerRev;
 
                             Serial.print("Distance restante: ");
-                            Serial.println(instance->distanceRemain);
+                            Serial.println(instance->distanceDid);
                             Serial.print("Step restant: ");
-                            Serial.println(instance->stepRemain);
+                            Serial.println(instance->stepDid);
                         }
                         else if ((xTaskGetTickCount() - stopStartTime) > maxIdleTime) {
                             Serial.println("Robot arrêté trop longtemps. Vidage de la queue.");
-                            instance->ViderQueue();
                             wasStopped = false; // Remet à zéro après vidage
                             FLAG_STOP = true;
 
-                            instance->stepRemain = instance->GetCurrentStep() - moteurGauche.currentPosition();  
-                            instance->distanceRemain = (instance->GetStepRemain() * M_PI * dRoues) / stepPerRev;  
+                            instance->stepDid = moteurGauche.currentPosition() - instance->GetCurrentStep();  
+                            instance->distanceDid = (instance->GetStepDid() * M_PI * dRoues) / stepPerRev;  
 
+                            instance->ViderQueue();
                             break; // sort de la boucle de mouvement
                         }
                     } 
                     else {
                         if (wasStopped) {
-                            float ratio = std::abs(instance->distanceRemain) / DIST_MAX;
+                            float distRemain = std::abs(steps - instance->stepDid);
+                            float ratio = distRemain / DIST_MAX;
                             if (ratio > 1.0) ratio = 1.0;
                             if (ratio < 0.0) ratio = 0.0;
 
@@ -89,8 +90,8 @@ void ClassMotors::vMotors(void* pvParameters){
                                 dynamicSpeed = -dynamicSpeed; // Inverser la vitesse si le moteur est en marche arrière
                             }
 
-                            if (instance->stepRemain < STEP_ACCEL) {
-                                RampUpAccelStepper(moteurGauche, moteurDroit, dynamicSpeed, instance->stepRemain/2);
+                            if (distRemain < STEP_ACCEL) {
+                                RampUpAccelStepper(moteurGauche, moteurDroit, dynamicSpeed, distRemain/2);
                             }
                             else {
                                 RampUpAccelStepper(moteurGauche, moteurDroit, dynamicSpeed);
@@ -107,7 +108,7 @@ void ClassMotors::vMotors(void* pvParameters){
             }
             else if(taskParams.distance==0){ //Pour tourner
                 steps = ((int)std::abs(taskParams.angle) / 360.0) * (M_PI * ecartRoues) * stepPerRev / (M_PI * dRoues);
-                instance->stepRemain = steps;
+                instance->stepDid = steps;
 
                 if(taskParams.direction == 0){//0 droite, 1 gauche
                     moteurGauche.move(steps);
@@ -119,47 +120,8 @@ void ClassMotors::vMotors(void* pvParameters){
                 }
 
                 while (moteurGauche.distanceToGo() != 0 || moteurDroit.distanceToGo() != 0) { //Goooo                    
-                    // Si FLAG_STOP est actif
-                    if (!*FLAG_CLEAR) {
-                        if (!wasStopped) {
-                            stopStartTime = xTaskGetTickCount(); // Première fois qu'on détecte l'arrêt
-                            wasStopped = true;
-
-                            // Ralentissement progressif
-                            RampDownAccelStepper(moteurGauche, moteurDroit);
-                            
-                            instance->stepRemain = instance->GetCurrentStep() - moteurGauche.currentPosition();
-                            instance->angleRemain = (instance->GetStepRemain() * 360.0) / (M_PI * ecartRoues * stepPerRev) * (M_PI * dRoues);
-                        } 
-                        else if ((xTaskGetTickCount() - stopStartTime) > maxIdleTime) {
-                            Serial.println("Robot arrêté trop longtemps. Vidage de la queue.");
-                            instance->ViderQueue();
-                            wasStopped = false; // Remet à zéro après vidage
-                            FLAG_STOP = true;
-
-                            // Calcul de l'angle restant
-                            instance->stepRemain = instance->GetCurrentStep() - moteurGauche.currentPosition();
-                            instance->angleRemain = (instance->GetStepRemain() * 360.0) / (M_PI * ecartRoues * stepPerRev) * (M_PI * dRoues);
-
-                            break; // sort de la boucle de mouvement
-                        }
-                    } 
-                    else {
-                        if (wasStopped) {
-                            float angleRatio = instance->angleRemain / ANGLE_MAX;
-                            if (angleRatio > 1.0f) angleRatio = 1.0f;
-                            if (angleRatio < 0.0f) angleRatio = 0.0f;
-
-                            float dynamicAngleSpeed = V_ROT_MIN + angleRatio * (speed - V_ROT_MIN);
-
-                            RampUpAccelStepper(moteurGauche, moteurDroit, dynamicAngleSpeed);
-
-                            wasStopped = false;
-                        }
-
-                        moteurGauche.run();
-                        moteurDroit.run();
-                        }
+                    moteurGauche.run();
+                    moteurDroit.run();
                 }
             }
             else{

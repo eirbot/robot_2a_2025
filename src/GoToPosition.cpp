@@ -58,7 +58,6 @@ void GoToPosition::CalculPolar() {
 }
 
 void GoToPosition::Go(float x_f,float y_f,float cangle_f) {
-    int stage = 0;
 
     TaskParams Params;
     x_final = x_f;
@@ -66,26 +65,38 @@ void GoToPosition::Go(float x_f,float y_f,float cangle_f) {
     cangle_final = cangle_f;
     
     CalculPolar();
-    stage++;
+
     Params = {0, (int)(abs(pangle)), (pangle > 0) ? 1 : 0, 500};
     mot.EnvoyerDonnees(&Params);
 
-    stage++;
     Params = {(int)r, 0, 0, 600};
     mot.EnvoyerDonnees(&Params);
 
-    stage++;
     Params = {0, (int)(abs(pangleFin)), (pangleFin > 0) ? 1 : 0, 500};
     mot.EnvoyerDonnees(&Params);
 
+    // On attend que le robot ait fini de bouger
+    mot.WaitUntilDone();
+    
     if (FLAG_STOP) {
-        UpdateFinalPoseAfterStop(mot.GetDistanceRemain(), mot.GetAngleRemain(), stage);
+        Serial.println("Le robot a été arrêté avant d'atteindre la position finale.");
+        Serial.print("Distance restante: ");
+        Serial.println(mot.GetDistanceDid());
+
+        UpdateFinalPoseAfterStop(mot.GetDistanceDid());
         FLAG_STOP = false;
     } else{
+        Serial.println("Le robot a atteint la position finale.");
+
         x_initial = x_final;
         y_initial = y_final;
         cangle_initial = cangle_final;
     }
+
+    Serial.println("Position interne mise à jour après déplacement.");
+    Serial.print("x_initial: "); Serial.print(x_initial);
+    Serial.print("  y_initial: "); Serial.print(y_initial);
+    Serial.print("  cangle_initial: "); Serial.println(cangle_initial);
 }
 
 void GoToPosition::AllerEtSet(float x_f, float y_f, float cangle_f, float x_set, float y_set, float cangle_set) {
@@ -103,39 +114,13 @@ void GoToPosition::AllerEtSet(float x_f, float y_f, float cangle_f, float x_set,
     Serial.print("  cangle_set: "); Serial.println(cangle_set);
 }
 
-void GoToPosition::UpdateFinalPoseAfterStop(float distanceRemain, float angleRemain, int stage) {
-    if (stage == 1 || stage == 3) {
-        // Cas : rotation uniquement (distance == 0)
-        if (stage == 1) {
-            float angle_done = pangle - angleRemain;
-            cangle_initial = cangle_initial + angle_done;
+void GoToPosition::UpdateFinalPoseAfterStop(float distanceDid) {
+    cangle_initial += pangle;
+    
+    float dx = distanceDid * sin(cangle_initial * DEG_TO_RAD);
+    float dy = distanceDid * cos(cangle_initial * DEG_TO_RAD);
 
-        }
-        else{
-            float angle_done = pangleFin - angleRemain;
-            cangle_initial = cangle_initial + angle_done;
-
-            x_initial = x_final;
-            y_initial = y_final;
-        }
-        
-        // Normalisation
-        if (cangle_initial > 180) cangle_initial -= 360;
-        if (cangle_initial < -180) cangle_initial += 360;
-    }
-    else if (stage == 2) {
-        // Cas : déplacement uniquement (rotation == 0)
-        float dist_done = r - distanceRemain;
-
-        float dx = dist_done * sin(cangle_initial * DEG_TO_RAD);
-        float dy = dist_done * cos(cangle_initial * DEG_TO_RAD);
-
-        x_final = x_initial + dx;
-        y_final = y_initial + dy;
-        cangle_initial = pangle + cangle_initial;
-
-        // Normalisation
-        if (cangle_initial > 180) cangle_initial -= 360;
-        if (cangle_initial < -180) cangle_initial += 360;
-    }
+    x_initial += dx;
+    y_initial += dy;
 }
+

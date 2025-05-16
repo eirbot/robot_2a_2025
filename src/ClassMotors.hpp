@@ -14,10 +14,6 @@
 #define V_MIN 100.0
 #define V_MAX 10000.0
 
-#define ANGLE_MAX 180.0f 
-#define V_ROT_MIN 100    
-#define V_ROT_MAX 800    
-
 class ClassMotors{
 public:
     ClassMotors();
@@ -28,17 +24,15 @@ public:
     void EnvoyerDonnees(void * Params);
     void ViderQueue();
 
-    long GetStepRemain() const { return stepRemain; }
+    long GetStepDid() const { return stepDid; }
     long GetCurrentStep() const { return currentStep; }
-    float GetAngleRemain() const { return angleRemain; }
-    float GetDistanceRemain() const { return distanceRemain; }
+    float GetDistanceDid() const { return distanceDid; }
 
 private:
     QueueHandle_t xQueue;
-    long stepRemain;
+    long stepDid;
     long currentStep;
-    float angleRemain;
-    float distanceRemain;
+    float distanceDid;
 };
 
 void RampDownAccelStepper(AccelStepper& moteur1, AccelStepper& moteur2);
