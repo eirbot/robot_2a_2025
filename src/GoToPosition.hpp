@@ -3,12 +3,15 @@
 
 #include "Arduino.h"
 #include <cmath>
+#include <vector>
 #include <iostream>
 #include "common.h"
 #include "ClassMotors.hpp"
 #include "tofs.h"
 
-
+struct Zone {
+    float x1, y1, x2, y2;
+};
 
 class GoToPosition{
 
@@ -36,6 +39,8 @@ class GoToPosition{
     float r;
     float pangle;
     float pangleFin;
+
+    
 
     void Go(float x_f,float y_f,float cangle_f);
     void AllerEtSet(float x_f, float y_f, float cangle_f, float x_set, float y_set, float cangle_set);
