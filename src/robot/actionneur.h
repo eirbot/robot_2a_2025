@@ -11,6 +11,8 @@
 #define motorIN1 13
 #define motorIN2 12
 
+#define BANNIERE 33
+
 #define gServoPin 14
 #define dServoPin 27
 #define hServoPin 25
@@ -21,6 +23,7 @@ void pousserCanettes();
 void avancerCanettes();
 void reculerCanettes();
 void arreterCanettes();
+void banniere();
 void gServof(int angle);
 void dServof(int angle);
 void hServof(int angle);

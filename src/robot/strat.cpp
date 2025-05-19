@@ -129,14 +129,14 @@ void vstrat2(){ // 2 Cannettes + Banniere (blue)
 
   // Postion pour bannière
   x = 0;
-  y = -200;
+  y = -195;
   angle = 0;
 
   serialGoto.Go(x, y, angle);
 
   mot.WaitUntilDone();
   //Met en position la bannière
-  // Banniere();
+  banniere();
 
   // Repart pour les canettes
   x = 0;

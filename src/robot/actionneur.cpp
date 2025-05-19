@@ -9,6 +9,7 @@ void vsetup_actionneurs(void *pvParameters){
 
   pinMode(motorIN1, OUTPUT);
   pinMode(motorIN2, OUTPUT);
+  pinMode(BANNIERE, OUTPUT);
 
   bgServo.setPeriodHertz(50); // standard 50 hz servo
 	bgServo.attach(14, 1000, 2000); // Attach the servo after it has been detatched
@@ -43,6 +44,18 @@ void pousserCanettes(){
   hgServo.write(0);
   hdServo.write(160);
   vTaskDelay(800);
+}
+
+void banniere(){
+  digitalWrite(BANNIERE, HIGH);
+  vTaskDelay(100);
+  digitalWrite(BANNIERE, LOW);
+  vTaskDelay(100);
+
+  pinMode(BANNIERE, INPUT); // Set the pin to input mode to disable the pull-up resistor
+  while(!digitalRead(BANNIERE)){
+    vTaskDelay(100);
+  } 
 }
 
 void resetActionneurs(){
