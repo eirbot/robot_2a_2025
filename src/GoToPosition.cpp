@@ -127,23 +127,13 @@ bool GoToPosition::Evitement() {
     float x_backup = x_initial + dx * cos(theta) + dy * sin(theta);
     float y_backup = y_initial - dx * sin(theta) + dy * cos(theta);
 
-    Serial.print("Position de secours: ");
-    Serial.print(x_backup);
-    Serial.print("  ");
-    Serial.println(y_backup);
-
     GoToPosition recul(x_initial, y_initial, cangle_initial, x_backup, y_backup, cangle_initial);
     recul.Go(x_backup, y_backup, cangle_initial);
 
     // Décalage gauche (theta - 90°)
-    dx = -250, dy = 0;
+    dx = 250, dy = 0;
     float x_left = x_backup + dx * cos(theta) + dy * sin(theta);
     float y_left = y_backup - dx * sin(theta) + dy * cos(theta);
-
-    Serial.print("Position gauche: ");
-    Serial.print(x_left);
-    Serial.print("  ");
-    Serial.println(y_left);
 
     if (!IsInForbiddenZone(x_left, y_left)) {
         Serial.println("Évitement par la gauche.");
@@ -153,19 +143,22 @@ bool GoToPosition::Evitement() {
 
         x_initial = x_left;
         y_initial = y_left;
+
+        dx = 0, dy = 200;
+        float x_left = x_left + dx * cos(theta) + dy * sin(theta);
+        float y_left = y_left - dx * sin(theta) + dy * cos(theta);
+        gauche.Go(x_left, y_left, cangle_initial);
+
+        x_initial = x_left;
+        y_initial = y_left;
         return true;
     }
 
     // Décalage droite (theta + 90°)
     Serial.println("Gauche impossible, tentative par la droite.");
-    dx = 250, dy = 0;
+    dx = -250, dy = 0;
     float x_right = x_backup + dx * cos(theta) + dy * sin(theta);
     float y_right = y_backup - dx * sin(theta) + dy * cos(theta);
-
-    Serial.print("Position droite: ");
-    Serial.print(x_right);
-    Serial.print("  ");
-    Serial.println(y_right);
 
     if (!IsInForbiddenZone(x_right, y_right)) {
         Serial.println("Évitement par la droite.");
@@ -175,6 +168,15 @@ bool GoToPosition::Evitement() {
 
         x_initial = x_right;
         y_initial = y_right;
+
+        dx = 0, dy = 200;
+        float x_right = x_right + dx * cos(theta) + dy * sin(theta);
+        float y_right = y_right - dx * sin(theta) + dy * cos(theta);
+        droite.Go(x_right, y_right, cangle_initial);
+
+        x_initial = x_right;
+        y_initial = y_right;
+
         return true;
     }
 
