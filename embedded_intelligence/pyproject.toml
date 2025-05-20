@@ -1,17 +1,22 @@
-[tool.poetry]
+[project]
 name = "cfr-2025-2a-embedded-ai"
 version = "0.1.0"
 description = "Embedded strategy logic to pilot at a high-level the robot of 2A in the Coupe de France de Robotique"
-authors = ["Convolutio <79534557+Convolutio@users.noreply.github.com>"]
+authors = [
+  {name ="Thomas Horrut", email = "79534557+Convolutio@users.noreply.github.com"}
+]
 license = "UNLICENSED"
 readme = "README.md"
-package-mode = false
+requires-python = ">=3.11.2"
 
-[tool.poetry.dependencies]
-python = "3.11.2"
-async-pyserial = "0.2.3"
+dependencies = [
+  "async-pyserial (==0.2.3)"
+]
 
+[project.scripts]
+robot-main-loop = "cfr_2025_2a_embedded_ai.main:start"
+fifo-test = "cfr_2025_2a_embedded_ai.read_fifo:read_fifo_loop"
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"

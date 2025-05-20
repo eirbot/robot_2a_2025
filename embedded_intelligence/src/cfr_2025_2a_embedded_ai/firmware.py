@@ -5,8 +5,8 @@ Contains all the utilities method to interact with the robot's firmware
 import asyncio
 from typing import Callable, Coroutine, Tuple
 
-from com import Communication
-from fifo_com import FifoCom
+from .communication.com import Communication
+from .communication.fifo_com import FifoCom
 
 Position = Tuple[int, int]
 
