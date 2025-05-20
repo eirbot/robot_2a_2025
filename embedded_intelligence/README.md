@@ -5,15 +5,29 @@ dans une carte de type Raspberry Pi.
 
 ## Requirements
 
-Avoir la version `3.11.2` de Python installée sur la machine.
+Il est attendu d'avoir la version `3.11.2` de Python installée sur la machine.
+
+Pour la gestion du projet, de ses dépendances et de son environnement
+d'exécution, l'outil moderne Poetry (`>=2.1`) est utilisé.  
+Sur un Raspberry OS fraichement installé, attention à d'abord mettre à jour
+toutes les dépendances systèmes avec `apt`
+
+```sh
+sudo apt update
+```
+
+Ensuite, poetry peut être installé avec cette commande, provenant du [site
+web](https://python-poetry.org/docs/#installing-with-the-official-installer)
+
+```sh
+curl -sSL https://install.python-poetry.org | python3 -
+```
 
 ## Installation des dépendances
 
 ```sh
-# $PYTHON désigne l'exécutable de python 3.11.2
-$PYTHON -m venv eirbot_venv
-source eirbot_venv/bin/activate
-pip install -r requirements.txt
+# En se plaçant dans le même dossier que ce README
+poetry install
 ```
 
 ## Configuration du port série
@@ -21,33 +35,17 @@ pip install -r requirements.txt
 Cet automate communique avec la carte STM-32 via un port série qui est à
 définir dans la variable `PORT` du fichier `esp_serial.py`
 
-## Exécuter le script expérimental de communication full-duplex
+## Exécuter le script principal du robot
 
-Si ce n'est déjà fait, sourcer le terminal dans l'`eirbot_venv`
-
-```sh
-source eirbot_venv/bin/activate
-```
-
-Enfin, lancer le programme
+L'architecture de ce projet n'utilise que des modules python en *mode package*.
+Poetry les exécute automatiquement en tant que module avec des scripts
+prédéfinis:
 
 ```sh
-python esp_serial.py
+# se place dans l'environnement virtuel de poetry et exécute le module main
+poetry run robot-main-loop
 ```
 
-## Exécuter l'automate
-
-Si ce n'est déjà fait, sourcer le terminal dans l'`eirbot_venv`
-
-```sh
-source eirbot_venv/bin/activate
-```
-
-Enfin, lancer le programme
-
-```sh
-python main.py
-```
 
 ## TODO
 
