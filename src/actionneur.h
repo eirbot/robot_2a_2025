@@ -23,7 +23,10 @@ void pousserCanettes();
 void avancerCanettes();
 void reculerCanettes();
 void arreterCanettes();
-void banniere();
+
+void startBanniere();
+void DoBanniere();
+
 void gServof(int angle);
 void dServof(int angle);
 void hServof(int angle);

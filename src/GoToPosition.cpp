@@ -52,13 +52,13 @@ void GoToPosition::Go(float x_f,float y_f,float cangle_f) {
     
     CalculPolar();
 
-    Params = {0, (int)(abs(pangle)), (pangle > 0) ? 1 : 0, 500};
+    Params = {0, (int)(abs(pangle)), (pangle > 0) ? 1 : 0, SPEEDMAX/2};
     mot.EnvoyerDonnees(&Params);
 
-    Params = {(int)r, 0, 0, 1000};
+    Params = {(int)r, 0, 0, SPEEDMAX};
     mot.EnvoyerDonnees(&Params);
 
-    Params = {0, (int)(abs(pangleFin)), (pangleFin > 0) ? 1 : 0, 500};
+    Params = {0, (int)(abs(pangleFin)), (pangleFin > 0) ? 1 : 0, SPEEDMAX/2};
     mot.EnvoyerDonnees(&Params);
 
     mot.WaitUntilDone();

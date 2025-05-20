@@ -45,8 +45,13 @@ void pousserCanettes(){
   hdServo.write(160);
   vTaskDelay(800);
 }
+void startBanniere(){
+  digitalWrite(BANNIERE, HIGH);
+  vTaskDelay(100);
+  digitalWrite(BANNIERE, LOW);
+}
 
-void banniere(){
+void DoBanniere(){
   digitalWrite(BANNIERE, HIGH);
   vTaskDelay(100);
   digitalWrite(BANNIERE, LOW);
