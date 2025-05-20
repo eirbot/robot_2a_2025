@@ -56,7 +56,11 @@ exécuter dans un process à part
 poetry run fifo-test
 ```
 
-Puis exécuter la boucle du robot avec l'instruction dans la section précédente.
+Puis exécuter la boucle du robot dans le processus suivant:
+
+```sh
+poetry run robot-main-loop-debug
+```
 
 
 ## TODO
