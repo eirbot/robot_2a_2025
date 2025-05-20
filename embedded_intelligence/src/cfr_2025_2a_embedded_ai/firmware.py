@@ -47,9 +47,9 @@ class Robot:
     def p(self):
         return self._p
 
-    async def goTo(self, x: int, y: int, v: float) -> None:
-        await self._com.send(f"G ${x} ${y} ${v}", Robot.GOTO_ANSWER_PREFIX)
+    async def goTo(self, x: int, y: int, angle: float) -> None:
+        await self._com.send(f"G {x} {y} {angle}", Robot.GOTO_ANSWER_PREFIX)
         self._p = (x, y)
 
     async def actionCanette(self) -> None:
-        await self._com.send("C\n", Robot.CANETTE_ACTION_ANSWER_PREFIX)
+        await self._com.send("C", Robot.CANETTE_ACTION_ANSWER_PREFIX)
