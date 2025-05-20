@@ -55,7 +55,7 @@ void GoToPosition::Go(float x_f,float y_f,float cangle_f) {
     Params = {0, (int)(abs(pangle)), (pangle > 0) ? 1 : 0, 500};
     mot.EnvoyerDonnees(&Params);
 
-    Params = {(int)r, 0, 0, 600};
+    Params = {(int)r, 0, 0, 1000};
     mot.EnvoyerDonnees(&Params);
 
     Params = {0, (int)(abs(pangleFin)), (pangleFin > 0) ? 1 : 0, 500};
@@ -64,19 +64,19 @@ void GoToPosition::Go(float x_f,float y_f,float cangle_f) {
     mot.WaitUntilDone();
     
     if (FLAG_STOP) {
-        Serial.println("Le robot a été arrêté avant d'atteindre la position finale.");
+        Serial.println("Le robot a ete arrete avant d'atteindre la position finale.");
         UpdateFinalPoseAfterStop(mot.GetDistanceDid());
         FLAG_STOP = false;
 
         if (retryCount >= 3) {
-            Serial.println("Trop de tentatives d'évitement, abandon de la stratégie.");
+            Serial.println("Trop de tentatives d'evitement, abandon de la stratégie.");
             retryCount = 0;
             return;
         }
 
         retryCount++;
         if (Evitement()) {
-            Serial.println("Reprise de la stratégie initiale après évitement.");
+            Serial.println("Reprise de la strategie initiale apres evitement.");
             Go(x_final, y_final, cangle_final);
             return;
         }
@@ -88,7 +88,7 @@ void GoToPosition::Go(float x_f,float y_f,float cangle_f) {
         cangle_initial = cangle_final;
     }
 
-    Serial.println("Position interne mise à jour après déplacement.");
+    Serial.println("Position interne mise à jour apres déplacement.");
     Serial.print("x_initial: "); Serial.print(x_initial);
     Serial.print("  y_initial: "); Serial.print(y_initial);
     Serial.print("  cangle_initial: "); Serial.println(cangle_initial);
@@ -101,7 +101,7 @@ void GoToPosition::AllerEtSet(float x_f, float y_f, float cangle_f, float x_set,
     y_initial = y_set;
     cangle_initial = cangle_set;
 
-    Serial.println("Position interne mise à jour manuellement après déplacement.");
+    Serial.println("Position interne mise à jour manuellement apres deplacement.");
     Serial.print("x_set: "); Serial.print(x_set);
     Serial.print("  y_set: "); Serial.print(y_set);
     Serial.print("  cangle_set: "); Serial.println(cangle_set);
@@ -118,7 +118,7 @@ void GoToPosition::UpdateFinalPoseAfterStop(float distanceDid) {
 }
 
 bool GoToPosition::Evitement() {
-    Serial.println("Début de la stratégie d'évitement.");
+    Serial.println("Debut de la strategie d'evitement.");
 
     float theta = cangle_initial * DEG_TO_RAD;
 
@@ -135,8 +135,11 @@ bool GoToPosition::Evitement() {
     float x_left = x_backup + dx * cos(theta) + dy * sin(theta);
     float y_left = y_backup - dx * sin(theta) + dy * cos(theta);
 
+    Serial.print("x_left: "); Serial.print(x_left);
+    Serial.print("  y_left: "); Serial.println(y_left);
+
     if (!IsInForbiddenZone(x_left, y_left)) {
-        Serial.println("Évitement par la gauche.");
+        Serial.println("Evitement par la gauche.");
 
         GoToPosition gauche(x_backup, y_backup, cangle_initial, x_left, y_left, cangle_initial - 90);
         gauche.Go(x_left, y_left, cangle_initial);
@@ -144,9 +147,15 @@ bool GoToPosition::Evitement() {
         x_initial = x_left;
         y_initial = y_left;
 
+        Serial.print("x_left: "); Serial.print(x_left);
+        Serial.print("  y_left: "); Serial.println(y_left);
+
         dx = 0, dy = 200;
-        float x_left = x_left + dx * cos(theta) + dy * sin(theta);
-        float y_left = y_left - dx * sin(theta) + dy * cos(theta);
+        x_left = x_left + dx * cos(theta) + dy * sin(theta);
+        y_left = y_left - dx * sin(theta) + dy * cos(theta);
+
+        Serial.print("x_left: "); Serial.print(x_left);
+        Serial.print("  y_left: "); Serial.println(y_left);
         gauche.Go(x_left, y_left, cangle_initial);
 
         x_initial = x_left;
@@ -170,8 +179,8 @@ bool GoToPosition::Evitement() {
         y_initial = y_right;
 
         dx = 0, dy = 200;
-        float x_right = x_right + dx * cos(theta) + dy * sin(theta);
-        float y_right = y_right - dx * sin(theta) + dy * cos(theta);
+        x_right = x_right + dx * cos(theta) + dy * sin(theta);
+        y_right = y_right - dx * sin(theta) + dy * cos(theta);
         droite.Go(x_right, y_right, cangle_initial);
 
         x_initial = x_right;

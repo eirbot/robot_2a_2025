@@ -3,7 +3,7 @@
 
 #include "Arduino.h"
 #include "strat.h"
-#include "main.h"
+#include "main_robot.h"
 #include "GoToPosition.hpp"
 #include "terminal_bluetooth.h"
 #include "ClassMotors.hpp"

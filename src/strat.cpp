@@ -1,5 +1,19 @@
 #include "strat.h"
 
+void retourBase(){
+  Serial.println("Retour à la base");
+  // Position initiale
+  float x = 0, y = 0;
+  float angle = 0;
+
+  // Retour a la base
+  x = -950;
+  y = 1450;
+  angle = 0;
+
+  serialGoto.Go(x, y, angle);
+}
+
 void vstrat0(){ // 1 Canette (bleue)
   Serial.println("Stratégie 0 en cours d'exécution...");
   // Position initiale
@@ -32,11 +46,7 @@ void vstrat0(){ // 1 Canette (bleue)
   serialGoto.Go(x, y, angle);
 
   // Retour a la base
-  x = -950;
-  y = 1450;
-  angle = 0;
-  serialGoto.Go(x, y, angle);
-
+  retourBase();
 
   if(vterminal_bluetoothHandle!=NULL){
     xTaskNotifyGive(vterminal_bluetoothHandle);
@@ -114,11 +124,7 @@ void vstrat1(){ // 2 Canettes (bleue)
   serialGoto.Go(x, y, angle);
 
   // Retour a la base
-  x = -950;
-  y = 1450;
-  angle = 0;
-
-  serialGoto.Go(x, y, angle);
+  retourBase();
 }
 
 void vstrat2(){ // 2 Cannettes + Banniere (blue)

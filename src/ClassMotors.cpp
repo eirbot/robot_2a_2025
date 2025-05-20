@@ -19,8 +19,12 @@ void ClassMotors::vMotors(void* pvParameters){
         if(xQueueReceive(instance->xQueue, &taskParams, portMAX_DELAY)==pdPASS){
 
             float speed = (taskParams.vitesse * stepPerRev)/((M_PI * dRoues));
+            float accel = speed * 0.6;
             moteurGauche.setMaxSpeed(speed);
+            moteurGauche.setAcceleration(accel);
             moteurDroit.setMaxSpeed(speed);
+            moteurDroit.setAcceleration(accel);
+
 
             instance->currentStep = moteurGauche.currentPosition();
 
@@ -53,7 +57,8 @@ void ClassMotors::vMotors(void* pvParameters){
                     if (!*FLAG_CLEAR) {
                         if (!wasStopped) {
                              // Ralentissement progressif
-                            RampDownAccelStepper(moteurGauche, moteurDroit);
+                            StopStepper(moteurGauche, moteurDroit);
+
                             Serial.println("Robot arrêté. Ralentissement progressif.");
 
                             stopStartTime = xTaskGetTickCount(); // Première fois qu'on détecte l'arrêt
@@ -61,6 +66,13 @@ void ClassMotors::vMotors(void* pvParameters){
 
                             instance->stepDid = moteurGauche.currentPosition() - instance->GetCurrentStep();  
                             instance->distanceDid = (instance->GetStepDid() * M_PI * dRoues) / stepPerRev;
+
+                            float remainingSteps = steps - instance->stepDid;
+                            moteurGauche.setAcceleration(accel);
+                            moteurDroit.setAcceleration(accel);
+
+                            moteurGauche.move(remainingSteps);
+                            moteurDroit.move(remainingSteps);
 
                             Serial.print("Distance restante: ");
                             Serial.println(instance->distanceDid);
@@ -81,22 +93,6 @@ void ClassMotors::vMotors(void* pvParameters){
                     } 
                     else {
                         if (wasStopped) {
-                            float distRemain = std::abs(steps - instance->stepDid);
-                            float ratio = distRemain / DIST_MAX;
-                            if (ratio > 1.0) ratio = 1.0;
-                            if (ratio < 0.0) ratio = 0.0;
-
-                            float dynamicSpeed = V_MIN + ratio * (speed - V_MIN);
-                            if (steps < 0) {
-                                dynamicSpeed = -dynamicSpeed; // Inverser la vitesse si le moteur est en marche arrière
-                            }
-
-                            if (distRemain < STEP_ACCEL) {
-                                RampUpAccelStepper(moteurGauche, moteurDroit, dynamicSpeed, distRemain/2);
-                            }
-                            else {
-                                RampUpAccelStepper(moteurGauche, moteurDroit, dynamicSpeed);
-                            }                    
                             wasStopped = false;
 
                             Serial.println("Robot en mouvement. Accélération dynamique.");
@@ -163,39 +159,16 @@ void ClassMotors::RestoreQueueBuffer() {
     }
 }
 
-void RampDownAccelStepper(AccelStepper& moteur1, AccelStepper& moteur2) {
-    float currentSpeed = moteur1.speed();
-    Serial.print("Vitesse actuelle: ");
-    Serial.println(currentSpeed);
-    float rampStep = currentSpeed / STEP_DECCEL; // Nombre de pas de ralentissement
-    for (int i = 0; i < STEP_DECCEL; ++i) {
-        currentSpeed -= rampStep;
-        moteur1.setSpeed(currentSpeed);
-        moteur2.setSpeed(currentSpeed);
+void StopStepper(AccelStepper& moteur1, AccelStepper& moteur2) {
+    moteur1.setAcceleration(DECCEL); // Ralentissement
+    moteur2.setAcceleration(DECCEL); // Ralentissement
 
-        moteur1.runSpeed(); // Utilise runSpeed au lieu de run pour un contrôle direct
-        moteur2.runSpeed(); // Utilise runSpeed au lieu de run pour un contrôle direct
+    moteur1.stop(); // Arrête le moteur
+    moteur2.stop(); // Arrête le moteur
+    while (moteur1.isRunning() || moteur2.isRunning()) {
+        // On attend que les moteurs s'arrêtent
+        moteur1.run();
+        moteur2.run();
     }
     vTaskDelay(100); // Pause pour éviter un mouvement trop rapide
-}
-
-void RampUpAccelStepper(AccelStepper& moteur1, AccelStepper& moteur2, float targetSpeed, float stepAccel) {
-    float rampStep = targetSpeed / stepAccel; // STEP_ACCEL : nombre de pas d'accélération
-    float currentSpeed = 0;
-
-    for (int i = 0; i < stepAccel; ++i) {
-        currentSpeed += rampStep;
-        moteur1.setSpeed(currentSpeed);
-        moteur2.setSpeed(currentSpeed);
-        
-        moteur1.runSpeed();  // Mouvement instantané à la vitesse fixée
-        moteur2.runSpeed();  // Mouvement instantané à la vitesse fixée
-    }
-    Serial.print("Vitesse cible: ");
-    Serial.println(targetSpeed);
-    Serial.print("Vitesse actuelle: ");
-    Serial.println(currentSpeed);
-    // On s'assure d'avoir bien atteint la vitesse cible
-    moteur1.setSpeed(targetSpeed);
-    moteur2.setSpeed(targetSpeed);
 }

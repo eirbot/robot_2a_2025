@@ -44,10 +44,12 @@ void commande(){ // sert à entrer des commandes via le port serial
             serialGoto.Go((float)commande.substring(5,9).toInt(),(float)commande.substring(10,14).toInt(),(float)commande.substring(15,19).toInt());
         }
         else if(commande.substring(0,5)=="carre"){
-            serialGoto.Go(0,300,90);
-            serialGoto.Go(300,300,180);
-            serialGoto.Go(300,0,270);
-            serialGoto.Go(0,0,0);
+            while(1){                
+                serialGoto.Go(0,1000,90);
+                serialGoto.Go(1000,1000,180);
+                serialGoto.Go(1000,0,270);
+                serialGoto.Go(0,0,0);
+            }
         }
         else if(commande.substring(0,4)=="flag"){
             Serial.println("Flag");

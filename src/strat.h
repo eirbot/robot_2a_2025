@@ -4,10 +4,11 @@
 #include "Arduino.h"
 #include "ClassMotors.hpp"
 #include "GoToPosition.hpp"
-#include "main.h"
+#include "main_robot.h"
 #include "common.h"
 #include "actionneur.h"
 
+void retourBase();
 void vstrat0();
 void vstrat1();
 void vstrat2();

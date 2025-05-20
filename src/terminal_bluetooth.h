@@ -4,7 +4,7 @@
 #include "actionneur.h"
 #include "strat.h"
 #include "GoToPosition.hpp"
-#include "main.h"
+#include "main_robot.h"
 
 void vterminal_bluetooth(void *pvParameters);
 

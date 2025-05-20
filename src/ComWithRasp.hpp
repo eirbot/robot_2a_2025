@@ -7,7 +7,7 @@
 #include "ClassMotors.hpp"
 #include "GoToPosition.hpp"
 #include "actionneur.h"
-#include "main.h"
+#include "main_robot.h"
 
 class ComWithRasp {
 public:
