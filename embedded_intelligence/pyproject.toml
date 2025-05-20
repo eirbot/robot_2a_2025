@@ -12,6 +12,9 @@ requires-python = ">=3.11.2"
 dependencies = [
   "async-pyserial (==0.2.3)"
 ]
+[project.optional-dependencies]
+mypy = [ "mypy" ]
+
 
 [project.scripts]
 robot-main-loop = "cfr_2025_2a_embedded_ai.main:start"
