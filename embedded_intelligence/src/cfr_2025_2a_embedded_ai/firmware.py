@@ -7,6 +7,7 @@ from typing import Callable, Coroutine, Tuple
 
 from .communication.com import Communication
 from .communication.fifo_com import FifoCom
+from .communication.serial_com import SerialCom
 
 Position = Tuple[int, int]
 
@@ -18,12 +19,19 @@ class Robot:
     GOTO_ANSWER_PREFIX = "GoToPosition"
     CANETTE_ACTION_ANSWER_PREFIX = "Cannette"
 
-    def __init__(self, position: Position) -> None:
+    def __init__(self, position: Position, debug=False) -> None:
         self._p: Position = position
-        self._com: Communication = FifoCom(
-            (Robot.GOTO_ANSWER_PREFIX, Robot.CANETTE_ACTION_ANSWER_PREFIX),
-            100
-        )
+        self._com: Communication
+        if debug:
+            self._com = FifoCom(
+                (Robot.GOTO_ANSWER_PREFIX, Robot.CANETTE_ACTION_ANSWER_PREFIX),
+                100
+            )
+        else:
+            self._com = SerialCom(
+                (Robot.GOTO_ANSWER_PREFIX, Robot.CANETTE_ACTION_ANSWER_PREFIX),
+                100
+            )
 
     async def _run_loop_and_terminate_group(self, robot_loop_func: Callable[[], Coroutine]):
         await robot_loop_func()

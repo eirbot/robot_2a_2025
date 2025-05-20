@@ -39,8 +39,6 @@ class Communication(ABC):
     each `read_yield_frequency` milliseconds, meaning that after a reading try,
     if a line is not read yet, it yields the execution loop to the other tasks
     during an async sleeping with a duration of `read_yield_frequency`.
-
-    The coroutine must return only if at least one "\n" character is present
     """
     @abstractmethod
     async def _frequently_yielding_read(self) -> str:

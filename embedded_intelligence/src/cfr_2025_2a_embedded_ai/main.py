@@ -9,7 +9,13 @@ def strategy(robot: Robot):
         await robot.actionCanette()
     return robot_loop_func
 
-# run this with poetry
+# run one of the functions below with poetry
+
+def start_debug():
+    robot = Robot((1, 2), debug=True)
+    game = World()
+    asyncio.run(robot.connect_and_run(strategy(robot)))
+
 def start():
     robot = Robot((1, 2))
     game = World()
