@@ -1,27 +1,48 @@
 import asyncio
 import os
 from typing import Tuple
+from io import TextIOWrapper
 from .com import Communication, ReplyPrefix
 
 class FifoCom(Communication):
     def __init__(self, anticipatedAnswerPrefixes: Tuple[ReplyPrefix, ...], read_yield_frequency: int) -> None:
         super().__init__(anticipatedAnswerPrefixes, read_yield_frequency)
-        self.fifo_input_path = "/tmp/fifo_in"
-        self.fifo_output_path = "/tmp/fifo_out"
+        self.input_fifo_path = "/tmp/fifo_in"
+        self.output_fifo_path = "/tmp/fifo_out"
 
+        self._input_fifo_fd: int
+        self._input_fifo_pipe: TextIOWrapper
+
+        self._writer: TextIOWrapper
+
+    async def _open_channel(self):
+        # Open named pipe to be read
+        # Open the FIFO in non-blocking mode
+        self._input_fifo_fd = os.open(self.input_fifo_path, os.O_RDONLY | os.O_NONBLOCK)
+        self._input_fifo_pipe = os.fdopen(self._input_fifo_fd)
+
+        # Open named pipe to be written in
+        # TODO: implement with streamwriter for full async/user-auto-yielding
+        # support
+        while True:
+            try:
+                self._writer = open(self.output_fifo_path, "w")
+                break
+            except* Exception:
+                pass
+
+    async def _close_channel(self):
+        self._input_fifo_pipe.close()
+        os.close(self._input_fifo_fd)
+
+        self._writer.close()
 
     async def _frequently_yielding_read(self) -> str:
-        loop = asyncio.get_running_loop()
-
-        # Open the FIFO in non-blocking mode
-        fd = os.open(self.fifo_input_path, os.O_RDONLY | os.O_NONBLOCK)
-        pipe = os.fdopen(fd)
-
         # Wrap in asyncio StreamReader
+        loop = asyncio.get_running_loop()
         reader = asyncio.StreamReader()
         protocol = asyncio.StreamReaderProtocol(reader)
-        await loop.connect_read_pipe(lambda: protocol, pipe)
-
+        await loop.connect_read_pipe(lambda: protocol, self._input_fifo_pipe)
         while True:
             line = await reader.readline()
             if not line:
@@ -33,14 +54,7 @@ class FifoCom(Communication):
             return received + "\n"
 
     async def _blocking_write(self, message: str) -> None:
-        # TODO: implement with streamwriter for full async/user-auto-yielding
-        # support
-        try:
-            with open(self.fifo_output_path, "w") as file:
-                file.write(message)
-            return
-        except* Exception:
-            pass
+        self._writer.write(message)
 
 if __name__ == "__main__":
 

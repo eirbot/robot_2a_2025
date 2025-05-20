@@ -6,7 +6,7 @@ from .com import Communication, ReplyPrefix
 
 
 class SerialCom(Communication):
-    PORT = '/dev/ttyUSB0'
+    PORT = '/dev/pts/3'
     def __init__(self, anticipatedAnswerPrefixes: Tuple[ReplyPrefix, ...], read_yield_frequency: int) -> None:
         super().__init__(anticipatedAnswerPrefixes, read_yield_frequency)
         options = SerialPortOptions()
@@ -17,6 +17,12 @@ class SerialCom(Communication):
         options.read_bufsize = 8*64
         set_async_worker("asyncio")
         self._serial_port = SerialPort(SerialCom.PORT, options)
+
+    async def _open_channel(self):
+        self._serial_port.open()
+
+    async def _close_channel(self):
+        self._serial_port.close()
 
     async def _frequently_yielding_read(self) -> str:
         while True:
