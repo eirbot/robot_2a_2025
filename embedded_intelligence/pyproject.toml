@@ -15,7 +15,7 @@ dependencies = [
 
 [project.scripts]
 robot-main-loop = "cfr_2025_2a_embedded_ai.main:start"
-fifo-test = "cfr_2025_2a_embedded_ai.read_fifo:read_fifo_loop"
+fifo-test = "cfr_2025_2a_embedded_ai.mock_fifo_esp:start"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

@@ -46,6 +46,18 @@ prédéfinis:
 poetry run robot-main-loop
 ```
 
+## Tester la communication
+
+Sur Linux, il est possible de tester la boucle du robot avec une communication
+locale utilisant une fifo plutôt qu'une communication serial. Pour cela,
+exécuter dans un process à part
+
+```sh
+poetry run fifo-test
+```
+
+Puis exécuter la boucle du robot avec l'instruction dans la section précédente.
+
 
 ## TODO
 
