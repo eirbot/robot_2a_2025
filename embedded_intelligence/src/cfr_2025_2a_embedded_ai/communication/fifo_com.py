@@ -1,7 +1,7 @@
 import asyncio
 import os
 from typing import Tuple
-from com import Communication, ReplyPrefix
+from .com import Communication, ReplyPrefix
 
 class FifoCom(Communication):
     def __init__(self, anticipatedAnswerPrefixes: Tuple[ReplyPrefix, ...], read_yield_frequency: int) -> None:
