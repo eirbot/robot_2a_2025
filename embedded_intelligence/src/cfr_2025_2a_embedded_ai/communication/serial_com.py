@@ -1,0 +1,35 @@
+from asyncio import Future
+import asyncio
+from async_pyserial import SerialPort, SerialPortOptions, SerialPortParity, set_async_worker
+from typing import Tuple, cast
+from .com import Communication, ReplyPrefix
+
+
+class SerialCom(Communication):
+    PORT = '/dev/ttyUSB0'
+    def __init__(self, anticipatedAnswerPrefixes: Tuple[ReplyPrefix, ...], read_yield_frequency: int) -> None:
+        super().__init__(anticipatedAnswerPrefixes, read_yield_frequency)
+        options = SerialPortOptions()
+        options.baudrate = 9600
+        options.bytesize = 8
+        options.stopbits = 1
+        options.parity = SerialPortParity.NONE # NONE, ODD, EVEN
+        options.read_bufsize = 8*64
+        set_async_worker("asyncio")
+        self._serial_port = SerialPort(SerialCom.PORT, options)
+
+    async def _frequently_yielding_read(self) -> str:
+        while True:
+            buf = (await cast(Future[bytes],
+                            self._serial_port.read())).decode('utf-8')
+            if not buf:
+                await asyncio.sleep(
+                    self._reading_thread_sleep_time_after_reading_try/1000
+                )
+            else:
+                return buf
+
+    async def _blocking_write(self, message: str) -> None:
+        await cast(Future[None],
+                   self._serial_port.write(message.encode('utf-8'))
+                   )

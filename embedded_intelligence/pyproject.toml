@@ -15,6 +15,7 @@ dependencies = [
 
 [project.scripts]
 robot-main-loop = "cfr_2025_2a_embedded_ai.main:start"
+robot-main-loop-debug = "cfr_2025_2a_embedded_ai.main:start_debug"
 fifo-test = "cfr_2025_2a_embedded_ai.mock_fifo_esp:start"
 
 [build-system]
