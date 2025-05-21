@@ -11,6 +11,7 @@ from .communication.serial_com import SerialCom
 
 Position = Tuple[int, int]
 
+READ_YIELDING_TIME = 2
 
 class Robot:
     GOTO_ANSWER_PREFIX = "GoToPosition"
@@ -22,17 +23,17 @@ class Robot:
         if debug:
             self._com = FifoCom(
                 (Robot.GOTO_ANSWER_PREFIX, Robot.CANETTE_ACTION_ANSWER_PREFIX),
-                100
+                READ_YIELDING_TIME*1000
             )
         else:
             self._com = SerialCom(
                 (Robot.GOTO_ANSWER_PREFIX, Robot.CANETTE_ACTION_ANSWER_PREFIX),
-                100
+                READ_YIELDING_TIME*1000
             )
 
     async def _run_loop_and_terminate_group(self, robot_loop_func: Callable[[], Coroutine]):
         await robot_loop_func()
-        raise TerminateReadLoop
+        raise TerminateReadLoop()
 
     async def connect_and_run(self, robot_loop_func: Callable[[], Coroutine]):
         try:
@@ -48,8 +49,18 @@ class Robot:
         return self._p
 
     async def goTo(self, x: int, y: int, angle: float) -> None:
-        await self._com.send(f"G {x} {y} {angle}", Robot.GOTO_ANSWER_PREFIX)
-        self._p = (x, y)
+        try:
+            print("S" + "-"*5 + f"Sending GoTo with these paramtres: {x} {y} {angle}" + "-"*5)
+            await self._com.send(f"G {x} {y} {angle}", Robot.GOTO_ANSWER_PREFIX)
+            self._p = (x, y)
+            print("S" + "-"*5 + f"GoTo done! Robot in position {self._p}" + "-"*5)
+        except asyncio.TimeoutError:
+            print("S" + "-"*5 + f"Timeout in sending GoTo {x} {y} {angle}" + "-"*5)
 
     async def actionCanette(self) -> None:
-        await self._com.send("C", Robot.CANETTE_ACTION_ANSWER_PREFIX)
+        try:
+            print("S" + "-"*5 + "Sending CanetteAction" + "-"*5)
+            await self._com.send("C", Robot.CANETTE_ACTION_ANSWER_PREFIX)
+            print("S" + "-"*5 + "CanetteAction confirmed by esp" + "-"*5)
+        except asyncio.TimeoutError:
+            print("S" + "-"*5 + "Timeout in sending CanetteAction" + "-"*5)

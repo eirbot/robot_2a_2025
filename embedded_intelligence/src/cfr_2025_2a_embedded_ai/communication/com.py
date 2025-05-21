@@ -30,8 +30,11 @@ class Communication(ABC):
             anticipatedAnswerPrefix: SimpleQueue()
             for anticipatedAnswerPrefix in anticipatedAnswerPrefixes
         }
-        self._reading_thread_sleep_time_after_reading_try = read_yield_frequency
         self._is_channel_open = asyncio.Event()
+        self._reading_thread_sleep_time_after_reading_try = read_yield_frequency
+        # TODO: parametrize that
+        self._reading_timeout = 3
+        self._response_timeout = 5
 
     @classmethod
     def __create_empty_awaiting_string(cls) -> AwaitingString:
@@ -45,15 +48,17 @@ class Communication(ABC):
     def __get_awaiting_string_value(cls, awaiting_string: AwaitingString):
         return awaiting_string[0]
 
-    """This must be a coroutine which try to read on the communication channel
-    each `read_yield_frequency` milliseconds, meaning that after a reading try,
-    if a line is not read yet, it yields the execution loop to the other tasks
-    during an async sleeping with a duration of `read_yield_frequency`.
+    """This must be a coroutine which tries to read on the communication
+    channel. Can be blocking.
+    The function is allowed to internally raise an asyncio.TimeoutError
     """
     @abstractmethod
-    async def _frequently_yielding_read(self) -> str:
+    async def _blocking_read(self) -> str:
         pass
 
+    """This coroutine can be blocking.
+    The function is allowed to internally raise an asyncio.TimeoutError
+    """
     @abstractmethod
     async def _blocking_write(self, message: str) -> None:
         pass
@@ -77,9 +82,18 @@ class Communication(ABC):
         self._is_channel_open.set()
         try:
             while True:
-                new_msg: list[str] = (await self._frequently_yielding_read()).split(
-                    "\n"
-                )
+                new_msg: list[str]
+                try:
+                    print(f"R reading during the next {self._reading_timeout} seconds")
+                    async with asyncio.timeout(self._reading_timeout):
+                        new_msg =  (await self._blocking_read()).split("\n")
+                except asyncio.TimeoutError:
+                    print(f"R timeout, ready to read for the next {self._reading_thread_sleep_time_after_reading_try} ms")
+                    await asyncio.sleep(self._reading_thread_sleep_time_after_reading_try/1000)
+                    continue
+
+                print(f"R have read these messages: {new_msg}")
+
                 while len(new_msg) > 1:
                     msg += new_msg.pop(0)
                     prefix, return_message = self._split(msg)
@@ -104,15 +118,26 @@ class Communication(ABC):
             await self._close_channel()
             print("End of reading loop. Communication channel closed!")
 
+    """This coroutine can raise an asyncio.TimeoutError if the sent message has
+    not be received by the other side of the channel.
+    """
     async def send(self, msg: str, expected_reply_prefix: ReplyPrefix) -> str:
         await self._is_channel_open.wait() # do not write while channel is closed 
         wait_reception_event = asyncio.Event()
         expectedAnswer = Communication.__create_empty_awaiting_string()
         self._queue[expected_reply_prefix].put((wait_reception_event,
                                                 expectedAnswer))
+        print(f"S Starting writing in channel the message \"{msg}\"")
         await self._blocking_write(msg + "\n")
-        print("Sent:", msg)
-        print("Waiting:", expected_reply_prefix)
-        await wait_reception_event.wait() # automatically yielding to the read task
-        return cast(str, Communication.__get_awaiting_string_value(expectedAnswer))
+        print(f"S Finished writing. Awaiting response during the next {self._response_timeout} seconds")
+        try:
+            async with asyncio.timeout(self._response_timeout):
+                await wait_reception_event.wait() # automatically yielding to the read task
+            response_content = cast(str, Communication.__get_awaiting_string_value(expectedAnswer))
+            print(f"S Got reponse with the following content: {response_content}")
+            return response_content
+        except asyncio.TimeoutError:
+            print("S Timeout in awaiting response. Raise TimeoutError...")
+            raise TimeoutError()
+
 
