@@ -6,8 +6,14 @@ void retourBase(){
   float x = 0, y = 0;
   float angle = 0;
 
+  // Va devant la base
+  x = -750; y = 1100; angle = 0;
+  serialGoto.Go(x, y, angle);
+
+  vTaskDelay(1000);
+
   // Retour a la base
-  x = -950; y = 1450; angle = 0;
+  x = -750; y = 1450; angle = 0;
   serialGoto.Go(x, y, angle);
 }
 
@@ -52,7 +58,7 @@ void vstrat1(){ // 2 Canettes (bleue)
   serialGoto.Go(x, y, angle);
 
   // Se met en position pour pousser les canettes
-  x = -480; y = -100; angle = 180;
+  x = -480; y = -60; angle = 180;
   serialGoto.Go(x, y, angle);
 
   // Action mécanique
@@ -76,11 +82,11 @@ void vstrat1(){ // 2 Canettes (bleue)
   serialGoto.Go(x, y, angle);
 
     // On pousse les canettes
-  x = 0; y = 150; angle = 180;
+  x = -100; y = 150; angle = 180;
   serialGoto.Go(x, y, angle);
 
   // On pousse les canettes
-  x = 0; y = 0; angle = 180;
+  x = -100; y = 0; angle = 180;
   serialGoto.Go(x, y, angle);
 
   Serial.println("Pousser les canettes");
@@ -89,7 +95,7 @@ void vstrat1(){ // 2 Canettes (bleue)
   pousserCanettes();
 
   // Reculer de 500 mm vers le haut (Y+), même angle
-  x = 0; y = 500; angle = 180;
+  x = -100; y = 500; angle = 180;
   serialGoto.Go(x, y, angle);
 
   // Retour a la base
@@ -103,11 +109,11 @@ void vstrat2(){ // 2 Cannettes + Banniere (blue)
   float angle = 0;
 
   // init banniere
-  startBanniere();
-  vTaskDelay(100);
+  // startBanniere();
+  // vTaskDelay(100);
 
   // Postion pour bannière
-  x = 0; y = -195; angle = 0;
+  x = 0; y = -212; angle = 0;
   serialGoto.Go(x, y, angle);
 
   mot.WaitUntilDone();

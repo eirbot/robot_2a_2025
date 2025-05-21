@@ -61,6 +61,7 @@ void DoBanniere(){
   while(!digitalRead(BANNIERE)){
     vTaskDelay(100);
   } 
+  pinMode(BANNIERE, OUTPUT);
 }
 
 void resetActionneurs(){

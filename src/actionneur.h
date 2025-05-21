@@ -11,7 +11,7 @@
 #define motorIN1 13
 #define motorIN2 12
 
-#define BANNIERE 33
+#define BANNIERE 26
 
 #define gServoPin 14
 #define dServoPin 27
