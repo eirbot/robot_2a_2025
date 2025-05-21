@@ -37,6 +37,7 @@ def read_fifo_loop():
                 line = f.readline()
                 if len(line) > 0:
                     print(f"< {line}", end="")
+                    # comment it for debug with timeouts
                     callback(line)
             except* Exception:
                 pass

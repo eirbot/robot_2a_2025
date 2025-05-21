@@ -1,0 +1,11 @@
+main_loop_for_robot:
+  poetry run robot-main-loop
+
+debug_loop_for_robot:
+  poetry run robot-main-loop-debug
+
+mock_fifo_run:
+  poetry run fifo-test
+
+check_typing:
+  poetry run mypy .

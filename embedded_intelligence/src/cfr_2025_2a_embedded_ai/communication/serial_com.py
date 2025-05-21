@@ -24,14 +24,15 @@ class SerialCom(Communication):
     async def _close_channel(self):
         self._serial_port.close()
 
-    async def _frequently_yielding_read(self) -> str:
+    async def _blocking_read(self) -> str:
         while True:
             buf = (await cast(Future[bytes],
                             self._serial_port.read())).decode('utf-8')
             if not buf:
-                await asyncio.sleep(
-                    self._reading_thread_sleep_time_after_reading_try/1000
-                )
+                # TODO: if this read is blocking, then add this
+                # to make the coroutine ready to yield sometimes to others
+                # await asyncio.sleep(0.05)
+                continue
             else:
                 return buf
 
