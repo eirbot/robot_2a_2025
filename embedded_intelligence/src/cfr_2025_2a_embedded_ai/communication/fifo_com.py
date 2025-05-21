@@ -1,8 +1,10 @@
 import asyncio
-import os
-from typing import Tuple
 from io import TextIOWrapper
-from .com import Communication, ReplyPrefix
+import os
+import select
+from typing import List, Tuple, cast
+
+from .com import Communication, ReplyPrefix, TerminateReadLoop
 
 class FifoCom(Communication):
     def __init__(self, anticipatedAnswerPrefixes: Tuple[ReplyPrefix, ...], read_yield_frequency: int) -> None:
@@ -10,57 +12,46 @@ class FifoCom(Communication):
         self.input_fifo_path = "/tmp/fifo_in"
         self.output_fifo_path = "/tmp/fifo_out"
 
-        self._input_fifo_fd: int
-        self._input_fifo_pipe: TextIOWrapper
-
-        self._writer: TextIOWrapper
-
     async def _open_channel(self):
-        # Open named pipe to be read
-        # Open the FIFO in non-blocking mode
-        self._input_fifo_fd = os.open(self.input_fifo_path, os.O_RDONLY | os.O_NONBLOCK)
-        self._input_fifo_pipe = os.fdopen(self._input_fifo_fd)
-
-        # Open named pipe to be written in
-        # TODO: implement with streamwriter for full async/user-auto-yielding
-        # support
-        while True:
-            try:
-                self._writer = open(self.output_fifo_path, "w")
-                break
-            except* Exception:
-                pass
+        pass
 
     async def _close_channel(self):
-        self._input_fifo_pipe.close()
-        os.close(self._input_fifo_fd)
+        pass
 
-        self._writer.close()
+    async def _blocking_read(self) -> str:
+        fifo_in_fd = os.open(self.input_fifo_path, os.O_RDONLY | os.O_NONBLOCK)
+        fifo_in = os.fdopen(fifo_in_fd)
 
-    async def _frequently_yielding_read(self) -> str:
-        # Wrap in asyncio StreamReader
-        loop = asyncio.get_running_loop()
-        reader = asyncio.StreamReader()
-        protocol = asyncio.StreamReaderProtocol(reader)
-        await loop.connect_read_pipe(lambda: protocol, self._input_fifo_pipe)
-        while True:
-            line = await reader.readline()
-            if not line:
-                await asyncio.sleep(
-                    self._reading_thread_sleep_time_after_reading_try / 1000
-                )  # Yield time to other tasks
-                continue
-            received = line.decode().strip()
-            return received + "\n"
+        try:
+            while True:
+                readable, _, _ = cast(
+                    Tuple[List[TextIOWrapper], List, List],
+                    select.select([fifo_in], [], [], 0.05),
+                )
+                if len(readable) == 0:
+                    yield_time = 0.05
+                    print(f"R\tfifo_read: ready to yield during the next {yield_time} seconds")
+                    await asyncio.sleep(yield_time)
+                    print("R\tfifo_read: retry reading input")
+                    continue
+                line = readable[0].read()
+                print(f"R\tfifo_read: read message \"{line}\"")
+                fifo_in.close()
+                return line
+        except TerminateReadLoop:
+            fifo_in.close()
+            raise TerminateReadLoop()
 
     async def _blocking_write(self, message: str) -> None:
-        self._writer.write(message)
+        print("S\tfifo_write: opening and writing")
+        with open(self.output_fifo_path, 'w') as fifo:
+            fifo.write(message)
+        print(f"S\tfifo_write: written message \"{message}\"")
 
-if __name__ == "__main__":
-
+def test():
     async def test_for_main():
         com = FifoCom(("Answer", "OtherAnswer"), 100)
-        res = await com._frequently_yielding_read()
+        res = await com._blocking_read()
         print("Read:", res)
         print("Writing...")
         await com._blocking_write("OtherAnswer I sent the message")
