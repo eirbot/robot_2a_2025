@@ -12,6 +12,7 @@ unsigned long startMillis;
 bool initial_tbluetooth=true;
 
 BluetoothSerial SerialBT;
+OLEDInterface oled;
 TaskParams Parameters = {0, 0, 0, 0};
 
 GoToPosition serialGoto {0,0,0,1000,1000,0};
@@ -35,13 +36,23 @@ void setup() {
   SerialBT.begin("ESP32test");
   SerialBT.setTimeout(50);
 
-  xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
+  // xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
 
   xTaskCreate(vsetup_actionneurs,"vsetup_actionneurs", 1000, NULL, 1, NULL);
 
   mot.StartMotors();
   //comRasp.StartCom();
+
+  if (!oled.begin()) {
+    Serial.println("Erreur init OLED");
+    while (true);
+  }
   
+  oled.afficherMenuPrincipal();
+  vTaskDelay(pdMS_TO_TICKS(3000));
+  oled.afficherScore(88);
+  vTaskDelay(pdMS_TO_TICKS(3000));
+  oled.afficherDebug();
 }
 
 void loop() {

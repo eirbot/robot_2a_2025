@@ -6,6 +6,7 @@
 #include "commande_serie.h"
 #include "actionneur.h"
 #include "tofs.h"
+#include "OLEDInterface.hpp"
 #include "ComWithRasp.hpp"
 
 extern BluetoothSerial SerialBT;
