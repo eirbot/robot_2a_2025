@@ -1,25 +1,25 @@
 import logging
+from typing import Optional
 
 COLOR_RESET = "\033[0m"
-COLOR_DEBUG = "\033[94m"   # Blue
-COLOR_INFO = "\033[92m"    # Green
-COLOR_WARNING = "\033[93m" # Yellow
-COLOR_ERROR = "\033[91m"   # Red
-COLOR_CRITICAL = "\033[95m" # Magenta
+COLOR_BLUE = "\033[94m"  # Blue
+COLOR_GREEN = "\033[92m"  # Green
+
+
 class ColorFormatter(logging.Formatter):
     level_colors = {
-        logging.DEBUG: COLOR_DEBUG,
-        logging.INFO: COLOR_INFO,
-        logging.WARNING: COLOR_WARNING,
-        logging.ERROR: COLOR_ERROR,
-        logging.CRITICAL: COLOR_CRITICAL
+        "<R>": COLOR_BLUE,
+        "<S>": COLOR_GREEN,
     }
+
     def format(self, record):
-        level_color = ColorFormatter.level_colors.get(record.levelno, COLOR_RESET)
+        level_color = ColorFormatter.level_colors.get(record.msg[:3], COLOR_RESET)
         record.msg = f"{level_color}{record.msg}{COLOR_RESET}"
         return super().format(record)
+
+
 handler = logging.StreamHandler()
-handler.setFormatter(ColorFormatter('%(message)s'))
+handler.setFormatter(ColorFormatter("%(levelname)s: %(message)s"))
 
 # Configure logger
 logger = logging.getLogger(__name__)
@@ -28,9 +28,15 @@ logger.setLevel(logging.DEBUG)
 logger.addHandler(handler)
 logger.propagate = False  # Avoid duplicate logs
 
-def print_log(msg: str):
-    logger.info(msg)
+LOOP_PREFIX = {False: "<R>", True: "<S>"}
 
-def print_debug_log(msg: str):
-    logger.debug(msg)
+def prefix(ob: Optional[bool]) -> str:
+    return "" if ob is None else f"{LOOP_PREFIX[ob]} "
 
+
+def print_log(msg: str, in_strategy_loop: Optional[bool] = None):
+    logger.info(prefix(in_strategy_loop) + msg)
+
+
+def print_debug_log(msg: str, in_strategy_loop: Optional[bool] = None):
+    logger.debug(prefix(in_strategy_loop) + msg)
