@@ -1,0 +1,13 @@
+[robot]
+
+log_level="debug"
+
+[robot.communication]
+protocol="fifo"
+[robot.communication.ports]
+input="/tmp/fifo_in"
+output="/tmp/fifo_out"
+[robot.communication.delays]
+read_timeout_before_yield=3
+read_yielding_delay=2
+response_awaiting=5

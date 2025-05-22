@@ -3,6 +3,8 @@ import asyncio
 from queue import SimpleQueue
 from typing import Mapping, Optional, Tuple, cast
 
+from ..config import RobotCommunicationDelays
+
 from ..debug_log import print_debug_log, print_log
 
 class TerminateReadLoop(Exception):
@@ -24,7 +26,8 @@ class Communication(ABC):
       reading try on the communication channel, the reading thread let the other
       tasks run during this duration 
     """
-    def __init__(self, anticipatedAnswerPrefixes: Tuple[ReplyPrefix, ...], read_yield_frequency: int) -> None:
+    def __init__(self, anticipatedAnswerPrefixes: Tuple[ReplyPrefix, ...],
+                 com_settings: RobotCommunicationDelays) -> None:
         super().__init__()
         self._queue: Mapping[
             ReplyPrefix, SimpleQueue[Tuple[asyncio.Event, AwaitingString]]
@@ -33,10 +36,11 @@ class Communication(ABC):
             for anticipatedAnswerPrefix in anticipatedAnswerPrefixes
         }
         self._is_channel_open = asyncio.Event()
-        self._reading_thread_sleep_time_after_reading_try = read_yield_frequency
-        # TODO: parametrize that
-        self._reading_timeout = 3
-        self._response_timeout = 5
+        self._reading_thread_sleep_time_after_reading_try = com_settings[
+            "read_yielding_delay"
+        ]
+        self._reading_timeout = com_settings["read_timeout_before_yield"]
+        self._response_timeout = com_settings["response_awaiting"]
 
     @classmethod
     def __create_empty_awaiting_string(cls) -> AwaitingString:
@@ -92,10 +96,10 @@ class Communication(ABC):
                         new_msg = (await self._blocking_read()).split("\n")
                 except asyncio.TimeoutError:
                     print_debug_log(
-                        f"timeout, ready to yield for the next {self._reading_thread_sleep_time_after_reading_try} ms",
+                        f"timeout, ready to yield for the next {self._reading_thread_sleep_time_after_reading_try} s",
                         in_strategy_loop=False,
                     )
-                    await asyncio.sleep(self._reading_thread_sleep_time_after_reading_try/1000)
+                    await asyncio.sleep(self._reading_thread_sleep_time_after_reading_try)
                     continue
 
                 print_debug_log(f"have read these messages: {new_msg}",

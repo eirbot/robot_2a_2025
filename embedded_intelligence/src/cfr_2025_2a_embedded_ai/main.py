@@ -1,4 +1,6 @@
 import asyncio
+
+from .config import load_config
 from .world import World
 from .firmware import Robot
 
@@ -11,15 +13,12 @@ def strategy(robot: Robot):
 
 # run one of the functions below with poetry
 
-def start_debug_fifo():
-    robot = Robot((1, 2), debug=True)
-    game = World()
-    asyncio.run(robot.connect_and_run(strategy(robot)))
-
 def start_debug():
-    robot = Robot((1, 2))
+    config = load_config()
+    robot = Robot((1, 2), config)
     game = World()
     asyncio.run(robot.connect_and_run(strategy(robot)))
 
 def start():
+    load_config()
     print("Robot loop with real strategy not implemented yet. Leaving...")
