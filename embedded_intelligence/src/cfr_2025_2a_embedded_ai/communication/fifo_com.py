@@ -4,14 +4,17 @@ import os
 import select
 from typing import List, Tuple, cast
 
+from cfr_2025_2a_embedded_ai.config import RobotFifoCommunicationConfig
+
 from .com import Communication, ReplyPrefix
 from ..debug_log import print_debug_log
 
 class FifoCom(Communication):
-    def __init__(self, anticipatedAnswerPrefixes: Tuple[ReplyPrefix, ...], read_yield_frequency: int) -> None:
-        super().__init__(anticipatedAnswerPrefixes, read_yield_frequency)
-        self.input_fifo_path = "/tmp/fifo_in"
-        self.output_fifo_path = "/tmp/fifo_out"
+    def __init__(self, anticipatedAnswerPrefixes: Tuple[ReplyPrefix, ...],
+                 com_settings: RobotFifoCommunicationConfig) -> None:
+        super().__init__(anticipatedAnswerPrefixes, com_settings["delays"])
+        self.input_fifo_path = com_settings["ports"]["input"]
+        self.output_fifo_path = com_settings["ports"]["output"]
 
     async def _open_channel(self):
         pass
@@ -53,14 +56,3 @@ class FifoCom(Communication):
             fifo.write(message)
         print_debug_log(f"\tfifo_write: written message \"{message}\"",
                         in_strategy_loop=True)
-
-def test():
-    async def test_for_main():
-        com = FifoCom(("Answer", "OtherAnswer"), 100)
-        res = await com._blocking_read()
-        print_debug_log("Read:" + res)
-        print_debug_log("Writing...")
-        await com._blocking_write("OtherAnswer I sent the message")
-        print_debug_log("Ok done!")
-
-    asyncio.run(test_for_main())

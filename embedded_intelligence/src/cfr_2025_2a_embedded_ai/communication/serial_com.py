@@ -2,19 +2,22 @@ from asyncio import Future
 import asyncio
 from async_pyserial import SerialPort, SerialPortOptions, SerialPortParity, set_async_worker
 from typing import Tuple, cast
+
+from cfr_2025_2a_embedded_ai.config import RobotSerialCommunicationConfig
 from .com import Communication, ReplyPrefix
 
 
 class SerialCom(Communication):
-    def __init__(self, anticipatedAnswerPrefixes: Tuple[ReplyPrefix, ...], read_yield_frequency: int, s_port: str) -> None:
-        super().__init__(anticipatedAnswerPrefixes, read_yield_frequency)
+    def __init__(self, anticipatedAnswerPrefixes: Tuple[ReplyPrefix, ...],
+                 com_settings: RobotSerialCommunicationConfig) -> None:
+        super().__init__(anticipatedAnswerPrefixes, com_settings["delays"])
         options = SerialPortOptions()
         options.baudrate = 9600
         options.bytesize = 8
         options.stopbits = 1
         options.parity = SerialPortParity.NONE # NONE, ODD, EVEN
         options.read_bufsize = 8*64
-        self._serial_port = SerialPort(s_port, options)
+        self._serial_port = SerialPort(com_settings["ports"], options)
 
     async def _open_channel(self):
         self._serial_port.open()

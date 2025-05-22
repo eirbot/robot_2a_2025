@@ -5,6 +5,8 @@ Contains all the utilities method to interact with the robot's firmware
 import asyncio
 from typing import Callable, Coroutine, Tuple
 
+from cfr_2025_2a_embedded_ai.config import RobotConfig
+
 from .communication.com import Communication, TerminateReadLoop
 from .communication.fifo_com import FifoCom
 from .communication.serial_com import SerialCom
@@ -13,25 +15,22 @@ from .debug_log import print_debug_log, print_log
 
 Position = Tuple[int, int]
 
-READ_YIELDING_TIME = 2
-
 class Robot:
     GOTO_ANSWER_PREFIX = "GoToPosition"
     CANETTE_ACTION_ANSWER_PREFIX = "Cannette"
 
-    def __init__(self, position: Position, debug=False) -> None:
+    def __init__(self, position: Position, config:RobotConfig) -> None:
         self._p: Position = position
         self._com: Communication
-        if debug:
+        if config["robot"]["communication"]["protocol"] == "fifo":
             self._com = FifoCom(
                 (Robot.GOTO_ANSWER_PREFIX, Robot.CANETTE_ACTION_ANSWER_PREFIX),
-                READ_YIELDING_TIME*1000
+                config["robot"]["communication"]
             )
         else:
             self._com = SerialCom(
                 (Robot.GOTO_ANSWER_PREFIX, Robot.CANETTE_ACTION_ANSWER_PREFIX),
-                READ_YIELDING_TIME*1000,
-                '/dev/pts/3'
+                config["robot"]["communication"]
             )
 
     async def _run_loop_and_terminate_group(self, robot_loop_func: Callable[[], Coroutine]):
