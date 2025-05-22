@@ -2,13 +2,16 @@ main_loop_for_robot:
   poetry run robot-main-loop
 
 debug_loop_for_robot:
-  poetry run robot-main-loop-debug
+  poetry run test-main-loop
+
+debug_fifo_loop_for_robot:
+  poetry run test-fifo-main-loop
 
 mock_fifo_run:
-  poetry run fifo-test
+  poetry run fifo-mock-esp
 
 mock_serial_run:
-  poetry run serial-test
+  poetry run serial-mock-esp
 
 check_typing:
   poetry run mypy .
