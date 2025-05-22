@@ -19,7 +19,6 @@ mypy = [ "mypy" ]
 [project.scripts]
 robot-main-loop = "cfr_2025_2a_embedded_ai.main:start"
 test-main-loop = "cfr_2025_2a_embedded_ai.main:start_debug"
-test-fifo-main-loop = "cfr_2025_2a_embedded_ai.main:start_debug_fifo"
 fifo-mock-esp = "cfr_2025_2a_embedded_ai.mocking.mock_fifo_esp:start"
 serial-mock-esp = "cfr_2025_2a_embedded_ai.mocking.mock_serial_esp:start"
 
