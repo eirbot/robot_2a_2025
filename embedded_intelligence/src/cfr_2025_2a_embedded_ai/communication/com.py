@@ -89,10 +89,10 @@ class Communication(ABC):
                 try:
                     print_debug_log(f"reading during the next {self._reading_timeout} seconds", in_strategy_loop=False)
                     async with asyncio.timeout(self._reading_timeout):
-                        new_msg =  (await self._blocking_read()).split("\n")
+                        new_msg = (await self._blocking_read()).split("\n")
                 except asyncio.TimeoutError:
                     print_debug_log(
-                        f"timeout, ready to read for the next {self._reading_thread_sleep_time_after_reading_try} ms",
+                        f"timeout, ready to yield for the next {self._reading_thread_sleep_time_after_reading_try} ms",
                         in_strategy_loop=False,
                     )
                     await asyncio.sleep(self._reading_thread_sleep_time_after_reading_try/1000)

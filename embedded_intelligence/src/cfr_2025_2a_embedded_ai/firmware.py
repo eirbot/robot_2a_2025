@@ -30,7 +30,8 @@ class Robot:
         else:
             self._com = SerialCom(
                 (Robot.GOTO_ANSWER_PREFIX, Robot.CANETTE_ACTION_ANSWER_PREFIX),
-                READ_YIELDING_TIME*1000
+                READ_YIELDING_TIME*1000,
+                '/dev/pts/3'
             )
 
     async def _run_loop_and_terminate_group(self, robot_loop_func: Callable[[], Coroutine]):
