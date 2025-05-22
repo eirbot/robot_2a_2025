@@ -19,7 +19,8 @@ mypy = [ "mypy" ]
 [project.scripts]
 robot-main-loop = "cfr_2025_2a_embedded_ai.main:start"
 robot-main-loop-debug = "cfr_2025_2a_embedded_ai.main:start_debug"
-fifo-test = "cfr_2025_2a_embedded_ai.mock_fifo_esp:start"
+fifo-test = "cfr_2025_2a_embedded_ai.mocking.mock_fifo_esp:start"
+serial-test = "cfr_2025_2a_embedded_ai.mocking.mock_serial_esp:start"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
