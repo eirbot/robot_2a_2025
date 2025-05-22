@@ -5,6 +5,7 @@ import select
 from typing import List, Tuple, cast
 
 from .com import Communication, ReplyPrefix, TerminateReadLoop
+from ..debug_log import print_debug_log
 
 class FifoCom(Communication):
     def __init__(self, anticipatedAnswerPrefixes: Tuple[ReplyPrefix, ...], read_yield_frequency: int) -> None:
@@ -30,12 +31,12 @@ class FifoCom(Communication):
                 )
                 if len(readable) == 0:
                     yield_time = 0.05
-                    print(f"R\tfifo_read: ready to yield during the next {yield_time} seconds")
+                    print_debug_log(f"R\tfifo_read: ready to yield during the next {yield_time} seconds")
                     await asyncio.sleep(yield_time)
-                    print("R\tfifo_read: retry reading input")
+                    print_debug_log("R\tfifo_read: retry reading input")
                     continue
                 line = readable[0].read()
-                print(f"R\tfifo_read: read message \"{line}\"")
+                print_debug_log(f"R\tfifo_read: read message \"{line}\"")
                 fifo_in.close()
                 return line
         except TerminateReadLoop:
@@ -43,18 +44,18 @@ class FifoCom(Communication):
             raise TerminateReadLoop()
 
     async def _blocking_write(self, message: str) -> None:
-        print("S\tfifo_write: opening and writing")
+        print_debug_log("S\tfifo_write: opening and writing")
         with open(self.output_fifo_path, 'w') as fifo:
             fifo.write(message)
-        print(f"S\tfifo_write: written message \"{message}\"")
+        print_debug_log(f"S\tfifo_write: written message \"{message}\"")
 
 def test():
     async def test_for_main():
         com = FifoCom(("Answer", "OtherAnswer"), 100)
         res = await com._blocking_read()
-        print("Read:", res)
-        print("Writing...")
+        print_debug_log("Read:" + res)
+        print_debug_log("Writing...")
         await com._blocking_write("OtherAnswer I sent the message")
-        print("Ok done!")
+        print_debug_log("Ok done!")
 
     asyncio.run(test_for_main())
