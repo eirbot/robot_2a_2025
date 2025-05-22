@@ -119,7 +119,7 @@ class Communication(ABC):
                             waiting_event.set()
                     msg = ""
                 msg += new_msg[0]
-        except TerminateReadLoop:
+        except asyncio.CancelledError:
             # the read loop is over, we do not use anymore the instance
             self._is_channel_open.clear()
             await self._close_channel()
