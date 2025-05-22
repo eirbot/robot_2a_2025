@@ -53,17 +53,22 @@ class Robot:
 
     async def goTo(self, x: int, y: int, angle: float) -> None:
         try:
-            print_debug_log("S" + "-"*5 + f"Sending GoTo with these paramtres: {x} {y} {angle}" + "-"*5)
+            print_debug_log("-"*5 + f"Sending GoTo with these parametres: {x} {y} {angle}" + "-"*5, in_strategy_loop=True)
             await self._com.send(f"G {x} {y} {angle}", Robot.GOTO_ANSWER_PREFIX)
             self._p = (x, y)
-            print_debug_log("S" + "-"*5 + f"GoTo done! Robot in position {self._p}" + "-"*5)
+            print_debug_log("-"*5 + f"GoTo done! Robot in position {self._p}" + "-"*5, in_strategy_loop=True)
         except asyncio.TimeoutError:
-            print_debug_log("S" + "-"*5 + f"Timeout in sending GoTo {x} {y} {angle}" + "-"*5)
+            print_debug_log("-"*5 + f"Timeout in sending GoTo {x} {y} {angle}" + "-"*5, in_strategy_loop=True)
 
     async def actionCanette(self) -> None:
         try:
-            print_debug_log("S" + "-"*5 + "Sending CanetteAction" + "-"*5)
+            print_debug_log("-"*5 + "Sending CanetteAction" + "-"*5,
+                            in_strategy_loop=True)
             await self._com.send("C", Robot.CANETTE_ACTION_ANSWER_PREFIX)
-            print_debug_log("S" + "-"*5 + "CanetteAction confirmed by esp" + "-"*5)
+            print_debug_log("-"*5 + "CanetteAction confirmed by esp" + "-"*5,
+                            in_strategy_loop=True)
         except asyncio.TimeoutError:
-            print_debug_log("S" + "-"*5 + "Timeout in sending CanetteAction" + "-"*5)
+            print_debug_log(
+                "-" * 5 + "Timeout in sending CanetteAction" + "-" * 5,
+                in_strategy_loop=True,
+            )

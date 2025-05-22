@@ -31,12 +31,14 @@ class FifoCom(Communication):
                 )
                 if len(readable) == 0:
                     yield_time = 0.05
-                    print_debug_log(f"R\tfifo_read: ready to yield during the next {yield_time} seconds")
+                    print_debug_log(f"\tfifo_read: ready to yield during the next {yield_time} seconds", in_strategy_loop=False)
                     await asyncio.sleep(yield_time)
-                    print_debug_log("R\tfifo_read: retry reading input")
+                    print_debug_log("\tfifo_read: retry reading input",
+                                    in_strategy_loop=False)
                     continue
                 line = readable[0].read()
-                print_debug_log(f"R\tfifo_read: read message \"{line}\"")
+                print_debug_log(f"\tfifo_read: read message \"{line}\"",
+                                in_strategy_loop=False)
                 fifo_in.close()
                 return line
         except TerminateReadLoop:
@@ -44,10 +46,12 @@ class FifoCom(Communication):
             raise TerminateReadLoop()
 
     async def _blocking_write(self, message: str) -> None:
-        print_debug_log("S\tfifo_write: opening and writing")
+        print_debug_log("\tfifo_write: opening and writing",
+                        in_strategy_loop=True)
         with open(self.output_fifo_path, 'w') as fifo:
             fifo.write(message)
-        print_debug_log(f"S\tfifo_write: written message \"{message}\"")
+        print_debug_log(f"\tfifo_write: written message \"{message}\"",
+                        in_strategy_loop=True)
 
 def test():
     async def test_for_main():
