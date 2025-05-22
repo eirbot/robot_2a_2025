@@ -3,6 +3,8 @@ import asyncio
 from queue import SimpleQueue
 from typing import Mapping, Optional, Tuple, cast
 
+from ..debug_log import print_debug_log, print_log
+
 class TerminateReadLoop(Exception):
     """Exception raised to ends the reading loop when the robot has
     finished"""
@@ -78,21 +80,21 @@ class Communication(ABC):
     async def read_loop(self) -> None:
         msg: str = ""
         await self._open_channel()
-        print("Communication channel open! Starting reading loop...")
+        print_log("R Communication channel open! Starting reading loop...")
         self._is_channel_open.set()
         try:
             while True:
                 new_msg: list[str]
                 try:
-                    print(f"R reading during the next {self._reading_timeout} seconds")
+                    print_debug_log(f"R reading during the next {self._reading_timeout} seconds")
                     async with asyncio.timeout(self._reading_timeout):
                         new_msg =  (await self._blocking_read()).split("\n")
                 except asyncio.TimeoutError:
-                    print(f"R timeout, ready to read for the next {self._reading_thread_sleep_time_after_reading_try} ms")
+                    print_debug_log(f"R timeout, ready to read for the next {self._reading_thread_sleep_time_after_reading_try} ms")
                     await asyncio.sleep(self._reading_thread_sleep_time_after_reading_try/1000)
                     continue
 
-                print(f"R have read these messages: {new_msg}")
+                print_debug_log(f"R have read these messages: {new_msg}")
 
                 while len(new_msg) > 1:
                     msg += new_msg.pop(0)
@@ -116,7 +118,7 @@ class Communication(ABC):
             # the read loop is over, we do not use anymore the instance
             self._is_channel_open.clear()
             await self._close_channel()
-            print("End of reading loop. Communication channel closed!")
+            print_log("R End of reading loop. Communication channel closed!")
 
     """This coroutine can raise an asyncio.TimeoutError if the sent message has
     not be received by the other side of the channel.
@@ -127,17 +129,17 @@ class Communication(ABC):
         expectedAnswer = Communication.__create_empty_awaiting_string()
         self._queue[expected_reply_prefix].put((wait_reception_event,
                                                 expectedAnswer))
-        print(f"S Starting writing in channel the message \"{msg}\"")
+        print_debug_log(f"S Starting writing in channel the message \"{msg}\"")
         await self._blocking_write(msg + "\n")
-        print(f"S Finished writing. Awaiting response during the next {self._response_timeout} seconds")
+        print_debug_log(f"S Finished writing. Awaiting response during the next {self._response_timeout} seconds")
         try:
             async with asyncio.timeout(self._response_timeout):
                 await wait_reception_event.wait() # automatically yielding to the read task
             response_content = cast(str, Communication.__get_awaiting_string_value(expectedAnswer))
-            print(f"S Got reponse with the following content: {response_content}")
+            print_debug_log(f"S Got reponse with the following content: {response_content}")
             return response_content
         except asyncio.TimeoutError:
-            print("S Timeout in awaiting response. Raise TimeoutError...")
+            print_debug_log("S Timeout in awaiting response. Raise TimeoutError...")
             raise TimeoutError()
 
 

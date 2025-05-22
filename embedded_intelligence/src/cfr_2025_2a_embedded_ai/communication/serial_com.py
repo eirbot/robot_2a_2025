@@ -1,5 +1,4 @@
 from asyncio import Future
-import asyncio
 from async_pyserial import SerialPort, SerialPortOptions, SerialPortParity, set_async_worker
 from typing import Tuple, cast
 from .com import Communication, ReplyPrefix
