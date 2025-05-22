@@ -23,6 +23,11 @@ web](https://python-poetry.org/docs/#installing-with-the-official-installer)
 curl -sSL https://install.python-poetry.org | python3 -
 ```
 
+Si vous aimez taper une commande en 2ms dans le terminal grâce à
+l'autocomplétion de la touche Tab, alors il est conseillé d'installer
+`just` (et d'ajouter son autocomplétion dans bash). Un `justfile` a été défini
+pour les amoureux des interfaces simples.
+
 ## Installation des dépendances
 
 ```sh
@@ -33,7 +38,8 @@ poetry install
 ## Configuration du port série
 
 Cet automate communique avec la carte STM-32 via un port série qui est à
-définir dans la variable `PORT` du fichier `esp_serial.py`
+définir dans l'instanciatoin de `SerialCom` située dans le constructeur de la
+classe `Robot` du fichier `firmware.py`
 
 ## Exécuter le script principal du robot
 
@@ -44,24 +50,47 @@ prédéfinis:
 ```sh
 # se place dans l'environnement virtuel de poetry et exécute le module main
 poetry run robot-main-loop
+# pour les feignasses
+# just main_loop_for_robot
 ```
 
-## Tester la communication
+## Tester la communication serial
 
-Sur Linux, il est possible de tester la boucle du robot avec une communication
+Sur Linux, il est possible d'ouvrir virtuellement deux ports serial pour faire
+communiquer ici deux processus de test. Pour cela suivre les étapes décrites
+dans [`./protocol_for_serial_test.md`](./protocol_for_serial_test.md).
+
+Ensuite, exécuter le programme déguisant l'esp :
+
+```sh
+poetry run serial-mock-esp
+# just mock_serial_run
+```
+
+Puis exécuter une boucle de test du robot :
+
+```sh
+poetry run test-main-loop
+# just debug_loop_for_robot
+```
+
+## Tester la communication sans serial
+
+Sur Linux, il est possible de tester une boucle du robot avec une communication
 locale utilisant une fifo plutôt qu'une communication serial. Pour cela,
 exécuter dans un process à part
 
 ```sh
-poetry run fifo-test
+poetry run fifo-mock-esp
+# just mock_fifo_run
 ```
 
 Puis exécuter la boucle du robot dans le processus suivant:
 
 ```sh
-poetry run robot-main-loop-debug
+poetry run test-fifo-main-loop
+# just debug_fifo_loop_for_robot
 ```
-
 
 ## TODO
 
