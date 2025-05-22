@@ -4,7 +4,7 @@ import os
 import select
 from typing import List, Tuple, cast
 
-from .com import Communication, ReplyPrefix, TerminateReadLoop
+from .com import Communication, ReplyPrefix
 from ..debug_log import print_debug_log
 
 class FifoCom(Communication):
@@ -41,9 +41,10 @@ class FifoCom(Communication):
                                 in_strategy_loop=False)
                 fifo_in.close()
                 return line
-        except TerminateReadLoop:
+        except asyncio.CancelledError:
             fifo_in.close()
-            raise TerminateReadLoop()
+            print_debug_log("\tfifo_read: reading interrupted, input fifo closed", in_strategy_loop=False)
+            raise
 
     async def _blocking_write(self, message: str) -> None:
         print_debug_log("\tfifo_write: opening and writing",
