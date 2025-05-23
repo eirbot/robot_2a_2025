@@ -9,7 +9,7 @@ void readTofs(void *Parameters_temp){
     Adafruit_VL53L0X frontTof = Adafruit_VL53L0X();
 
     if (!frontTof.begin()) {
-        Serial.println(F("Failed to boot VL53L0X"));
+        // Serial.println(F("Failed to boot VL53L0X"));
     }
 
     VL53L0X_RangingMeasurementData_t measure;

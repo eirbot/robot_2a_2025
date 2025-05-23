@@ -1,11 +1,6 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#include "esp_task_wdt.h"
-#include "ClassMotors.hpp"
-#include "GoToPosition.hpp"
-#include "AccelStepper.h"
-
 // a determiner pour les pins des btn et switch
 #define BTNG 36
 #define BTND 39
@@ -21,6 +16,9 @@
 
 #define SPEEDMAX 1000
 #define ACCELMAX 3000
+#define X_POS_INIT 1775
+#define Y_POS_INIT 100
+#define ANGLE_INIT 0
 
 #define MOTOR_G 6
 #define MOTOR_D 5
@@ -31,6 +29,11 @@
 
 #define vitesse_nominale 100
 #define stop_distance 200
+
+#include "esp_task_wdt.h"
+#include "ClassMotors.hpp"
+#include "GoToPosition.hpp"
+#include "AccelStepper.h"
 
 typedef struct {
     int distance;
@@ -49,7 +52,7 @@ extern AccelStepper moteurDroit;
 extern TaskHandle_t vstratHandle;
 extern TaskHandle_t vterminal_bluetoothHandle;
 
-SemaphoreHandle_t xPositionMutex;
+extern SemaphoreHandle_t xPositionMutex;
 
 extern volatile bool* FLAG_CLEAR;
 extern bool FLAG_STOP;
