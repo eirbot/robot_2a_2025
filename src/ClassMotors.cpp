@@ -29,14 +29,12 @@ void ClassMotors::vMotors(void* pvParameters){
             instance->currentStep = moteurGauche.currentPosition();
 
             if(taskParams.angle==0 && taskParams.distance==0){
-                Serial.println("Tout les parametres a 0");
+
             }
             else if(taskParams.angle==0){ //Pour avancer
-                steps = ((int)taskParams.distance / (M_PI * dRoues)) * stepPerRev;
+                steps = (int)((taskParams.distance / (M_PI * dRoues)) * stepPerRev);
                 instance->stepDid = 0;
 
-                Serial.print("Steps de la ligne droite:   ");
-                Serial.println(steps);
                 if(taskParams.direction == 1){// On recule, ou on t'encule
                     moteurGauche.move(-steps);
                     moteurDroit.move(-steps);
@@ -59,8 +57,6 @@ void ClassMotors::vMotors(void* pvParameters){
                              // Ralentissement progressif
                             StopStepper(moteurGauche, moteurDroit);
 
-                            Serial.println("Robot arrêté. Ralentissement progressif.");
-
                             stopStartTime = xTaskGetTickCount(); // Première fois qu'on détecte l'arrêt
                             wasStopped = true;
 
@@ -73,14 +69,8 @@ void ClassMotors::vMotors(void* pvParameters){
 
                             moteurGauche.move(remainingSteps);
                             moteurDroit.move(remainingSteps);
-
-                            Serial.print("Distance restante: ");
-                            Serial.println(instance->distanceDid);
-                            Serial.print("Step restant: ");
-                            Serial.println(instance->stepDid);
                         }
                         else if ((xTaskGetTickCount() - stopStartTime) > maxIdleTime) {
-                            Serial.println("Robot arrêté trop longtemps. Vidage de la queue.");
                             wasStopped = false; // Remet à zéro après vidage
                             FLAG_STOP = true;
 
@@ -103,7 +93,7 @@ void ClassMotors::vMotors(void* pvParameters){
                 }               
             }
             else if(taskParams.distance==0){ //Pour tourner
-                steps = ((int)std::abs(taskParams.angle) / 360.0) * (M_PI * ecartRoues) * stepPerRev / (M_PI * dRoues);
+                steps = (int)((std::abs(taskParams.angle) / 360.0) * (M_PI * ecartRoues) * stepPerRev / (M_PI * dRoues));
                 instance->stepDid = steps;
 
                 if(taskParams.direction == 0){//0 droite, 1 gauche
@@ -122,7 +112,6 @@ void ClassMotors::vMotors(void* pvParameters){
                 }
             }
             else{
-                Serial.println("il faut au moins un parametre a 0 entre angle et distance");
             }
             vTaskDelay(100);
         }
@@ -224,8 +213,8 @@ void ClassMotors::UpdateOdometry() {
     if (angle < -M_PI) angle += 2 * M_PI;
 
     // Mise à jour de la position
-    x += delta_s * cos(angle);
-    y += delta_s * sin(angle);
+    x += delta_s * sin(angle);
+    y += delta_s * cos(angle);
 
     // Écrire la nouvelle position
     SetPosition(x, y, angle);

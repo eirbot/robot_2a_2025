@@ -36,9 +36,9 @@ private:
     long currentStep;
     float distanceDid;
 
-    float x_pos = 0.0;
-    float y_pos = 0.0;
-    float orientation = 0.0; // En radians
+    float x_pos = X_POS_INIT;
+    float y_pos = Y_POS_INIT;
+    float orientation = ANGLE_INIT; // En radians
 };
 
 void StopStepper(AccelStepper& moteur1, AccelStepper& moteur2);

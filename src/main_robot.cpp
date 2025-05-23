@@ -15,7 +15,7 @@ BluetoothSerial SerialBT;
 OLEDInterface oled;
 TaskParams Parameters = {0, 0, 0, 0};
 
-GoToPosition serialGoto {0,0,0,1000,1000,0};
+GoToPosition serialGoto {X_POS_INIT,Y_POS_INIT,ANGLE_INIT,1000,1000,0};
 
 void debug(void* param) {
 
@@ -23,7 +23,7 @@ void debug(void* param) {
     float x, y, angle;
     mot.GetPosition(x, y, angle);
     Serial.printf("%f;%f;%f\r\n", x, y, angle * RAD_TO_DEG);
-    vTaskDelay(pdMS_TO_TICKS(1000));
+    vTaskDelay(pdMS_TO_TICKS(10));
   }
 }
 
@@ -42,11 +42,11 @@ void setup() {
 
   xPositionMutex = xSemaphoreCreateMutex();
   if (xPositionMutex == NULL) {
-      Serial.println("Erreur : mutex non créé");
+      // Serial.println("Erreur : mutex non créé");
   }
 
 
-  Serial.begin(115200);
+  Serial.begin(230400);
   startMillis = millis();
 
   SerialBT.begin("ESP32test");
@@ -55,13 +55,14 @@ void setup() {
   // xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
 
   xTaskCreate(vsetup_actionneurs,"vsetup_actionneurs", 1000, NULL, 1, NULL);
-  xTaskCreate(debug,"debug", 1000, NULL, 1, NULL);
+  
 
   mot.StartMotors();
   //comRasp.StartCom();
+  xTaskCreate(debug,"debug", 8192, NULL, 1, NULL);
 
   if (!oled.begin()) {
-    Serial.println("Erreur init OLED");
+    // Serial.println("Erreur init OLED");
     while (true);
   }
   
@@ -73,8 +74,11 @@ void setup() {
 }
 
 void loop() {
-  commande();
-  
+  //commande();
+  while(!digitalRead(tirette)){
+    vTaskDelay(pdMS_TO_TICKS(100));
+  }
+  vstrat1();
   // Serial.println(frontClear_tof); // This will now work correctly
-  vTaskDelay(pdMS_TO_TICKS(1000));
+  
 }
