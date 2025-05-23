@@ -4,6 +4,7 @@
 #include "Arduino.h"
 #include "common.h"
 #include "Adafruit_VL53L0X.h"
+#include <SparkFun_I2C_Mux_Arduino_Library.h>
 
 extern volatile bool frontClear_tof; // Ensure this is declared as extern
 extern volatile bool backClear_tof;  // Ensure this is declared as extern
