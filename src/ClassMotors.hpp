@@ -23,6 +23,10 @@ public:
     long GetStepDid() const { return stepDid; }
     long GetCurrentStep() const { return currentStep; }
     float GetDistanceDid() const { return distanceDid; }
+    void UpdateOdometry();
+
+    void GetPosition(float &x, float &y, float &angle);
+    void SetPosition(float x, float y, float angle);
 
 private:
     QueueHandle_t xQueue;
@@ -31,6 +35,10 @@ private:
     long stepDid;
     long currentStep;
     float distanceDid;
+
+    float x_pos = 0.0;
+    float y_pos = 0.0;
+    float orientation = 0.0; // En radians
 };
 
 void StopStepper(AccelStepper& moteur1, AccelStepper& moteur2);

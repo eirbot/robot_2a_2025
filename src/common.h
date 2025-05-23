@@ -49,6 +49,8 @@ extern AccelStepper moteurDroit;
 extern TaskHandle_t vstratHandle;
 extern TaskHandle_t vterminal_bluetoothHandle;
 
+SemaphoreHandle_t xPositionMutex;
+
 extern volatile bool* FLAG_CLEAR;
 extern bool FLAG_STOP;
 
