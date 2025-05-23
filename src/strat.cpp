@@ -17,7 +17,7 @@ void retourBase(){
 }
 
 void vstrat0(){ // 1 Canette (bleue)
-
+  
   // Position initiale
   float x = 0, y = 0;
   float angle = 0;
@@ -27,7 +27,7 @@ void vstrat0(){ // 1 Canette (bleue)
   serialGoto.Go(x, y, angle);
 
   // Se met en position pour pousser les canettes
-  x = 2250; y = 100; angle = 180;
+  x = 2250; y = 250; angle = 180;
   serialGoto.Go(x, y, angle);
 
   // Action mécanique
@@ -38,12 +38,14 @@ void vstrat0(){ // 1 Canette (bleue)
   x = 2250; y = 400; angle = 180;
   serialGoto.Go(x, y, angle);
 
-  // Retour a la base
-  retourBase();
+  // Se met en position pour se caler
+  x = 3000; y = 400; angle = 90;
+  serialGoto.AllerEtSet(x, y, angle, x-100, y, angle);
 
-  if(vterminal_bluetoothHandle!=NULL){
-    xTaskNotifyGive(vterminal_bluetoothHandle);
-  } 
+  // Reculer pour repartir
+  x = 2700; y = 400; angle = 90;
+  serialGoto.Go(x, y, angle);
+
 }
 
 void vstrat1(){ // 2 Canettes (bleue)
@@ -55,7 +57,7 @@ void vstrat1(){ // 2 Canettes (bleue)
   vstrat0();
 
   // Position intermediaire
-  x = 2500; y = 1200; angle = 90;
+  x = 2450; y = 1200; angle = -90;
   serialGoto.Go(x, y, angle);
 
   // Va devant les canettes
@@ -82,8 +84,6 @@ void vstrat1(){ // 2 Canettes (bleue)
   x = 1775; y = 700; angle = 180;
   serialGoto.Go(x, y, angle);
 
-  // Retour a la base
-  retourBase();
 }
 
 void vstrat2(){ // 2 Cannettes + Banniere (blue)
@@ -91,10 +91,6 @@ void vstrat2(){ // 2 Cannettes + Banniere (blue)
   // Position initiale
   float x = 0, y = 0;
   float angle = 0;
-
-  // init banniere
-  // startBanniere();
-  // vTaskDelay(100);
 
   // Postion pour bannière
   x = 1775; y = 0; angle = 0;

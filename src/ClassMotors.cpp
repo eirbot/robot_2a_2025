@@ -148,6 +148,18 @@ void ClassMotors::RestoreQueueBuffer() {
     }
 }
 
+void ClassMotors::Stop() {
+    // Stoppe les moteurs
+    FLAG_STOP = true;
+    stepDid = moteurGauche.currentPosition() - GetCurrentStep();  
+    distanceDid = (GetStepDid() * M_PI * dRoues) / stepPerRev;
+    StopStepper(moteurGauche, moteurDroit);
+    while (xQueueReceive(xQueue, NULL, 0) == pdTRUE) {
+        // On vide la file
+        vTaskDelay(10);
+    }
+}
+
 void StopStepper(AccelStepper& moteur1, AccelStepper& moteur2) {
     moteur1.setAcceleration(DECCEL); // Ralentissement
     moteur2.setAcceleration(DECCEL); // Ralentissement

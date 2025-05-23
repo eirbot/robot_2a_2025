@@ -19,6 +19,7 @@ public:
     void EnvoyerDonnees(void * Params);
     void TransferQueueBuffer();
     void RestoreQueueBuffer();
+    void Stop();
 
     long GetStepDid() const { return stepDid; }
     long GetCurrentStep() const { return currentStep; }

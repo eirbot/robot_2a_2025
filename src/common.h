@@ -1,7 +1,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-// a determiner pour les pins des btn et switch
+#define TEMPS_MATCH_ROBOT 85000
+
 #define BTNG 36
 #define BTND 39
 #define SWITCH1 34 //Gauche
@@ -17,7 +18,7 @@
 #define SPEEDMAX 1000
 #define ACCELMAX 3000
 #define X_POS_INIT 1775
-#define Y_POS_INIT 100
+#define Y_POS_INIT 200
 #define ANGLE_INIT 0
 
 #define MOTOR_G 6

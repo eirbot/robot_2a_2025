@@ -59,7 +59,7 @@ void setup() {
 
   mot.StartMotors();
   //comRasp.StartCom();
-  xTaskCreate(debug,"debug", 8192, NULL, 1, NULL);
+  // xTaskCreate(debug,"debug", 8192, NULL, 1, NULL);
 
   if (!oled.begin()) {
     // Serial.println("Erreur init OLED");
@@ -75,10 +75,25 @@ void setup() {
 
 void loop() {
   //commande();
+  TickType_t GoBase = 0;
+  Serial.println("Waiting for tirette In...");
+  while(digitalRead(tirette)){
+    vTaskDelay(pdMS_TO_TICKS(100));
+  }
+  Serial.println("Waiting for tirette Out...");
   while(!digitalRead(tirette)){
     vTaskDelay(pdMS_TO_TICKS(100));
   }
+  Serial.println("Tirette Out");
+  GoBase = xTaskGetTickCount();
   vstrat1();
+  Serial.println("On attend la fin du match");
+  while(xTaskGetTickCount() - GoBase < TEMPS_MATCH_ROBOT){
+    vTaskDelay(pdMS_TO_TICKS(100));
+  }
+  Serial.println("Fin du match");
+  mot.Stop();
+  retourBase();
   // Serial.println(frontClear_tof); // This will now work correctly
   
 }

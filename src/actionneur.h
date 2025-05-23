@@ -26,7 +26,6 @@ void avancerCanettes();
 void reculerCanettes();
 void arreterCanettes();
 
-void startBanniere();
 void DoBanniere();
 
 void gServof(int angle);

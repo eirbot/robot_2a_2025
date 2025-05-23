@@ -84,6 +84,7 @@ void GoToPosition::Go(float x_f,float y_f,float cangle_f) {
         y_initial = y;
         cangle_initial = cangle_final;
 
+        Serial.printf("x: %f, y: %f, angle: %f\n", x_initial, y_initial, cangle_initial * RAD_TO_DEG);
     }
 }
 

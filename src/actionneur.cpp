@@ -49,21 +49,22 @@ void pousserCanettes(){
   bdServo.write(0);
   vTaskDelay(800);
 }
-void startBanniere(){
-  digitalWrite(BANNIERE, HIGH);
-  vTaskDelay(100);
-  digitalWrite(BANNIERE, LOW);
-}
 
 void DoBanniere(){
+  TickType_t TimeOutBan = 0;
   digitalWrite(BANNIERE, HIGH);
   vTaskDelay(100);
   digitalWrite(BANNIERE, LOW);
   vTaskDelay(100);
 
   pinMode(BANNIERE, INPUT); // Set the pin to input mode to disable the pull-up resistor
+
+  TimeOutBan = xTaskGetTickCount();
   while(!digitalRead(BANNIERE)){
     vTaskDelay(100);
+    if((xTaskGetTickCount() - TimeOutBan) > 5000){
+      break; // Stop after 5 seconds
+    }
   } 
   pinMode(BANNIERE, OUTPUT);
 }
