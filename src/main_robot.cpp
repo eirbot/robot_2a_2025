@@ -17,6 +17,16 @@ TaskParams Parameters = {0, 0, 0, 0};
 
 GoToPosition serialGoto {0,0,0,1000,1000,0};
 
+void debug(void* param) {
+
+  while (true) {
+    float x, y, angle;
+    mot.GetPosition(x, y, angle);
+    Serial.printf("%f;%f;%f\r\n", x, y, angle * RAD_TO_DEG);
+    vTaskDelay(pdMS_TO_TICKS(1000));
+  }
+}
+
 void setup() {
   esp_task_wdt_init(10,true);
   ComWithRasp comRasp;
@@ -30,6 +40,12 @@ void setup() {
   moteurDroit.setAcceleration(ACCELMAX);
   moteurGauche.setCurrentPosition(0);
 
+  xPositionMutex = xSemaphoreCreateMutex();
+  if (xPositionMutex == NULL) {
+      Serial.println("Erreur : mutex non créé");
+  }
+
+
   Serial.begin(115200);
   startMillis = millis();
 
@@ -39,6 +55,7 @@ void setup() {
   // xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
 
   xTaskCreate(vsetup_actionneurs,"vsetup_actionneurs", 1000, NULL, 1, NULL);
+  xTaskCreate(debug,"debug", 1000, NULL, 1, NULL);
 
   mot.StartMotors();
   //comRasp.StartCom();

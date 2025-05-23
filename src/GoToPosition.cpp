@@ -66,6 +66,15 @@ void GoToPosition::Go(float x_f,float y_f,float cangle_f) {
     if (FLAG_STOP) {
         Serial.println("Le robot a ete arrete avant d'atteindre la position finale.");
         UpdateFinalPoseAfterStop(mot.GetDistanceDid());
+        Serial.print("x_initial: "); Serial.print(x_initial);
+        Serial.print("  y_initial: "); Serial.print(y_initial);
+        Serial.print("  cangle_initial: "); Serial.println(cangle_initial);
+
+        float x, y, angle;
+        mot.GetPosition(x, y, angle);
+        Serial.print("x_pos: "); Serial.print(x);
+        Serial.print("  y_pos: "); Serial.print(y);
+        Serial.print("  orientation: "); Serial.println(angle * RAD_TO_DEG);
         FLAG_STOP = false;
 
         if (retryCount >= 3) {
@@ -77,9 +86,10 @@ void GoToPosition::Go(float x_f,float y_f,float cangle_f) {
         retryCount++;
         if (Evitement()) {
             Serial.println("Reprise de la strategie initiale apres evitement.");
+            mot.RestoreQueueBuffer();  // <-- À insérer ici
             Go(x_final, y_final, cangle_final);
-            return;
         }
+
     } else {
         Serial.println("Le robot a atteint la position finale.");
         retryCount = 0;

@@ -94,12 +94,11 @@ void ClassMotors::vMotors(void* pvParameters){
                     else {
                         if (wasStopped) {
                             wasStopped = false;
-
-                            Serial.println("Robot en mouvement. Accélération dynamique.");
                         }
 
                         moteurGauche.run();
                         moteurDroit.run(); 
+                        instance->UpdateOdometry();
                     }
                 }               
             }
@@ -119,6 +118,7 @@ void ClassMotors::vMotors(void* pvParameters){
                 while (moteurGauche.distanceToGo() != 0 || moteurDroit.distanceToGo() != 0) { //Goooo                    
                     moteurGauche.run();
                     moteurDroit.run();
+                    instance->UpdateOdometry();
                 }
             }
             else{
@@ -171,4 +171,63 @@ void StopStepper(AccelStepper& moteur1, AccelStepper& moteur2) {
         moteur2.run();
     }
     vTaskDelay(100); // Pause pour éviter un mouvement trop rapide
+}
+
+void ClassMotors::GetPosition(float &x, float &y, float &angle) {
+    if (xSemaphoreTake(xPositionMutex, portMAX_DELAY) == pdTRUE) {
+        x = x_pos;
+        y = y_pos;
+        angle = orientation;
+        xSemaphoreGive(xPositionMutex);
+    }
+}
+
+void ClassMotors::SetPosition(float x, float y, float angle) {
+    if (xSemaphoreTake(xPositionMutex, portMAX_DELAY) == pdTRUE) {
+        x_pos = x;
+        y_pos = y;
+        orientation = angle;
+        xSemaphoreGive(xPositionMutex);
+    }
+}
+
+void ClassMotors::UpdateOdometry() {
+    static long lastStepGauche = 0;
+    static long lastStepDroit = 0;
+
+    long currentStepGauche = moteurGauche.currentPosition();
+    long currentStepDroit = moteurDroit.currentPosition();
+
+    long deltaStepGauche = currentStepGauche - lastStepGauche;
+    long deltaStepDroit  = currentStepDroit  - lastStepDroit;
+
+    lastStepGauche = currentStepGauche;
+    lastStepDroit  = currentStepDroit;
+
+    float distanceParStep = (M_PI * dRoues) / stepPerRev;
+    float s_L = deltaStepGauche * distanceParStep;
+    float s_R = deltaStepDroit  * distanceParStep;
+
+    float delta_s = (s_R + s_L) / 2.0;
+    float delta_theta = (s_R - s_L) / ecartRoues; // en radians
+
+    float x, y, angle;
+
+    // Prendre les positions actuelles
+    GetPosition(x, y, angle);
+
+    // Mise à jour de l'orientation
+    angle += delta_theta;
+
+    // Normalisation
+    if (angle > M_PI) angle -= 2 * M_PI;
+    if (angle < -M_PI) angle += 2 * M_PI;
+
+    // Mise à jour de la position
+    x += delta_s * cos(angle);
+    y += delta_s * sin(angle);
+
+    // Écrire la nouvelle position
+    SetPosition(x, y, angle);
+
 }
