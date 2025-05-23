@@ -35,11 +35,40 @@ pour les amoureux des interfaces simples.
 poetry install
 ```
 
-## Configuration du port série
+## Configuration du robot
+
+Le programme utilise un fichier `.toml` comme ceux définis dans
+`./robot_settings/` pour se configurer, notamment au niveau de son mode de
+communication et de son niveau d'affichage de logs pour pouvoir travailler dans
+plusieurs environnement d'exécution en phase de debugging ou en phase de
+production.
+
+Le fichier est à mettre en paramètre du programme python
+
+```sh
+poetry run <script-poetry> --config ./robot_settings/debug.toml
+```
+
+Une série de couple `(script-poetry, configuration)` a été définie dans le
+`justfile` pour exécuter le programme du robot dans plusieurs contextes
+différents.
+
+### Configuration de la communication serial
 
 Cet automate communique avec la carte STM-32 via un port série qui est à
-définir dans l'instanciatoin de `SerialCom` située dans le constructeur de la
-classe `Robot` du fichier `firmware.py`
+définir dans le champ `robot.communication.ports` du fichier `.toml`
+
+```toml
+[robot]
+
+# reste de la configuration du robot...
+
+[robot.communication]
+protocol="serial"
+ports="/dev/ttyUSB0"
+
+# reste de la configuration du robot...
+```
 
 ## Exécuter le script principal du robot
 
@@ -49,47 +78,74 @@ prédéfinis:
 
 ```sh
 # se place dans l'environnement virtuel de poetry et exécute le module main
-poetry run robot-main-loop
-# pour les feignasses
-# just main_loop_for_robot
+poetry run robot-main-loop --config <fichier-config.toml>
+```
+
+En production, le robot devra tourner avec le fichier
+`./robot_settings/main.toml` :
+
+```sh
+just main_loop_for_robot
+# ou bien $ poetry run robot-main-loop --config ./robot_settings/main.toml
 ```
 
 ## Tester la communication serial
 
-Sur Linux, il est possible d'ouvrir virtuellement deux ports serial pour faire
-communiquer ici deux processus de test. Pour cela suivre les étapes décrites
-dans [`./protocol_for_serial_test.md`](./protocol_for_serial_test.md).
+Sur Linux, il est possible avec l'outil `socat` d'ouvrir un *pont serial
+virtuel* pour faire communiquer deux processus entre eux via serial.
 
-Ensuite, exécuter le programme déguisant l'esp :
+Avec cela, une boucle de stratégie artificielle du robot a été programmée
+accompagnée d'un programme imitant en serial la réception et l'envoi
+d'information par l'esp. Pour exécuter et tester la bonne communication entre
+ces deux processus, suivre les étapes suivantes :
+
+1. Ouvrir le pont
+
+   ```sh
+   just start_virtual_serial_bridge
+   # ou bien
+   socat -d -d pty,raw,echo=0 pty,raw,echo=0
+   ```
+
+2. Modifier les fichiers de configuraton `./robot_settings/debug.toml` et
+   `./robot_settings/debug_mock.toml` avec, pour chacun, un des 2 ports séries
+   proposés par `socat`.
+
+3. Exécuter l'imitateur de l'esp
+
+   ```sh
+   just mock_serial_run
+   # ou bien
+   poetry run serial-mock-esp --config ./robot_settings/debug_mock.toml
+   ```
+
+4. Enfin, exécuter la boucle de test du robot (essayer de faire ça rapidement
+   après l'étape 3 si on veut que la communication se déroule sans timeout) :
+
+   ```sh
+   just debug_loop_for_robot
+   # ou bien
+   poetry run test-main-loop --config ./robot_settings/debug.toml
+   ```
+
+### Tester la communication avec autre chose que serial
+
+Pour tester la boucle de communication duplex de manière générique, il est
+proposé d'effectuer le même test, mais avec autre deux tubes nommés (fifo) (ça
+se passe toujours sur Linux, hélas).
 
 ```sh
-poetry run serial-mock-esp
-# just mock_serial_run
-```
-
-Puis exécuter une boucle de test du robot :
-
-```sh
-poetry run test-main-loop
-# just debug_loop_for_robot
-```
-
-## Tester la communication sans serial
-
-Sur Linux, il est possible de tester une boucle du robot avec une communication
-locale utilisant une fifo plutôt qu'une communication serial. Pour cela,
-exécuter dans un process à part
-
-```sh
-poetry run fifo-mock-esp
-# just mock_fifo_run
+just mock_fifo_run
+# ou bien
+poetry run fifo-mock-esp --config ./robot_settings/fifo_debug.toml
 ```
 
 Puis exécuter la boucle du robot dans le processus suivant:
 
 ```sh
-poetry run test-fifo-main-loop
-# just debug_fifo_loop_for_robot
+just debug_fifo_loop_for_robot
+# ou bien
+poetry run test-main-loop --config ./robot_settings/fifo_debug.toml
 ```
 
 ## TODO
