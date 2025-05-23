@@ -1,27 +1,31 @@
 #include "actionneur.h"
+#include "PCF8575.h"
 
 Servo bgServo;
 Servo bdServo;
 Servo hdServo;
 Servo hgServo;
 
+PCF8575 pcf8575(0x20);
+
 void vsetup_actionneurs(void *pvParameters){
 
-  pinMode(motorIN1, OUTPUT);
-  pinMode(motorIN2, OUTPUT);
+  pcf8575.pinMode(motorIN1, OUTPUT);
+  pcf8575.pinMode(motorIN2, OUTPUT);
   pinMode(BANNIERE, OUTPUT);
+  pinMode(tirette, INPUT_PULLUP);
 
   bgServo.setPeriodHertz(50); // standard 50 hz servo
-	bgServo.attach(14, 1000, 2000); // Attach the servo after it has been detatched
+	bgServo.attach(bgServoPin, 1000, 2000); // Attach the servo after it has been detatched
 
   bdServo.setPeriodHertz(50); // standard 50 hz servo
-	bdServo.attach(27, 1000, 2000); // Attach the servo after it has been detatched
+	bdServo.attach(bdServoPin, 1000, 2000); // Attach the servo after it has been detatched
 
   hdServo.setPeriodHertz(50); // standard 50 hz servo
-	hdServo.attach(25, 1000, 2000); // Attach the servo after it has been detatched
+	hdServo.attach(hdServoPin, 1000, 2000); // Attach the servo after it has been detatched
 
   hgServo.setPeriodHertz(50); // standard 50 hz servo
-  hgServo.attach(32, 1000, 2000); // Attach the servo after it has been detatched
+  hgServo.attach(hgServoPin, 1000, 2000); // Attach the servo after it has been detatched
 
   resetActionneurs();
 
@@ -39,10 +43,10 @@ void pousserCanettes(){
   reculerCanettes();
   vTaskDelay(900);
   arreterCanettes();
-  bgServo.write(170);
-  bdServo.write(0);
   hgServo.write(0);
   hdServo.write(160);
+  bgServo.write(170);
+  bdServo.write(0);
   vTaskDelay(800);
 }
 void startBanniere(){
@@ -72,18 +76,18 @@ void resetActionneurs(){
 }
 
 void avancerCanettes() {
-  digitalWrite(motorIN1, LOW); 
-  digitalWrite(motorIN2, HIGH); 
+  pcf8575.digitalWrite(motorIN1, LOW); 
+  pcf8575.digitalWrite(motorIN2, HIGH); 
 }
 
 void reculerCanettes() {
-  digitalWrite(motorIN1, HIGH); 
-  digitalWrite(motorIN2, LOW); 
+  pcf8575.digitalWrite(motorIN1, HIGH); 
+  pcf8575.digitalWrite(motorIN2, LOW); 
 }
 
 void arreterCanettes() {
-  digitalWrite(motorIN1, LOW); 
-  digitalWrite(motorIN2, LOW); 
+  pcf8575.digitalWrite(motorIN1, LOW); 
+  pcf8575.digitalWrite(motorIN2, LOW); 
 }
 
 void gServof(int angle){

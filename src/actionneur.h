@@ -8,15 +8,17 @@
 #include "soc/mcpwm_periph.h"
 #include "BluetoothSerial.h"
 
-#define motorIN1 13
-#define motorIN2 12
+#define motorIN1 P3
+#define motorIN2 P2
 
-#define BANNIERE 26
+#define BANNIERE 33
 
-#define gServoPin 14
-#define dServoPin 27
-#define hServoPin 25
-#define bServoPin 32
+#define tirette 32
+
+#define bgServoPin 25
+#define bdServoPin 26
+#define hgServoPin 27
+#define hdServoPin 14
 
 // Function declarations
 void pousserCanettes();

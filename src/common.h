@@ -7,17 +7,17 @@
 #include "AccelStepper.h"
 
 // a determiner pour les pins des btn et switch
-#define BTNG 34
-#define BTND 35
-#define SWITCH1 39 //Gauche
-#define SWITCH2 36
-#define SWITCH3 37
-#define SWITCH4 38 //Droite
+#define BTNG 36
+#define BTND 39
+#define SWITCH1 34 //Gauche
+#define SWITCH2 35
+#define SWITCH3 P10
+#define SWITCH4 P11 //Droite
 
-#define STEPD 18 
-#define DIRD 23  
-#define DIRG 5
-#define STEPG 19
+#define STEPD 17
+#define DIRD 16 
+#define STEPG 4
+#define DIRG 2
 
 #define SPEEDMAX 1000
 #define ACCELMAX 3000

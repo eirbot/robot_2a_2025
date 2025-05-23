@@ -126,3 +126,4 @@ void OLEDInterface::afficherScore(int score) {
 
     _display.display();
 }
+    
