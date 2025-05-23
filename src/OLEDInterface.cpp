@@ -126,4 +126,24 @@ void OLEDInterface::afficherScore(int score) {
 
     _display.display();
 }
-    
+
+#define MAX_ELEMENTS_PER_PAGE 5 // a voir avec l'ecran
+
+void OLEDInterface::displayPage(Page* page) {
+    refresh();
+    tailleTexte(7);
+    afficherTexte(page->_name, 15, 0);
+    if (page->_currentElement > MAX_ELEMENTS_PER_PAGE) {
+        for (int i = 0; i < MAX_ELEMENTS_PER_PAGE; i++) {
+        _display.setCursor(0, 25 + (i * 10));
+        _display.println(page->_elementsOfPage[i]->_name);
+        }
+    }
+    else {
+        for (int i = MAX_ELEMENTS_PER_PAGE; i < page->_elementsOfPage.size(); i++) {
+        _display.setCursor(0, 25 + (i * 10));
+        _display.println(page->_elementsOfPage[i]->_name);
+        }
+    }
+    _display.display();
+}
