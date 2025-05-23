@@ -1,14 +1,17 @@
 import os
 import sys
 
+from ..config import load_config
+
 GOTO_ANSWER_PREFIX = "GoToPosition"
 CANETTE_ACTION_ANSWER_PREFIX = "Cannette"
 
-fifo1 = '/tmp/fifo_in'
-fifo2 = '/tmp/fifo_out'
+# in the viewpoint of the mock esp
+inpt_fifo: str
+otpt_fifo: str
 
 # Function to create a FIFO if it doesn't exist
-def create_fifo(fifo_name):
+def create_fifo(fifo_name: str):
     try:
         if not os.path.exists(fifo_name):
             os.mkfifo(fifo_name)
@@ -20,8 +23,9 @@ def create_fifo(fifo_name):
         sys.exit(1)
 
 def write(msg: str):
+    global otpt_fifo
     print(f"> {msg}")
-    with open("/tmp/fifo_in", "w") as f:
+    with open(otpt_fifo, "w") as f:
         f.write(msg + "\n")
 
 def callback(line: str):
@@ -31,7 +35,8 @@ def callback(line: str):
         write(CANETTE_ACTION_ANSWER_PREFIX)
 
 def read_fifo_loop():
-    with open("/tmp/fifo_out", "r") as f:
+    global inpt_fifo
+    with open(inpt_fifo, "r") as f:
         while True:
             try:
                 line = f.readline()
@@ -43,7 +48,15 @@ def read_fifo_loop():
                 pass
 
 def start():
-    create_fifo(fifo1)
-    create_fifo(fifo2)
+    global inpt_fifo
+    global otpt_fifo
+    com_config = load_config()["robot"]["communication"]
+    if com_config["protocol"] != "fifo":
+        raise Exception("Invalid configuration")
+    # inversing the pipe using according to the robot viewpoint
+    inpt_fifo = com_config["ports"]["output"]
+    otpt_fifo = com_config["ports"]["input"]
+    create_fifo(inpt_fifo)
+    create_fifo(otpt_fifo)
     print("Named Pipe mock communicator. Ready !\n")
     read_fifo_loop()
