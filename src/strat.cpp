@@ -45,16 +45,19 @@ void DoStrat(void* param) {
   }
 
   if(jaune){
-    float X_POS_INIT= 1225;
-    float Y_POS_INIT= 200;
-    float ANGLE_INIT= 0;
+    X_POS_INIT= 1225;
+    Y_POS_INIT= 200;
+    ANGLE_INIT= 0;
   }
   else{
-    float X_POS_INIT= 1775;
-    float Y_POS_INIT= 200;
-    float ANGLE_INIT= 0;
+    X_POS_INIT= 1775;
+    Y_POS_INIT= 200;
+    ANGLE_INIT= 0;
   }
   mot.SetPosition(X_POS_INIT,Y_POS_INIT,ANGLE_INIT);
+  serialGoto.x_initial = X_POS_INIT;
+  serialGoto.y_initial = Y_POS_INIT;
+  serialGoto.cangle_initial = ANGLE_INIT;
 
   switch (strat) {
     case 0:

@@ -58,7 +58,7 @@ void setup() {
 
   mot.StartMotors();
   //comRasp.StartCom();
-  //xTaskCreate(debug,"debug", 8192, NULL, 1, NULL);
+  xTaskCreate(debug,"debug", 8192, NULL, 1, NULL);
 
   if (!oled.begin()) {
     // Serial.println("Erreur init OLED");
