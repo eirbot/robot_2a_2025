@@ -50,6 +50,7 @@ extern AccelStepper moteurDroit;
 extern TaskHandle_t vstratHandle;
 extern TaskHandle_t vterminal_bluetoothHandle;
 extern TaskHandle_t vMotorsHandle;
+extern TaskHandle_t handleDoStrat;
 
 
 extern SemaphoreHandle_t xPositionMutex;

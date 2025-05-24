@@ -1,6 +1,8 @@
 #include "common.h"
 
 TaskHandle_t vMotorsHandle;
+TaskHandle_t handleDoStrat = NULL;
+
 
 AccelStepper moteurGauche(AccelStepper::DRIVER, STEPG, DIRG); // STEP, DIR
 AccelStepper moteurDroit(AccelStepper::DRIVER, STEPD, DIRD);  // STEP, DIR
