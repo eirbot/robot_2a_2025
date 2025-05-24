@@ -1,7 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define TEMPS_MATCH_ROBOT 15000
+#define TEMPS_MATCH_ROBOT 85000
 
 #define BTNG 36
 #define BTND 39
