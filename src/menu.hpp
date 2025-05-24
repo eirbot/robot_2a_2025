@@ -6,7 +6,7 @@
 
 class Page {  
 public:
-    Page(char* name, std::vector<Page*> elementsOfPage);
+    Page(char* name, char type, int id);
     Page(char* name, std::vector<Page*> elementsOfPage, Page* parentPage, char type, int id);
     void Next();
     void doAction();

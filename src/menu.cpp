@@ -5,9 +5,15 @@ void testing(int id) {
     Serial.print("Testing ID: ");
     Serial.println(id);
 }
-Page * currentDisplayedPage = nullptr;
-Page::Page(char* name, std::vector<Page*> elementsOfPage)
-    : _name(name), _elementsOfPage(elementsOfPage) {}
+
+
+Page::Page(char* name, char type, int id)
+{
+    _name = name;
+    _type = type;
+    _id = id;
+    _currentElement = 0;
+}
 
 Page::Page(char* name, std::vector<Page*> elementsOfPage, Page* parentPage, char type, int id){
     _name = name;
@@ -35,3 +41,51 @@ void Page::doAction() {
     else if (_elementsOfPage[_currentElement]->_type == 'c') {  //constant        
     }
 }
+
+Page Test_total("TestTotal", 't', 0);
+Page Test_total("TestPince", 't', 1);
+Page Test_servo("TestServo", 't', 2);
+Page Test_pouseurs("TestPousseur", 't', 3);
+std::vector<Page*> testActionneurAvant = {&Test_total, &Test_total, &Test_servo, &Test_pouseurs};
+
+
+Page Test_baniere("TestBaniere", 't', 4);
+Page Test_vox("TestVox", 't', 5);
+std::vector<Page*> testActionneur = {&Test_baniere, &Test_vox, &Page("ActionneurAvant", 's', 0)};
+
+
+Page Position_x("PositionX", 'c', 0);
+Page Position_y("PositionY", 'c', 1);
+std::vector<Page*> position = {&Position_x, &Position_y};
+
+
+Page Strategy_1("Strategy_1", 't', 6);
+Page Strategy_2("Strategy_2", 't', 7);
+Page Strategy_3("Strategy_3", 't', 8);
+Page Strategy_4("Strategy_4", 't', 9);
+Page Strategy_5("Strategy_5", 't', 10);
+Page Strategy_6("Strategy_6", 't', 11);
+std::vector<Page*> strategy = {&Strategy_1, &Strategy_2, &Strategy_3, &Strategy_4, &Strategy_5, &Strategy_6};
+
+
+Page Tof_1("Tof_1", 'c', 2);
+Page Tof_2("Tof_2", 'c', 3);
+Page Tof_3("Tof_3", 'c', 4);
+Page Tof_4("Tof_4", 'c', 5);
+Page Tof_5("Tof_5", 'c', 6);
+Page Tof_6("Tof_6", 'c', 7);
+std::vector<Page*> tof = {&Tof_1, &Tof_2, &Tof_3, &Tof_4, &Tof_5, &Tof_6};
+
+
+Page Menu("Menu", 's', 0);
+
+Page TestAct("Actionneur", testActionneur, &Menu, 's', 0);
+Page TestActAvant("ActAvant", testActionneurAvant, &TestAct, 's', 0);
+
+Page Position("Position", position, &Menu, 's', 0);
+
+Page Strategy("Strategy", strategy, &Menu, 's', 0);
+
+Page Tof("Tof", tof, &Menu, 's', 0);
+
+Page * currentDisplayedPage = &Menu;
