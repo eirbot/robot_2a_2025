@@ -84,7 +84,7 @@ void GoToPosition::Go(float x_f,float y_f,float cangle_f) {
         y_initial = y;
         cangle_initial = cangle_final;
 
-        Serial.printf("x: %f; y: %f; angle: %f\r\n", x_initial, y_initial, cangle_initial * RAD_TO_DEG);
+        // Serial.printf("x: %f, y: %f, angle: %f\n", x_initial, y_initial, cangle_initial);
     }
 }
 
@@ -94,6 +94,9 @@ void GoToPosition::AllerEtSet(float x_f, float y_f, float cangle_f, float x_set,
     x_initial = x_set;
     y_initial = y_set;
     cangle_initial = cangle_set;
+
+    // Mettre à jour la position finale après l'arrêt
+    mot.SetPosition(x_initial, y_initial, cangle_initial);
 }
 
 void GoToPosition::UpdateFinalPoseAfterStop(float distanceDid) {

@@ -17,6 +17,15 @@ void retourBase(){
   serialGoto.Go(x, y, angle);
 }
 
+void StopMatch(){
+  mot.Stop();        // Vide la queue et arrête les moteurs
+  if (handleDoStrat != NULL) {
+    vTaskDelete(handleDoStrat);
+    handleDoStrat = NULL;
+  }
+  retourBase();             // Optionnel : revenir à la base
+}
+
 void inverseur(float* x, float* angle){
   if(jaune){
     *x= 3000.0- *x;

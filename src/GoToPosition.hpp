@@ -41,7 +41,7 @@ class GoToPosition{
     float pangleFin;
 
     
-
+    void StopMatch();
     void Go(float x_f,float y_f,float cangle_f);
     void AllerEtSet(float x_f, float y_f, float cangle_f, float x_set, float y_set, float cangle_set);
     void UpdateFinalPoseAfterStop(float distanceDid);

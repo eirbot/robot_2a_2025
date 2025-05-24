@@ -90,18 +90,14 @@ void loop() {
   Serial.println("Tirette Out");
   GoBase = xTaskGetTickCount();
 
-  xTaskCreate(DoStrat, "DoStrat", 10000, strat, 1, NULL);
+  xTaskCreatePinnedToCore(DoStrat, "Strat", 10000, strat, 1, &handleDoStrat, 1);
 
   Serial.println("On attend la fin du match");
   while(xTaskGetTickCount() - GoBase < TEMPS_MATCH_ROBOT){
     vTaskDelay(pdMS_TO_TICKS(100));
   }
   Serial.println("Fin du match");
-  mot.Stop();            // Fin du match, on stoppe
-  Serial.println("On a stop");
-  vTaskDelay(pdMS_TO_TICKS(500)); 
-  mot.RestartMotors();   // Puis on autorise le mouvement à nouveau
-  retourBase();          // Le robot peut se déplacer à nouveau
+  StopMatch();
   // Serial.println(frontClear_tof); // This will now work correctly
   
 }

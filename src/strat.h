@@ -9,6 +9,7 @@
 #include "actionneur.h"
 
 void DoStrat(void* param);
+void StopMatch();
 void retourBase();
 void vstrat0();
 void vstrat1();

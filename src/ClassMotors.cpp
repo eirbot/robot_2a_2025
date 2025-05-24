@@ -149,7 +149,6 @@ void ClassMotors::RestoreQueueBuffer() {
 }
 
 void ClassMotors::Stop() {
-    FLAG_STOP = true;
     stepDid = moteurGauche.currentPosition() - GetCurrentStep();  
     distanceDid = (GetStepDid() * M_PI * dRoues) / stepPerRev;
     StopStepper(moteurGauche, moteurDroit);
