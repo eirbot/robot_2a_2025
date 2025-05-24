@@ -8,15 +8,10 @@ volatile bool backClear_tof = true;  // Define the variable here
 void readTofs(void *Parameters_temp){
     tofQueue = xQueueCreate(1, sizeof(int));
 
-<<<<<<< HEAD
-    if (Mux.begin() == false) {
-        // Serial.println("Failed to boot I2C Mux");
-=======
     Adafruit_VL53L0X frontTof = Adafruit_VL53L0X();
 
     if (!frontTof.begin()) {
         // Serial.println(F("Failed to boot VL53L0X"));
->>>>>>> 8a19639065e134c83e68cb2bb01f702f99e0d9c3
     }
 
     Adafruit_VL53L0X frontTopTof = Adafruit_VL53L0X();

@@ -8,6 +8,7 @@
 #include "common.h"
 #include "actionneur.h"
 
+void DoStrat(void* param);
 void retourBase();
 void vstrat0();
 void vstrat1();

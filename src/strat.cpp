@@ -1,6 +1,7 @@
 #include "strat.h"
 
 void retourBase(){
+  Serial.println("Retour à la base...");
   // Position initiale
   float x = 0, y = 0;
   float angle = 0;
@@ -14,6 +15,30 @@ void retourBase(){
   // Retour a la base
   x = 2700; y = 1600; angle = 0;
   serialGoto.Go(x, y, angle);
+}
+
+void DoStrat(void* param) {
+  int strat = *((int*)param);
+  Serial.printf("Stratégie %d en cours...\n", strat);
+
+  switch (strat) {
+    case 0:
+      vstrat0();
+      break;
+    case 1:
+      vstrat1();
+      break;
+    case 2:
+      vstrat2();
+      break;
+    default:
+      Serial.println("Stratégie inconnue");
+      retourBase();
+      break;
+  }
+
+  Serial.println("Stratégie terminée.");
+  vTaskDelete(NULL);
 }
 
 void vstrat0(){ // 1 Canette (bleue)

@@ -20,6 +20,7 @@ public:
     void TransferQueueBuffer();
     void RestoreQueueBuffer();
     void Stop();
+    void RestartMotors();
 
     long GetStepDid() const { return stepDid; }
     long GetCurrentStep() const { return currentStep; }

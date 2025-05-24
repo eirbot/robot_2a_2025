@@ -119,7 +119,7 @@ void ClassMotors::vMotors(void* pvParameters){
 }
 
 void ClassMotors::StartMotors(){
-    xTaskCreate(vMotors, "vMotors", 10000, this, 1, NULL);
+    xTaskCreatePinnedToCore(vMotors, "vMotors", 10000, this, 1, &vMotorsHandle, 1);
 }
 
 void ClassMotors::EnvoyerDonnees(void* Params){
@@ -149,14 +149,31 @@ void ClassMotors::RestoreQueueBuffer() {
 }
 
 void ClassMotors::Stop() {
-    // Stoppe les moteurs
     FLAG_STOP = true;
     stepDid = moteurGauche.currentPosition() - GetCurrentStep();  
     distanceDid = (GetStepDid() * M_PI * dRoues) / stepPerRev;
     StopStepper(moteurGauche, moteurDroit);
-    while (xQueueReceive(xQueue, NULL, 0) == pdTRUE) {
-        // On vide la file
-        vTaskDelay(10);
+
+    // Suspendre la tâche qui envoie dans la file
+    if (vMotorsHandle != NULL) {
+        vTaskSuspend(vMotorsHandle);
+    }
+
+    // Vider la file
+    TaskParams tmp;
+    while (uxQueueMessagesWaiting(xQueue) > 0) {
+        xQueueReceive(xQueue, &tmp, 0);
+    }
+
+    // Reprendre la tâche productrice
+    if (vMotorsHandle != NULL) {
+        vTaskResume(vMotorsHandle);
+    }
+}
+
+void ClassMotors::RestartMotors() {
+    if (vMotorsHandle != NULL) {
+        vTaskResume(vMotorsHandle);
     }
 }
 

@@ -1,7 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define TEMPS_MATCH_ROBOT 85000
+#define TEMPS_MATCH_ROBOT 15000
 
 #define BTNG 36
 #define BTND 39
@@ -43,15 +43,14 @@ typedef struct {
     int vitesse;
 } TaskParams;
 
-extern TaskHandle_t vavancerHandle;
-extern TaskHandle_t vtournerHandle;
-
 // Déclaration des deux moteurs (type DRIVER = step/dir)
 extern AccelStepper moteurGauche; 
 extern AccelStepper moteurDroit; 
 
 extern TaskHandle_t vstratHandle;
 extern TaskHandle_t vterminal_bluetoothHandle;
+extern TaskHandle_t vMotorsHandle;
+
 
 extern SemaphoreHandle_t xPositionMutex;
 
