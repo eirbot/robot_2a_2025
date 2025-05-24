@@ -55,11 +55,10 @@ void setup() {
   // xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
 
   xTaskCreate(vsetup_actionneurs,"vsetup_actionneurs", 1000, NULL, 1, NULL);
-  
 
   mot.StartMotors();
   //comRasp.StartCom();
-  // xTaskCreate(debug,"debug", 8192, NULL, 1, NULL);
+  //xTaskCreate(debug,"debug", 8192, NULL, 1, NULL);
 
   if (!oled.begin()) {
     // Serial.println("Erreur init OLED");
@@ -71,12 +70,13 @@ void setup() {
   oled.afficherScore(88);
   vTaskDelay(pdMS_TO_TICKS(3000));
   oled.afficherDebug();
+
 }
 
 void loop() {
   //commande();
   TickType_t GoBase = 0;
-  int *strat = new int(2);
+  int *strat = new int(0);
   Serial.println("Waiting for tirette In...");
   while(digitalRead(tirette)){
     vTaskDelay(pdMS_TO_TICKS(100));

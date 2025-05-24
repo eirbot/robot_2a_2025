@@ -10,6 +10,11 @@ PCF8575 pcf8575(0x20);
 
 void vsetup_actionneurs(void *pvParameters){
 
+  pinMode(SWITCH1, INPUT);
+  // pinMode(SWITCH2, INPUT);
+  // pinMode(SWITCH3, INPUT);  //une de ces trois liges casse le serial.print
+  // pinMode(SWITCH4, INPUT);
+
   pcf8575.pinMode(motorIN1, OUTPUT);
   pcf8575.pinMode(motorIN2, OUTPUT);
   pinMode(BANNIERE, OUTPUT);

@@ -1,7 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define TEMPS_MATCH_ROBOT 15000
+#define TEMPS_MATCH_ROBOT 150000
 
 #define BTNG 36
 #define BTND 39
@@ -17,9 +17,7 @@
 
 #define SPEEDMAX 1000
 #define ACCELMAX 3000
-#define X_POS_INIT 1775
-#define Y_POS_INIT 200
-#define ANGLE_INIT 0
+
 
 #define MOTOR_G 6
 #define MOTOR_D 5
@@ -30,6 +28,10 @@
 
 #define vitesse_nominale 100
 #define stop_distance 200
+
+extern float X_POS_INIT;
+extern float Y_POS_INIT;
+extern float ANGLE_INIT;
 
 #include "esp_task_wdt.h"
 #include "ClassMotors.hpp"
@@ -56,5 +58,9 @@ extern SemaphoreHandle_t xPositionMutex;
 
 extern volatile bool* FLAG_CLEAR;
 extern bool FLAG_STOP;
+
+extern bool jaune;
+
+
 
 #endif

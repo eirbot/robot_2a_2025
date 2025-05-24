@@ -7,6 +7,7 @@
 #include <driver/mcpwm.h>
 #include "soc/mcpwm_periph.h"
 #include "BluetoothSerial.h"
+#include "common.h"
 
 #define motorIN1 P3
 #define motorIN2 P2
