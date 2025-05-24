@@ -149,22 +149,31 @@ void ClassMotors::RestoreQueueBuffer() {
 }
 
 void ClassMotors::Stop() {
-    stepDid = moteurGauche.currentPosition() - GetCurrentStep();  
-    distanceDid = (GetStepDid() * M_PI * dRoues) / stepPerRev;
+    // Stopper les moteurs en douceur
     StopStepper(moteurGauche, moteurDroit);
 
-    // Suspendre la tâche qui envoie dans la file
+    // Calculs de distance uniquement si un mouvement était actif
+    if (GetCurrentStep() != 0) {
+        stepDid = moteurGauche.currentPosition() - GetCurrentStep();
+        distanceDid = (stepDid * M_PI * dRoues) / stepPerRev;
+    } else {
+        stepDid = 0;
+        distanceDid = 0.0;
+    }
+
+    // Suspendre proprement la tâche de moteur (sécurité)
     if (vMotorsHandle != NULL) {
         vTaskSuspend(vMotorsHandle);
     }
 
-    // Vider la file
+    // Vider proprement la file de commandes
+    UBaseType_t nbMessages = uxQueueMessagesWaiting(xQueue);
     TaskParams tmp;
-    while (uxQueueMessagesWaiting(xQueue) > 0) {
+    for (UBaseType_t i = 0; i < nbMessages; ++i) {
         xQueueReceive(xQueue, &tmp, 0);
     }
 
-    // Reprendre la tâche productrice
+    // Reprendre la tâche
     if (vMotorsHandle != NULL) {
         vTaskResume(vMotorsHandle);
     }
@@ -209,14 +218,14 @@ void ClassMotors::SetPosition(float x, float y, float angle) {
 }
 
 void ClassMotors::UpdateOdometry() {
-    static long lastStepGauche = 0;
-    static long lastStepDroit = 0;
-
     long currentStepGauche = moteurGauche.currentPosition();
-    long currentStepDroit = moteurDroit.currentPosition();
+    long currentStepDroit  = moteurDroit.currentPosition();
 
     long deltaStepGauche = currentStepGauche - lastStepGauche;
     long deltaStepDroit  = currentStepDroit  - lastStepDroit;
+
+    // Si pas de mouvement, on ne met pas à jour
+    if (deltaStepGauche == 0 && deltaStepDroit == 0) return;
 
     lastStepGauche = currentStepGauche;
     lastStepDroit  = currentStepDroit;
@@ -226,25 +235,20 @@ void ClassMotors::UpdateOdometry() {
     float s_R = deltaStepDroit  * distanceParStep;
 
     float delta_s = (s_R + s_L) / 2.0;
-    float delta_theta = (s_R - s_L) / ecartRoues; // en radians
+    float delta_theta = (s_R - s_L) / ecartRoues; // radians
 
     float x, y, angle;
-
-    // Prendre les positions actuelles
     GetPosition(x, y, angle);
 
-    // Mise à jour de l'orientation
     angle += delta_theta;
 
-    // Normalisation
+    // Normalisation angle entre -π et π
     if (angle > M_PI) angle -= 2 * M_PI;
     if (angle < -M_PI) angle += 2 * M_PI;
 
-    // Mise à jour de la position
     x += delta_s * sin(angle);
     y += delta_s * cos(angle);
 
-    // Écrire la nouvelle position
     SetPosition(x, y, angle);
-
 }
+

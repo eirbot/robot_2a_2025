@@ -96,7 +96,8 @@ void GoToPosition::AllerEtSet(float x_f, float y_f, float cangle_f, float x_set,
     cangle_initial = cangle_set;
 
     // Mettre à jour la position finale après l'arrêt
-    mot.SetPosition(x_initial, y_initial, cangle_initial);
+    mot.SetPosition(x_initial, y_initial, cangle_initial * DEG_TO_RAD);
+    mot.UpdateOdometry();
 }
 
 void GoToPosition::UpdateFinalPoseAfterStop(float distanceDid) {

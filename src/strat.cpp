@@ -8,13 +8,18 @@ void retourBase(){
 
   // Va devant la base
   x = 2700; y = 1200; angle = 0;
+  inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
   vTaskDelay(1000);
 
   // Retour a la base
   x = 2700; y = 1600; angle = 0;
+  inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
+
+  mot.WaitUntilDone();
+  Serial.println("Retour à la base terminé.");
 }
 
 void StopMatch(){
@@ -35,13 +40,23 @@ void inverseur(float* x, float* angle){
 
 void DoStrat(void* param) {
   int strat = *((int*)param);
-  Serial.printf("Stratégie %d en cours...\n", strat);
 
-  if(digitalRead(SWITCH1)){
-    jaune = true;
+  Serial.println("Attente de la tirette...");
+  while(!FLAG_TIRETTE) {
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
-  else{
-    jaune = false;
+
+  Serial.println("Choix Equipe");
+  while(FLAG_TIRETTE) {
+    if(digitalRead(SWITCH1)){
+      jaune = true;
+      Serial.println("Jaune");
+    }
+    else{
+      jaune = false;
+      Serial.println("Bleu");
+    }
+    vTaskDelay(pdMS_TO_TICKS(100));
   }
 
   if(jaune){
@@ -59,6 +74,7 @@ void DoStrat(void* param) {
   serialGoto.y_initial = Y_POS_INIT;
   serialGoto.cangle_initial = ANGLE_INIT;
 
+  Serial.printf("Stratégie %d en cours...\n", strat);
   switch (strat) {
     case 0:
       vstrat0();
@@ -110,9 +126,12 @@ void vstrat0(){ // 1 Canette (bleue)
   serialGoto.Go(x, y, angle);
 
   // Se caler
+  mot.WaitUntilDone();
+
   x = 3000; y = 400; angle = 90;
   inverseur(&x,&angle);
   serialGoto.AllerEtSet(x, y, angle, (jaune) ? x+500 : x-500, y, angle);
+
   mot.WaitUntilDone();
 
   // Reculer pour repartir
