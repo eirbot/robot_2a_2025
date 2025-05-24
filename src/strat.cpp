@@ -107,7 +107,7 @@ void vstrat0(){ // 1 Canette (bleue)
   // Se met en position pour se caler
   x = 3000; y = 400; angle = 90;
   inverseur(&x,&angle);
-  serialGoto.AllerEtSet(x, y, angle, x-100, y, angle);
+  serialGoto.AllerEtSet(x, y, angle, (jaune) ? x+100 : x-100, y, angle);
 
   // Reculer pour repartir
   x = 2700; y = 400; angle = 90;
