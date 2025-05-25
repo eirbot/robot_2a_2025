@@ -69,6 +69,9 @@ void DoStrat(void* param) {
     case 2:
       vstrat2();
       break;
+    case 3:
+      vstrat3();
+      break;
     default:
       Serial.println("Stratégie inconnue");
       retourBase();
@@ -188,4 +191,20 @@ void vstrat2(){ // 2 Cannettes + Banniere (blue)
 
   // Fait la stratégie 1
   vstrat1();
+}
+
+void vstrat3(){ // Banniere
+
+  // Position initiale
+  float x = 0, y = 0;
+  float angle = 0;
+
+  // Postion pour bannière
+  x = 1775; y = 0; angle = 0;
+  inverseur(&x,&angle);
+  serialGoto.Go(x, y, angle);
+
+  mot.WaitUntilDone();
+  //Met en position la bannière
+  DoBanniere();
 }

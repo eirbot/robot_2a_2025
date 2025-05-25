@@ -52,7 +52,7 @@ void setup() {
   SerialBT.begin("ESP32test");
   SerialBT.setTimeout(50);
 
-  // xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
+  xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
 
   xTaskCreate(vsetup_actionneurs,"vsetup_actionneurs", 1000, NULL, 1, NULL);
 
@@ -76,7 +76,7 @@ void setup() {
 void loop() {
   //commande();
   TickType_t GoBase = 0;
-  int *strat = new int(0);
+  int *strat = new int(3);
   Serial.println("Waiting for tirette In...");
   while(digitalRead(tirette)){
     vTaskDelay(pdMS_TO_TICKS(100));

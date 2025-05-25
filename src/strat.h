@@ -14,5 +14,7 @@ void retourBase();
 void vstrat0();
 void vstrat1();
 void vstrat2();
+void vstrat3();
+
 
 #endif
