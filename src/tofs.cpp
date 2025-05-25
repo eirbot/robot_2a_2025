@@ -2,24 +2,24 @@
 
 QWIICMUX Mux;
 
+Adafruit_VL53L0X frontTopTof = Adafruit_VL53L0X();
+Adafruit_VL53L0X frontRightTof = Adafruit_VL53L0X();
+Adafruit_VL53L0X frontLeftTof = Adafruit_VL53L0X();
+Adafruit_VL53L0X backTopTof = Adafruit_VL53L0X();
+Adafruit_VL53L0X backRightTof = Adafruit_VL53L0X();
+Adafruit_VL53L0X backLeftTof = Adafruit_VL53L0X();
+
 volatile bool frontClear_tof = true; // Define the variable here
 volatile bool backClear_tof = true;  // Define the variable here
 
 void readTofs(void *Parameters_temp){
     tofQueue = xQueueCreate(1, sizeof(int));
 
-    Adafruit_VL53L0X frontTof = Adafruit_VL53L0X();
-
-    if (!frontTof.begin()) {
-        // Serial.println(F("Failed to boot VL53L0X"));
+    if (!Mux.begin()) {
+        Serial.println(F("Failed to boot VL53L0X"));
     }
 
-    Adafruit_VL53L0X frontTopTof = Adafruit_VL53L0X();
-    Adafruit_VL53L0X frontRightTof = Adafruit_VL53L0X();
-    Adafruit_VL53L0X frontLeftTof = Adafruit_VL53L0X();
-    Adafruit_VL53L0X backTopTof = Adafruit_VL53L0X();
-    Adafruit_VL53L0X backRightTof = Adafruit_VL53L0X();
-    Adafruit_VL53L0X backLeftTof = Adafruit_VL53L0X();
+
 
     // Mux.setPort(6); // Front Top
     // if (!frontTopTof.begin()) {
