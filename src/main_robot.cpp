@@ -61,7 +61,6 @@ void setup() {
   SerialBT.setTimeout(50);
 
   // xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
-
   xTaskCreate(vsetup_actionneurs,"vsetup_actionneurs", 1000, NULL, 1, NULL);
   xTaskCreatePinnedToCore(DoStrat, "Strat", 10000, strat, 1, &handleDoStrat, 1);
 
@@ -90,7 +89,7 @@ void loop() {
 
   oled.afficherScore(88);
   FLAG_TIRETTE = true;
-  
+
   Serial.println("Waiting for tirette Out...");
   while(!digitalRead(tirette)){
     vTaskDelay(pdMS_TO_TICKS(100));

@@ -54,78 +54,79 @@ void readTofs(void *Parameters_temp){
     VL53L0X_RangingMeasurementData_t measure;
 
     while(1){
-        // Mux.setPort(6); // Front Top
-        // frontTopTof.rangingTest(&measure, false);
-        // if (measure.RangeMilliMeter < stop_distance && measure.RangeStatus == 0){
-        //     // xQueueSend(tofQueue, &measure.RangeMilliMeter, 10);
-        //     frontClear_tof = false;
-        // }
-        // else{
-        //     frontClear_tof = true;
-        // }
-        // Serial.print("Front Top: ");
-        // Serial.println(measure.RangeMilliMeter);
+        if(FLAG_TOF){
+            // Mux.setPort(6); // Front Top
+            // frontTopTof.rangingTest(&measure, false);
+            // if (measure.RangeMilliMeter < stop_distance && measure.RangeStatus == 0){
+            //     // xQueueSend(tofQueue, &measure.RangeMilliMeter, 10);
+            //     frontClear_tof = false;
+            // }
+            // else{
+            //     frontClear_tof = true;
+            // }
+            // Serial.print("Front Top: ");
+            // Serial.println(measure.RangeMilliMeter);
 
-        Mux.setPort(2); // Front Right
-        frontRightTof.rangingTest(&measure, false);
-        if (measure.RangeMilliMeter < stop_distance && measure.RangeStatus == 0){
-            // xQueueSend(tofQueue, &measure.RangeMilliMeter, 10);
-            frontClear_tof = false;
+            Mux.setPort(2); // Front Right
+            frontRightTof.rangingTest(&measure, false);
+            if (measure.RangeMilliMeter < stop_distance && measure.RangeStatus == 0){
+                // xQueueSend(tofQueue, &measure.RangeMilliMeter, 10);
+                frontClear_tof = false;
+            }
+            else{
+                frontClear_tof = true;
+            }
+            Serial.print("Front Right: ");
+            Serial.println(measure.RangeMilliMeter);
+
+        //     Mux.setPort(5); // Front Left
+        //     frontLeftTof.rangingTest(&measure, false);
+        //     if (measure.RangeMilliMeter < stop_distance && measure.RangeStatus == 0){
+        //         // xQueueSend(tofQueue, &measure.RangeMilliMeter, 10);
+        //         frontClear_tof = false;
+        //     }
+        //     else{
+        //         frontClear_tof = true;
+        //     }
+        //     Serial.print("Front Left: ");
+        //     Serial.println(measure.RangeMilliMeter);
+
+        //     Mux.setPort(7); // Back Top
+        //     backTopTof.rangingTest(&measure, false);
+        //     if (measure.RangeMilliMeter < stop_distance && measure.RangeStatus == 0){
+        //         // xQueueSend(tofQueue, &measure.RangeMilliMeter, 10);
+        //         backClear_tof = false;
+        //     }
+        //     else{
+        //         backClear_tof = true;
+        //     }
+        //     Serial.print("Back Top: ");
+        //     Serial.println(measure.RangeMilliMeter);
+
+        //     Mux.setPort(3); // Back Right
+        //     backRightTof.rangingTest(&measure, false);
+        //     if (measure.RangeMilliMeter < stop_distance && measure.RangeStatus == 0){
+        //         // xQueueSend(tofQueue, &measure.RangeMilliMeter, 10);
+        //         backClear_tof = false;
+        //     }
+        //     else{
+        //         backClear_tof = true;
+        //     }
+        //     Serial.print("Back Right: ");
+        //     Serial.println(measure.RangeMilliMeter);
+
+        //     Mux.setPort(4); // Back Left
+        //     backLeftTof.rangingTest(&measure, false);
+        //     if (measure.RangeMilliMeter < stop_distance && measure.RangeStatus == 0){
+        //         // xQueueSend(tofQueue, &measure.RangeMilliMeter, 10);
+        //         backClear_tof = false;
+        //     }
+        //     else{
+        //         backClear_tof = true;
+        //     }
+        //     Serial.print("Back Left: ");
+        //     Serial.println(measure.RangeMilliMeter);
         }
-        else{
-            frontClear_tof = true;
-        }
-        Serial.print("Front Right: ");
-        Serial.println(measure.RangeMilliMeter);
-
-    //     Mux.setPort(5); // Front Left
-    //     frontLeftTof.rangingTest(&measure, false);
-    //     if (measure.RangeMilliMeter < stop_distance && measure.RangeStatus == 0){
-    //         // xQueueSend(tofQueue, &measure.RangeMilliMeter, 10);
-    //         frontClear_tof = false;
-    //     }
-    //     else{
-    //         frontClear_tof = true;
-    //     }
-    //     Serial.print("Front Left: ");
-    //     Serial.println(measure.RangeMilliMeter);
-
-    //     Mux.setPort(7); // Back Top
-    //     backTopTof.rangingTest(&measure, false);
-    //     if (measure.RangeMilliMeter < stop_distance && measure.RangeStatus == 0){
-    //         // xQueueSend(tofQueue, &measure.RangeMilliMeter, 10);
-    //         backClear_tof = false;
-    //     }
-    //     else{
-    //         backClear_tof = true;
-    //     }
-    //     Serial.print("Back Top: ");
-    //     Serial.println(measure.RangeMilliMeter);
-
-    //     Mux.setPort(3); // Back Right
-    //     backRightTof.rangingTest(&measure, false);
-    //     if (measure.RangeMilliMeter < stop_distance && measure.RangeStatus == 0){
-    //         // xQueueSend(tofQueue, &measure.RangeMilliMeter, 10);
-    //         backClear_tof = false;
-    //     }
-    //     else{
-    //         backClear_tof = true;
-    //     }
-    //     Serial.print("Back Right: ");
-    //     Serial.println(measure.RangeMilliMeter);
-
-    //     Mux.setPort(4); // Back Left
-    //     backLeftTof.rangingTest(&measure, false);
-    //     if (measure.RangeMilliMeter < stop_distance && measure.RangeStatus == 0){
-    //         // xQueueSend(tofQueue, &measure.RangeMilliMeter, 10);
-    //         backClear_tof = false;
-    //     }
-    //     else{
-    //         backClear_tof = true;
-    //     }
-    //     Serial.print("Back Left: ");
-    //     Serial.println(measure.RangeMilliMeter);
-
-    //     vTaskDelay(100);
+        vTaskDelay(100);
     }
 }

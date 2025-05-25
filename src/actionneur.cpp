@@ -1,5 +1,4 @@
 #include "actionneur.h"
-#include "PCF8575.h"
 
 Servo bgServo;
 Servo bdServo;
@@ -110,4 +109,24 @@ void hServof(int angle){
 
 void bServof(int angle){
   hdServo.write(angle);
+}
+
+bool checkSwitch(int switchNumber) {
+  switch (switchNumber) {
+    case 1:
+      return digitalRead(SWITCH1);
+      break;
+    case 2:
+      return digitalRead(SWITCH2);
+      break;
+    case 3:
+      return pcf8575.digitalRead(SWITCH3);
+      break;
+    case 4:
+      return pcf8575.digitalRead(SWITCH4);
+      break;
+    default:
+      Serial.println("Invalid switch number");
+      return false; // Invalid switch number
+  }
 }

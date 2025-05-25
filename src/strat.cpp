@@ -56,6 +56,14 @@ void DoStrat(void* param) {
       jaune = false;
       Serial.println("Bleu");
     }
+    if(checkSwitch(3)){
+      FLAG_TOF = true;
+      Serial.println("TOF activé");
+    }
+    else{
+      FLAG_TOF = false;
+      Serial.println("TOF désactivé");
+    }
     vTaskDelay(pdMS_TO_TICKS(100));
   }
 
