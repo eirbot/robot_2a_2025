@@ -1,0 +1,11 @@
+[robot]
+
+log_level="info"
+
+[robot.communication]
+protocol="serial"
+ports="/dev/ttyUSB0"
+[robot.communication.delays]
+read_timeout_before_yield=0.1
+read_yielding_delay=0.1
+response_awaiting=0.1

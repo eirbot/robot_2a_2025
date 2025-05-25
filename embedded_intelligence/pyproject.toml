@@ -1,0 +1,27 @@
+[project]
+name = "cfr-2025-2a-embedded-ai"
+version = "0.1.0"
+description = "Embedded strategy logic to pilot at a high-level the robot of 2A in the Coupe de France de Robotique"
+authors = [
+  {name ="Thomas Horrut", email = "79534557+Convolutio@users.noreply.github.com"}
+]
+license = "UNLICENSED"
+readme = "README.md"
+requires-python = ">=3.11.2"
+
+dependencies = [
+  "async-pyserial (==0.2.3)"
+]
+[project.optional-dependencies]
+mypy = [ "mypy" ]
+
+
+[project.scripts]
+robot-main-loop = "cfr_2025_2a_embedded_ai.main:start"
+test-main-loop = "cfr_2025_2a_embedded_ai.main:start_debug"
+fifo-mock-esp = "cfr_2025_2a_embedded_ai.mocking.mock_fifo_esp:start"
+serial-mock-esp = "cfr_2025_2a_embedded_ai.mocking.mock_serial_esp:start"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

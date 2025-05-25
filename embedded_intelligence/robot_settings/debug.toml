@@ -1,0 +1,11 @@
+[robot]
+
+log_level="debug"
+
+[robot.communication]
+protocol="serial"
+ports="/dev/pts/3"
+[robot.communication.delays]
+read_timeout_before_yield=3
+read_yielding_delay=2
+response_awaiting=5

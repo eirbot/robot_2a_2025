@@ -1,0 +1,11 @@
+build:
+  pio run
+
+upload:
+  pio run --target upload
+
+clean:
+  pio run --target clean
+
+check:
+  pio check

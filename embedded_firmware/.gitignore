@@ -3,3 +3,10 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
+
+# for neovim
+.cache/
+.ccls
+.clang-tidy
+.clangd
+compile_commands.json
