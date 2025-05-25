@@ -16,6 +16,10 @@ les tâches suivantes :
 - transmettre régulièrement des informations de capteurs
 - transmettre à la demande des informations de capteurs
 
+Ce programme est suffisant pour faire fonctionner le robot entièrement mais
+peut déléguer ses fonctionnalités de prise de décision au programme décrit dans
+la section suivante grâce à de la communication serial.
+
 ## Code haut-niveau de stratégie embarqué
 
 Dans le dossier [`embedded_intelligence/`](./embedded_intelligence/) se trouve
