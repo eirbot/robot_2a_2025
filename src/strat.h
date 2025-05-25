@@ -11,6 +11,8 @@
 void DoStrat(void* param);
 void StopMatch();
 void retourBase();
+void inverseur(float* x, float* angle);
+
 void vstrat0();
 void vstrat1();
 void vstrat2();

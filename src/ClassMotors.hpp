@@ -9,14 +9,14 @@
 
 #define DECCEL 9000.0
 
-class ClassMotors{
+class ClassMotors {
 public:
     ClassMotors();
     static void vMotors(void* pvParameters);
 
     void WaitUntilDone();
     void StartMotors();
-    void EnvoyerDonnees(void * Params);
+    void EnvoyerDonnees(void* Params);
     void TransferQueueBuffer();
     void RestoreQueueBuffer();
     void Stop();
@@ -27,12 +27,12 @@ public:
     float GetDistanceDid() const { return distanceDid; }
     void UpdateOdometry();
 
-    void GetPosition(float &x, float &y, float &angle);
+    void GetPosition(float& x, float& y, float& angle);
     void SetPosition(float x, float y, float angle);
 
 private:
     QueueHandle_t xQueue;
-    QueueHandle_t xQueueBuffer; // File tampon
+    QueueHandle_t xQueueBuffer;
 
     long stepDid;
     long currentStep;
@@ -40,7 +40,10 @@ private:
 
     float x_pos = X_POS_INIT;
     float y_pos = Y_POS_INIT;
-    float orientation = ANGLE_INIT; // En radians
+    float orientation = ANGLE_INIT; // radians
+
+    long lastStepGauche = 0;
+    long lastStepDroit = 0;
 };
 
 void StopStepper(AccelStepper& moteur1, AccelStepper& moteur2);

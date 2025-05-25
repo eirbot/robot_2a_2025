@@ -1,5 +1,4 @@
 #include "actionneur.h"
-#include "PCF8575.h"
 
 Servo bgServo;
 Servo bdServo;
@@ -12,8 +11,8 @@ void vsetup_actionneurs(void *pvParameters){
 
   pinMode(SWITCH1, INPUT);
   pinMode(SWITCH2, INPUT);
-  // pinMode(SWITCH3, INPUT);  //une de ces deux lignes casse le serial.print
-  // pinMode(SWITCH4, INPUT);
+  pcf8575.pinMode(SWITCH3, INPUT);  
+  pcf8575.pinMode(SWITCH4, INPUT); 
 
   pcf8575.pinMode(motorIN1, OUTPUT);
   pcf8575.pinMode(motorIN2, OUTPUT);
@@ -110,4 +109,24 @@ void hServof(int angle){
 
 void bServof(int angle){
   hdServo.write(angle);
+}
+
+bool checkSwitch(int switchNumber) {
+  switch (switchNumber) {
+    case 1:
+      return digitalRead(SWITCH1);
+      break;
+    case 2:
+      return digitalRead(SWITCH2);
+      break;
+    case 3:
+      return pcf8575.digitalRead(SWITCH3);
+      break;
+    case 4:
+      return pcf8575.digitalRead(SWITCH4);
+      break;
+    default:
+      Serial.println("Invalid switch number");
+      return false; // Invalid switch number
+  }
 }

@@ -60,6 +60,9 @@ extern SemaphoreHandle_t xPositionMutex;
 
 extern volatile bool* FLAG_CLEAR;
 extern bool FLAG_STOP;
+extern bool FLAG_TIRETTE;
+extern bool FLAG_DEBUG;
+extern bool FLAG_TOF;
 
 extern bool jaune;
 
