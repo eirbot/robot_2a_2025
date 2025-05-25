@@ -38,7 +38,7 @@ void hServof(int angle);
 void bServof(int angle);
 void vsetup_actionneurs(void *pvParameters);
 void resetActionneurs();
-bool checkSwitch(int switchNumber);
+bool checkSwitches(int switchNumber);
 
 #endif
 

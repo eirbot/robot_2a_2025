@@ -41,68 +41,69 @@ void inverseur(float* x, float* angle){
 void DoStrat(void* param) {
   int strat = *((int*)param);
 
-  Serial.println("Attente de la tirette...");
-  while(!FLAG_TIRETTE) {
-    vTaskDelay(pdMS_TO_TICKS(100));
-  }
+  while(1){
+    Serial.println("Attente de la tirette...");
+    while(!FLAG_TIRETTE) {
+      vTaskDelay(pdMS_TO_TICKS(100));
+    }
 
-  Serial.println("Choix Equipe");
-  while(FLAG_TIRETTE) {
-    if(digitalRead(SWITCH1)){
-      jaune = true;
-      Serial.println("Jaune");
+    Serial.println("Choix Equipe");
+    while(FLAG_TIRETTE) {
+      if(checkSwitches(1)){
+        jaune = true;
+        Serial.println("Jaune");
+      }
+      else{
+        jaune = false;
+        Serial.println("Bleu");
+      }
+      if(checkSwitches(3)){
+        FLAG_TOF = true;
+        Serial.println("TOF activé");
+      }
+      else{
+        FLAG_TOF = false;
+        Serial.println("TOF désactivé");
+      }
+      vTaskDelay(pdMS_TO_TICKS(100));
+    }
+
+    if(jaune){
+      X_POS_INIT= 1225;
+      Y_POS_INIT= 200;
+      ANGLE_INIT= 0;
     }
     else{
-      jaune = false;
-      Serial.println("Bleu");
+      X_POS_INIT= 1775;
+      Y_POS_INIT= 200;
+      ANGLE_INIT= 0;
     }
-    if(checkSwitch(3)){
-      FLAG_TOF = true;
-      Serial.println("TOF activé");
-    }
-    else{
-      FLAG_TOF = false;
-      Serial.println("TOF désactivé");
-    }
-    vTaskDelay(pdMS_TO_TICKS(100));
-  }
+    mot.SetPosition(X_POS_INIT,Y_POS_INIT,ANGLE_INIT);
+    serialGoto.x_initial = X_POS_INIT;
+    serialGoto.y_initial = Y_POS_INIT;
+    serialGoto.cangle_initial = ANGLE_INIT;
 
-  if(jaune){
-    X_POS_INIT= 1225;
-    Y_POS_INIT= 200;
-    ANGLE_INIT= 0;
-  }
-  else{
-    X_POS_INIT= 1775;
-    Y_POS_INIT= 200;
-    ANGLE_INIT= 0;
-  }
-  mot.SetPosition(X_POS_INIT,Y_POS_INIT,ANGLE_INIT);
-  serialGoto.x_initial = X_POS_INIT;
-  serialGoto.y_initial = Y_POS_INIT;
-  serialGoto.cangle_initial = ANGLE_INIT;
-
-  Serial.printf("Stratégie %d en cours...\n", strat);
-  switch (strat) {
-    case 0:
-      vstrat0();
-      break;
-    case 1:
-      vstrat1();
-      break;
-    case 2:
-      vstrat2();
-      break;
+    Serial.printf("Stratégie %d en cours...\n", strat);
+    switch (strat) {
+      case 0:
+        vstrat0();
+        break;
+      case 1:
+        vstrat1();
+        break;
+      case 2:
+        vstrat2();
+        break;
     case 3:
       vstrat3();
       break;
-    default:
-      Serial.println("Stratégie inconnue");
-      retourBase();
-      break;
+      default:
+        Serial.println("Stratégie inconnue");
+        retourBase();
+        break;
+    }
+    Serial.println("Stratégie terminée.");
   }
-
-  Serial.println("Stratégie terminée.");
   vTaskDelete(NULL);
 }
 

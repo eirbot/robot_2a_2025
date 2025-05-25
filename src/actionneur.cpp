@@ -111,19 +111,19 @@ void bServof(int angle){
   hdServo.write(angle);
 }
 
-bool checkSwitch(int switchNumber) {
+bool checkSwitches(int switchNumber) {
   switch (switchNumber) {
     case 1:
-      return digitalRead(SWITCH1);
+      return (bool)digitalRead(SWITCH1);
       break;
     case 2:
-      return digitalRead(SWITCH2);
+      return (bool)digitalRead(SWITCH2);
       break;
     case 3:
-      return pcf8575.digitalRead(SWITCH3);
+      return (bool)pcf8575.digitalRead(SWITCH3);
       break;
     case 4:
-      return pcf8575.digitalRead(SWITCH4);
+      return (bool)pcf8575.digitalRead(SWITCH4);
       break;
     default:
       Serial.println("Invalid switch number");
