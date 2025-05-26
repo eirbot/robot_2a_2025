@@ -72,12 +72,12 @@ void DoStrat(void* param) {
 
     if(jaune){
       X_POS_INIT= 1225;
-      Y_POS_INIT= 200;
+      Y_POS_INIT= 100;
       ANGLE_INIT= 0;
     }
     else{
       X_POS_INIT= 1775;
-      Y_POS_INIT= 200;
+      Y_POS_INIT= 100;
       ANGLE_INIT= 0;
     }
     mot.SetPosition(X_POS_INIT,Y_POS_INIT,ANGLE_INIT);

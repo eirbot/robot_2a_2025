@@ -38,7 +38,7 @@ void debug(void* param) {
 void setup() {
   esp_task_wdt_init(10,true);
   ComWithRasp comRasp;
-  int *strat = new int(2);
+  int *strat = new int(3);
 
   // Config des vitesses max et accélérations
   moteurGauche.setMaxSpeed(SPEEDMAX);
