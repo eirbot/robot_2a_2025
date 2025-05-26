@@ -65,7 +65,7 @@ void setup() {
     while (true);
   }
   
-  oled.afficherMenuPrincipal();
+  oled.displayPage(currentDisplayedPage);
   vTaskDelay(pdMS_TO_TICKS(3000));
   oled.afficherScore(88);
   vTaskDelay(pdMS_TO_TICKS(3000));
@@ -78,3 +78,4 @@ void loop() {
   // Serial.println(frontClear_tof); // This will now work correctly
   vTaskDelay(pdMS_TO_TICKS(1000));
 }
+

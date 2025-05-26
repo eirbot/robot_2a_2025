@@ -7,7 +7,7 @@ void testing(int id) {
 }
 
 
-Page::Page(char* name, char type, int id)
+Page::Page(std::string name, char type, int id)
 {
     _name = name;
     _type = type;
@@ -15,7 +15,7 @@ Page::Page(char* name, char type, int id)
     _currentElement = 0;
 }
 
-Page::Page(char* name, std::vector<Page*> elementsOfPage, Page* parentPage, char type, int id){
+Page::Page(std::string name, std::vector<Page*> elementsOfPage, Page* parentPage, char type, int id){
     _name = name;
     _elementsOfPage = elementsOfPage;
     _elementsOfPage.push_back(parentPage);
@@ -42,8 +42,11 @@ void Page::doAction() {
     }
 }
 
+
+
+
 Page Test_total("TestTotal", 't', 0);
-Page Test_total("TestPince", 't', 1);
+Page Test_pince("TestPince", 't', 1);
 Page Test_servo("TestServo", 't', 2);
 Page Test_pouseurs("TestPousseur", 't', 3);
 std::vector<Page*> testActionneurAvant = {&Test_total, &Test_total, &Test_servo, &Test_pouseurs};
@@ -51,7 +54,7 @@ std::vector<Page*> testActionneurAvant = {&Test_total, &Test_total, &Test_servo,
 
 Page Test_baniere("TestBaniere", 't', 4);
 Page Test_vox("TestVox", 't', 5);
-std::vector<Page*> testActionneur = {&Test_baniere, &Test_vox, &Page("ActionneurAvant", 's', 0)};
+std::vector<Page*> testActionneur = {&Test_baniere, &Test_vox};
 
 
 Page Position_x("PositionX", 'c', 0);
@@ -77,15 +80,18 @@ Page Tof_6("Tof_6", 'c', 7);
 std::vector<Page*> tof = {&Tof_1, &Tof_2, &Tof_3, &Tof_4, &Tof_5, &Tof_6};
 
 
-Page Menu("Menu", 's', 0);
+Page DisplayMenu("Menu", 's', 0);
+Page* ptr_Menu = &DisplayMenu;
 
-Page TestAct("Actionneur", testActionneur, &Menu, 's', 0);
-Page TestActAvant("ActAvant", testActionneurAvant, &TestAct, 's', 0);
+Page DisplayTestAct("Actionneur", testActionneur, ptr_Menu, 's', 0);
+Page* ptr_TestAct = &DisplayTestAct;
 
-Page Position("Position", position, &Menu, 's', 0);
+Page DisplayTestActAvant("ActAvant", testActionneurAvant, ptr_TestAct, 's', 0);
 
-Page Strategy("Strategy", strategy, &Menu, 's', 0);
+Page DisplayPosition("Position", position, ptr_Menu, 's', 0);
 
-Page Tof("Tof", tof, &Menu, 's', 0);
+Page DisplayStrategy("Strategy", strategy, ptr_Menu, 's', 0);
 
-Page * currentDisplayedPage = &Menu;
+Page DisplayTof("Tof", tof, ptr_Menu, 's', 0);
+
+Page * currentDisplayedPage = &DisplayMenu;

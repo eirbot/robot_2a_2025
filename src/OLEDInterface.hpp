@@ -7,7 +7,6 @@
 #include <Fonts/FreeSans24pt7b.h>
 #include "main_robot.h"
 #include "common.h"
-#include "menu.hpp"
 
 class OLEDInterface {
 public:
