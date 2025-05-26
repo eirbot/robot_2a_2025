@@ -62,22 +62,20 @@ void DoStrat(void* param) {
         Serial.println("TOF active");
       }
       else{
-        FLAG_TOF = true;
-        Serial.println("TOF active");
-        // FLAG_TOF = false;
-        // Serial.println("TOF desactivé");
+        FLAG_TOF = false;
+        Serial.println("TOF desactivé");
       }
       vTaskDelay(pdMS_TO_TICKS(100));
     }
 
     if(jaune){
       X_POS_INIT= 1225;
-      Y_POS_INIT= 100;
+      Y_POS_INIT= 220;
       ANGLE_INIT= 0;
     }
     else{
       X_POS_INIT= 1775;
-      Y_POS_INIT= 100;
+      Y_POS_INIT= 220;
       ANGLE_INIT= 0;
     }
     mot.SetPosition(X_POS_INIT,Y_POS_INIT,ANGLE_INIT);
@@ -230,7 +228,7 @@ void vstrat3(){ // Banniere
   float angle = 0;
 
   // Postion pour bannière
-  x = 1775; y = 0; angle = 0;
+  x = 1775; y = 120; angle = 0;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 

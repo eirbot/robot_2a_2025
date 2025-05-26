@@ -21,5 +21,5 @@ bool jaune=true;
 
 //position bleu par default
 float X_POS_INIT= 1775;
-float Y_POS_INIT= 100;
+float Y_POS_INIT= 220;
 float ANGLE_INIT= 0;
