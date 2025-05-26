@@ -62,8 +62,10 @@ void DoStrat(void* param) {
         Serial.println("TOF active");
       }
       else{
-        FLAG_TOF = false;
-        Serial.println("TOF desactivé");
+        FLAG_TOF = true;
+        Serial.println("TOF active");
+        // FLAG_TOF = false;
+        // Serial.println("TOF desactivé");
       }
       vTaskDelay(pdMS_TO_TICKS(100));
     }
@@ -204,7 +206,7 @@ void vstrat2(){ // 2 Cannettes + Banniere (blue)
   float angle = 0;
 
   // Postion pour bannière
-  x = 1775; y = 0; angle = 0;
+  x = 1775; y = 120; angle = 0;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
@@ -213,7 +215,7 @@ void vstrat2(){ // 2 Cannettes + Banniere (blue)
   DoBanniere();
 
   // Repart pour les canettes
-  x = 1775; y = 300; angle = 0;
+  x = 1775; y = 350; angle = 0;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
