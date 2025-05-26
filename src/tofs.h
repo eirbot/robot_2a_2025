@@ -17,6 +17,7 @@ extern volatile bool backClear_tof;  // Ensure this is declared as extern
 
 static QueueHandle_t tofQueue;
 
+bool checkClear(int start, int end, int stop_distance);
 void readTofs(void *Parameters_temp);
 
 #endif
