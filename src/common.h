@@ -16,7 +16,7 @@
 #define STEPG 4
 #define DIRG 2
 
-#define SPEEDMAX 1000
+#define SPEEDMAX 500
 #define ACCELMAX 3000
 
 

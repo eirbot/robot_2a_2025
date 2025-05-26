@@ -3,7 +3,7 @@
 volatile bool frontClear_tof = true; // Define the variable here
 volatile bool backClear_tof = true;  // Define the variable here
 
-VL53L0X sensor[6];
+VL53L0X sensor[NB_TOFS];
 int xshutPins[6] = {0, 1, 4, 5, 6, 7}; // GPIO reliés aux XSHUT
 
 
@@ -11,27 +11,27 @@ void readTofs(void *Parameters_temp){
     Wire.begin();
 
     // Désactiver tous les capteurs
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < NB_TOFS; i++) {
         pcf8575.pinMode(xshutPins[i], OUTPUT);
         pcf8575.digitalWrite(xshutPins[i], LOW);
     }
 
     delay(10);
 
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < NB_TOFS; i++) {
         pcf8575.digitalWrite(xshutPins[i], HIGH);
         delay(10);
         sensor[i].init();
-        sensor[i].setAddress(0x30 + i);
+        sensor[i].setAddress(0x31 + i);
     }
 
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < NB_TOFS; i++) {
         sensor[i].startContinuous(); // ou prepare pour single-shot
     }
 
     while(1){
         if(FLAG_TOF){
-            for(int i=0;i<6;i++){
+            for(int i=0;i<NB_TOFS;i++){
                 int distance = sensor[i].readRangeContinuousMillimeters();
                 if (distance < stop_distance){
                     // xQueueSend(tofQueue, &measure.RangeMilliMeter, 10);

@@ -10,6 +10,8 @@
 #include <SparkFun_I2C_Mux_Arduino_Library.h>
 #include "actionneur.h"
 
+#define NB_TOFS 3
+
 extern volatile bool frontClear_tof; // Ensure this is declared as extern
 extern volatile bool backClear_tof;  // Ensure this is declared as extern
 

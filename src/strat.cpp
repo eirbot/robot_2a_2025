@@ -59,11 +59,13 @@ void DoStrat(void* param) {
       }
       if(checkSwitches(3)){
         FLAG_TOF = true;
-        Serial.println("TOF activé");
+        Serial.println("TOF active");
       }
       else{
-        FLAG_TOF = false;
-        Serial.println("TOF désactivé");
+        FLAG_TOF = true;
+        Serial.println("TOF active");
+        // FLAG_TOF = false;
+        // Serial.println("TOF desactivé");
       }
       vTaskDelay(pdMS_TO_TICKS(100));
     }
@@ -83,7 +85,7 @@ void DoStrat(void* param) {
     serialGoto.y_initial = Y_POS_INIT;
     serialGoto.cangle_initial = ANGLE_INIT;
 
-    Serial.printf("Stratégie %d en cours...\n", strat);
+    Serial.printf("Strategie %d en cours...\n", strat);
     switch (strat) {
       case 0:
         vstrat0();
@@ -98,11 +100,11 @@ void DoStrat(void* param) {
       vstrat3();
       break;
       default:
-        Serial.println("Stratégie inconnue");
+        Serial.println("Strategie inconnue");
         retourBase();
         break;
     }
-    Serial.println("Stratégie terminée.");
+    Serial.println("Strategie terminee.");
   }
   vTaskDelete(NULL);
 }

@@ -60,7 +60,7 @@ void setup() {
   SerialBT.begin("ESP32test");
   SerialBT.setTimeout(50);
 
-  // xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
+  xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
   xTaskCreate(vsetup_actionneurs,"vsetup_actionneurs", 1000, NULL, 1, NULL);
   xTaskCreatePinnedToCore(DoStrat, "Strat", 10000, strat, 1, &handleDoStrat, 1);
 
