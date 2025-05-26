@@ -9,6 +9,7 @@
 #include "menu.hpp"
 #include "OLEDInterface.hpp"
 #include "ComWithRasp.hpp"
+#include "strat.h"
 
 extern BluetoothSerial SerialBT;
 

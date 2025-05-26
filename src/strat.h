@@ -8,9 +8,15 @@
 #include "common.h"
 #include "actionneur.h"
 
+void DoStrat(void* param);
+void StopMatch();
 void retourBase();
+void inverseur(float* x, float* angle);
+
 void vstrat0();
 void vstrat1();
 void vstrat2();
+void vstrat3();
+
 
 #endif
