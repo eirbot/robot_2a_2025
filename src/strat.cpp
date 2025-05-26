@@ -6,12 +6,21 @@ void retourBase(){
   float x = 0, y = 0;
   float angle = 0;
 
+  // Point intermédiaire si nécessaire
+  mot.GetPosition(x, y, angle);
+  if(y < 1000 || y > 0){
+    x = 2000; y = 1000; angle = 0;
+    inverseur(&x,&angle);
+    serialGoto.Go(x, y, angle);
+  }
+
   // Va devant la base
   x = 2700; y = 1200; angle = 0;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
-  vTaskDelay(1000);
+  mot.WaitUntilDone();
+  vTaskDelay(pdMS_TO_TICKS(1000)); // Attente pour stabilisation
 
   // Retour a la base
   x = 2700; y = 1600; angle = 0;
