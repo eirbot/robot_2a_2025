@@ -11,8 +11,8 @@ void vsetup_actionneurs(void *pvParameters){
 
   pinMode(SWITCH1, INPUT);
   pinMode(SWITCH2, INPUT);
-  pcf8575.pinMode(SWITCH3, INPUT);  
-  pcf8575.pinMode(SWITCH4, INPUT); 
+  pinMode(SWITCH3, INPUT);  
+  pinMode(SWITCH4, INPUT); 
 
   pcf8575.pinMode(motorIN1, OUTPUT);
   pcf8575.pinMode(motorIN2, OUTPUT);
@@ -111,22 +111,22 @@ void bServof(int angle){
   hdServo.write(angle);
 }
 
-bool checkSwitches(int switchNumber) {
-  switch (switchNumber) {
-    case 1:
-      return (bool)digitalRead(SWITCH1);
-      break;
-    case 2:
-      return (bool)digitalRead(SWITCH2);
-      break;
-    case 3:
-      return (bool)pcf8575.digitalRead(SWITCH3);
-      break;
-    case 4:
-      return (bool)pcf8575.digitalRead(SWITCH4);
-      break;
-    default:
-      Serial.println("Invalid switch number");
-      return false; // Invalid switch number
-  }
-}
+// bool checkSwitches(int switchNumber) {
+//   switch (switchNumber) {
+//     case 1:
+//       return (bool)digitalRead(SWITCH1);
+//       break;
+//     case 2:
+//       return (bool)digitalRead(SWITCH2);
+//       break;
+//     case 3:
+//       return (bool)pcf8575.digitalRead(SWITCH3);
+//       break;
+//     case 4:
+//       return (bool)pcf8575.digitalRead(SWITCH4);
+//       break;
+//     default:
+//       Serial.println("Invalid switch number");
+//       return false; // Invalid switch number
+//   }
+// }

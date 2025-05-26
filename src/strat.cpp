@@ -49,7 +49,7 @@ void DoStrat(void* param) {
 
     Serial.println("Choix Equipe");
     while(FLAG_TIRETTE) {
-      if(checkSwitches(1)){
+      if(digitalRead(SWITCH1)){
         jaune = true;
         Serial.println("Jaune");
       }
@@ -57,7 +57,7 @@ void DoStrat(void* param) {
         jaune = false;
         Serial.println("Bleu");
       }
-      if(checkSwitches(3)){
+      if(digitalRead(SWITCH3)){
         FLAG_TOF = true;
         Serial.println("TOF active");
       }
