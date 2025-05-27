@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 import asyncio
-from queue import SimpleQueue
-from typing import Mapping, Optional, Tuple, cast
+from typing import Mapping, Optional, Tuple
 
 from ..config import RobotCommunicationDelays
 
@@ -30,9 +29,8 @@ class Communication(ABC):
                  com_settings: RobotCommunicationDelays) -> None:
         super().__init__()
         self._queue: Mapping[
-            ReplyPrefix, SimpleQueue[Tuple[asyncio.Event, AwaitingString]]
-        ] = {
-            anticipatedAnswerPrefix: SimpleQueue()
+            ReplyPrefix, asyncio.Queue[str]] = {
+            anticipatedAnswerPrefix: asyncio.Queue()
             for anticipatedAnswerPrefix in anticipatedAnswerPrefixes
         }
         self._is_channel_open = asyncio.Event()
@@ -109,18 +107,10 @@ class Communication(ABC):
                     msg += new_msg.pop(0)
                     prefix, return_message = self._split(msg)
                     if prefix in self._queue:
-                        q = self._queue[prefix]
-                        if not q.empty():
-                            waiting_event, waiting_answer = self._queue[
-                                prefix
-                            ].get_nowait()
-                            # Returning the given string
-                            Communication.__set_awaiting_string(
-                                waiting_answer, return_message
-                            )
-                            # And setting the waiting event has done
-                            # The next yielding read will yield to the process
-                            waiting_event.set()
+                        # Piping the given string to the other send task
+                        # And setting the waiting event has done
+                        # The next yielding read will yield to the process
+                        self._queue[prefix].put_nowait(return_message)
                     msg = ""
                 msg += new_msg[0]
         except asyncio.CancelledError:
@@ -135,18 +125,14 @@ class Communication(ABC):
     """
     async def send(self, msg: str, expected_reply_prefix: ReplyPrefix) -> str:
         await self._is_channel_open.wait() # do not write while channel is closed 
-        wait_reception_event = asyncio.Event()
-        expectedAnswer = Communication.__create_empty_awaiting_string()
-        self._queue[expected_reply_prefix].put((wait_reception_event,
-                                                expectedAnswer))
         print_debug_log(f"Starting writing in channel the message \"{msg}\"",
                         in_strategy_loop=True)
         await self._blocking_write(msg + "\n")
         print_debug_log(f"Finished writing. Awaiting response during the next {self._response_timeout} seconds", in_strategy_loop=True)
         try:
+            response_content: str = ""
             async with asyncio.timeout(self._response_timeout):
-                await wait_reception_event.wait() # automatically yielding to the read task
-            response_content = cast(str, Communication.__get_awaiting_string_value(expectedAnswer))
+                response_content = await self._queue[expected_reply_prefix].get() # automatically yielding to the read task
             print_debug_log(f"Got reponse with the following content: {response_content}", in_strategy_loop=True)
             return response_content
         except asyncio.TimeoutError:
