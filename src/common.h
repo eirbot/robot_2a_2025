@@ -8,8 +8,8 @@
 #define BTND 39
 #define SWITCH1 34 //Gauche
 #define SWITCH2 35
-#define SWITCH3 P10
-#define SWITCH4 P11 //Droite
+#define SWITCH3 12  
+#define SWITCH4 13 //Droite
 
 #define STEPD 17
 #define DIRD 16 

@@ -9,6 +9,10 @@ int xshutPins[6] = {0, 1, 4, 5, 6, 7}; // GPIO reliés aux XSHUT
 bool checkClear(int start, int end, int stop_distance) {
     for (int i = start; i <= end; i++) {
         int distance = sensor[i].readRangeContinuousMillimeters();
+        // Serial.print("Tof ");
+        // Serial.print(i);
+        // Serial.print(": ");
+        // Serial.println(distance);
         if (distance < STOP_DISTANCE) {
             return false;
         }
@@ -25,7 +29,7 @@ void readTofs(void *Parameters_temp){
         pcf8575.digitalWrite(xshutPins[i], LOW);
     }
 
-    delay(10);
+    vTaskDelay(10);
 
     for (int i = 0; i < NB_TOFS; i++) {
         pcf8575.digitalWrite(xshutPins[i], HIGH);
@@ -40,20 +44,9 @@ void readTofs(void *Parameters_temp){
 
     while(1){
         if(FLAG_TOF){
-            bool allClearFront = checkClear(0, 2, STOP_DISTANCE); // Vérifie les capteurs avant (0, 1, 2)
-            bool allClearBack = checkClear(3, 5, STOP_DISTANCE); // Vérifie les capteurs arrière (3, 4, 5)
-
-            if (allClearFront) {
-                frontClear_tof = true;
-            } else {
-                frontClear_tof = false;
-            }
-            if (allClearBack) {
-                backClear_tof = true;
-            } else {
-                backClear_tof = false;
-            }
-            
+            frontClear_tof = checkClear(0, 2, STOP_DISTANCE); // Vérifie les capteurs avant (0, 1, 2)
+            vTaskDelay(10);
+            backClear_tof = checkClear(3, NB_TOFS-1, STOP_DISTANCE); // Vérifie les capteurs arrière (3, 4, 5)            
         }
         vTaskDelay(100);
     }
