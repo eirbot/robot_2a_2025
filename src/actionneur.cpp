@@ -66,7 +66,7 @@ void DoBanniere(){
   TimeOutBan = xTaskGetTickCount();
   while(!digitalRead(BANNIERE)){
     vTaskDelay(100);
-    if((xTaskGetTickCount() - TimeOutBan) > 2000){
+    if((xTaskGetTickCount() - TimeOutBan) > 5000){
       break; // Stop after 5 seconds
     }
   } 
