@@ -6,7 +6,6 @@ TaskHandle_t vterminal_bluetoothHandle = NULL;
 int resolution = 8;
 int bloque = 0;
 
-bool modeBluetooth = false;//choix du mode bluetooth ou strategique
 unsigned long startMillis;
 
 bool initial_tbluetooth=true;
@@ -72,6 +71,8 @@ void setup() {
     // Serial.println("Erreur init OLED");
     while (true);
   }
+
+  xTaskCreate(vterminal_bluetooth,"vterminal_bluetooth", 4000, NULL, 1, &vterminal_bluetoothHandle);
 }
 
 void loop() {
@@ -80,6 +81,7 @@ void loop() {
 
   FLAG_TIRETTE = false;
   oled.afficherMenuPrincipal();
+  //oled.displayPage(ptr_Menu);
   vTaskDelay(pdMS_TO_TICKS(1000));
 
   Serial.println("Waiting for tirette In...");
