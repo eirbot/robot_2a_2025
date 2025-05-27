@@ -5,7 +5,8 @@ Contains all the utilities method to interact with the robot's firmware
 import asyncio
 from typing import Callable, Coroutine, Tuple
 
-from cfr_2025_2a_embedded_ai.config import RobotConfig
+from .config import RobotConfig
+from .prefixes import CANETTE_ACTION_ANSWER_PREFIX, ESP_REPLY_PREFIX_SET, GOTO_ANSWER_PREFIX, EspReplyPrefix
 
 from .communication.com import Communication, TerminateReadLoop
 from .communication.fifo_com import FifoCom
@@ -16,20 +17,18 @@ from .debug_log import print_debug_log, print_log
 Position = Tuple[int, int]
 
 class Robot:
-    GOTO_ANSWER_PREFIX = "GoToPosition"
-    CANETTE_ACTION_ANSWER_PREFIX = "Cannette"
 
     def __init__(self, position: Position, config:RobotConfig) -> None:
         self._p: Position = position
         self._com: Communication
         if config["robot"]["communication"]["protocol"] == "fifo":
-            self._com = FifoCom(
-                (Robot.GOTO_ANSWER_PREFIX, Robot.CANETTE_ACTION_ANSWER_PREFIX),
+            self._com = FifoCom[EspReplyPrefix](
+                ESP_REPLY_PREFIX_SET,
                 config["robot"]["communication"]
             )
         else:
-            self._com = SerialCom(
-                (Robot.GOTO_ANSWER_PREFIX, Robot.CANETTE_ACTION_ANSWER_PREFIX),
+            self._com = SerialCom[EspReplyPrefix](
+                ESP_REPLY_PREFIX_SET,
                 config["robot"]["communication"]
             )
 
@@ -54,7 +53,7 @@ class Robot:
     async def goTo(self, x: int, y: int, angle: float) -> None:
         try:
             print_debug_log("-"*5 + f"Sending GoTo with these parametres: {x} {y} {angle}" + "-"*5, in_strategy_loop=True)
-            await self._com.send(f"G {x} {y} {angle}", Robot.GOTO_ANSWER_PREFIX)
+            await self._com.send(f"G {x} {y} {angle}", GOTO_ANSWER_PREFIX)
             self._p = (x, y)
             print_debug_log("-"*5 + f"GoTo done! Robot in position {self._p}" + "-"*5, in_strategy_loop=True)
         except asyncio.TimeoutError:
@@ -64,7 +63,7 @@ class Robot:
         try:
             print_debug_log("-"*5 + "Sending CanetteAction" + "-"*5,
                             in_strategy_loop=True)
-            await self._com.send("C", Robot.CANETTE_ACTION_ANSWER_PREFIX)
+            await self._com.send("C", CANETTE_ACTION_ANSWER_PREFIX)
             print_debug_log("-"*5 + "CanetteAction confirmed by esp" + "-"*5,
                             in_strategy_loop=True)
         except asyncio.TimeoutError:

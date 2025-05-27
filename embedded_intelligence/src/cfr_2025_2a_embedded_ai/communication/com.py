@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import asyncio
-from typing import Mapping, Optional, Tuple
+from typing import Generic, Mapping, Optional, Set, Tuple, TypeVar, cast
 
 from ..config import RobotCommunicationDelays
 
@@ -10,24 +10,23 @@ class TerminateReadLoop(Exception):
     """Exception raised to ends the reading loop when the robot has
     finished"""
 
-ReplyPrefix = str
-
-AwaitingString = list[Optional[str]]
+ReplyPrefix = TypeVar("ReplyPrefix")
 
 """
 Usage instruction for a safe channel opening/closing:
 Only write messages when the read_loop has started running. There is a
 protection that will block any message sending while the channel is not open
 """
-class Communication(ABC):
+class Communication(ABC, Generic[ReplyPrefix]):
     """
     - read_yield_frequency: this is a duration in milliseconds. After each
       reading try on the communication channel, the reading thread let the other
       tasks run during this duration 
     """
-    def __init__(self, anticipatedAnswerPrefixes: Tuple[ReplyPrefix, ...],
+    def __init__(self, anticipatedAnswerPrefixes: Set[ReplyPrefix],
                  com_settings: RobotCommunicationDelays) -> None:
-        super().__init__()
+        ABC().__init__()
+        self._anticipatedAnswerPrefixes = anticipatedAnswerPrefixes
         self._queue: Mapping[
             ReplyPrefix, asyncio.Queue[str]] = {
             anticipatedAnswerPrefix: asyncio.Queue()
@@ -39,18 +38,6 @@ class Communication(ABC):
         ]
         self._reading_timeout = com_settings["read_timeout_before_yield"]
         self._response_timeout = com_settings["response_awaiting"]
-
-    @classmethod
-    def __create_empty_awaiting_string(cls) -> AwaitingString:
-        return [None]
-
-    @classmethod
-    def __set_awaiting_string(cls, awaiting_string: AwaitingString, val: str):
-        awaiting_string[0] = val
-
-    @classmethod
-    def __get_awaiting_string_value(cls, awaiting_string: AwaitingString):
-        return awaiting_string[0]
 
     """This must be a coroutine which tries to read on the communication
     channel. Can be blocking.
@@ -75,9 +62,12 @@ class Communication(ABC):
     async def _close_channel(self) -> None:
         pass
 
-    def _split(self, msg: str) -> Tuple[ReplyPrefix, str]:
+    def _split(self, msg: str) -> Optional[Tuple[ReplyPrefix, str]]:
         splitted = msg.split(" ")
-        return splitted[0], " ".join(splitted[1:])
+        prefix = splitted[0]
+        if prefix in self._anticipatedAnswerPrefixes:
+            return cast(ReplyPrefix, prefix), " ".join(splitted[1:])
+        return None
 
     async def read_loop(self) -> None:
         msg: str = ""
@@ -105,12 +95,14 @@ class Communication(ABC):
 
                 while len(new_msg) > 1:
                     msg += new_msg.pop(0)
-                    prefix, return_message = self._split(msg)
-                    if prefix in self._queue:
-                        # Piping the given string to the other send task
-                        # And setting the waiting event has done
-                        # The next yielding read will yield to the process
-                        self._queue[prefix].put_nowait(return_message)
+                    parsed_msg = self._split(msg)
+                    if parsed_msg is None:
+                        continue
+                    prefix, return_message = parsed_msg
+                    # Piping the given string to the other send task
+                    # And setting the waiting event has done
+                    # The next yielding read will yield to the process
+                    self._queue[prefix].put_nowait(return_message)
                     msg = ""
                 msg += new_msg[0]
         except asyncio.CancelledError:

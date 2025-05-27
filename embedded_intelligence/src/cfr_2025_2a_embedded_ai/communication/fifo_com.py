@@ -2,26 +2,30 @@ import asyncio
 from io import TextIOWrapper
 import os
 import select
-from typing import List, Tuple, cast
+from typing import Generic, List, Set, Tuple, cast
+from typing_extensions import override
 
 from cfr_2025_2a_embedded_ai.config import RobotFifoCommunicationConfig
 
 from .com import Communication, ReplyPrefix
 from ..debug_log import print_debug_log
 
-class FifoCom(Communication):
-    def __init__(self, anticipatedAnswerPrefixes: Tuple[ReplyPrefix, ...],
+class FifoCom(Communication[ReplyPrefix], Generic[ReplyPrefix]):
+    def __init__(self, anticipatedAnswerPrefixes: Set[ReplyPrefix],
                  com_settings: RobotFifoCommunicationConfig) -> None:
         super().__init__(anticipatedAnswerPrefixes, com_settings["delays"])
         self.input_fifo_path = com_settings["ports"]["input"]
         self.output_fifo_path = com_settings["ports"]["output"]
 
+    @override
     async def _open_channel(self):
         pass
 
+    @override
     async def _close_channel(self):
         pass
 
+    @override
     async def _blocking_read(self) -> str:
         fifo_in_fd = os.open(self.input_fifo_path, os.O_RDONLY | os.O_NONBLOCK)
         fifo_in = os.fdopen(fifo_in_fd)
@@ -49,6 +53,7 @@ class FifoCom(Communication):
             print_debug_log("\tfifo_read: reading interrupted, input fifo closed", in_strategy_loop=False)
             raise
 
+    @override
     async def _blocking_write(self, message: str) -> None:
         print_debug_log("\tfifo_write: opening and writing",
                         in_strategy_loop=True)
