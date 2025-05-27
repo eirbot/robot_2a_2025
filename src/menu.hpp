@@ -1,6 +1,7 @@
+#ifndef MENU_H
+#define MENU_H
 #include <Arduino.h>
 #include <vector>
-#include "OLEDInterface.hpp"
 
 
 
@@ -22,3 +23,5 @@ public:
 
 extern Page* ptr_Menu;
 extern Page* currentDisplayedPage;
+
+#endif

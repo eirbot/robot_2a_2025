@@ -7,7 +7,9 @@
 #include <Fonts/FreeSans24pt7b.h>
 #include "main_robot.h"
 #include "common.h"
-//#include "menu.hpp"
+#include "menu.hpp"
+
+class Page;
 
 class OLEDInterface {
 public:
@@ -19,7 +21,7 @@ public:
     void afficherErreurCapteur(const char* message);
     void afficherDebug();
     void afficherScore(int score);
-    //void displayPage(Page* page);
+    void displayPage(Page* page);
 
 private:
     Adafruit_SSD1306 _display;

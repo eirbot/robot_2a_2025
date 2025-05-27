@@ -42,24 +42,6 @@ void Page::doAction() {
     }
 }
 
-// void Page::Display() {
-//     _display.println("======== MENU ========");
-//     _display.print("Page: ");
-//     _display.println(_name.c_str());
-//     _display.println("----------------------");
-
-//     for (size_t i = 0; i < _elementsOfPage.size(); ++i) {
-//         if (i == _currentElement) {
-//             _display.print(" > "); // Sélection actuelle
-//         } else {
-//             _display.print("   ");
-//         }
-//         _display.println(_elementsOfPage[i]->_name.c_str());
-//     }
-
-//     _display.println("======================");
-// }
-
 
 
 
