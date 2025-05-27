@@ -139,10 +139,11 @@ void OLEDInterface::displayPage(Page* page) {
         }
     }
     else {
-        afficherTexte("Coucou", 20, 0);
-        // for (int i = MAX_ELEMENTS_PER_PAGE; i < page->_elementsOfPage.size(); i++) {
-        // afficherTexte(page->_elementsOfPage[i]->_name.c_str(), i * 12, 0);
-        // }
+        //afficherTexte("Coucou", 20, 0);
+        //afficherScore(page->_currentElement);
+        for (int i = MAX_ELEMENTS_PER_PAGE; i < page->_elementsOfPage.size(); i++) {
+        afficherTexte(page->_elementsOfPage[i]->_name.c_str(), i * 12, 0);
+        }
     }
     _display.display();
 }

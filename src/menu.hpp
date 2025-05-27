@@ -22,6 +22,7 @@ public:
 };
 
 extern Page* ptr_Menu;
+extern Page* ptr_TestAct;
 extern Page* currentDisplayedPage;
 
 #endif

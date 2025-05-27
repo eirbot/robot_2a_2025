@@ -81,7 +81,7 @@ void loop() {
 
   FLAG_TIRETTE = false;
   //oled.afficherMenuPrincipal();
-  oled.displayPage(ptr_Menu);
+  oled.displayPage(ptr_TestAct);
   vTaskDelay(pdMS_TO_TICKS(1000));
 
   Serial.println("Waiting for tirette In...");
