@@ -214,7 +214,7 @@ void vstrat2(){ // 2 Cannettes + Banniere (blue)
   float angle = 0;
 
   // Postion pour bannière
-  x = 1775; y = 120; angle = 0;
+  x = 1775; y = 155; angle = 0;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 

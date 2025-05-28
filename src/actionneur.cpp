@@ -77,7 +77,7 @@ void resetActionneurs(){
   hgServo.write(0);
   bgServo.write(0);
   bdServo.write(170);
-  hdServo.write(160);
+  hdServo.write(180);
 }
 
 void avancerCanettes() {
