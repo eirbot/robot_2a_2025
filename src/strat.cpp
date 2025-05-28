@@ -105,9 +105,12 @@ void DoStrat(void* param) {
       case 2:
         vstrat2();
         break;
-    case 3:
-      vstrat3();
-      break;
+      case 3:
+        vstrat3();
+        break;
+      case 4:
+        vstrat4();
+        break;
       default:
         Serial.println("Strategie inconnue");
         retourBase();
