@@ -8,23 +8,18 @@
 
 class Page {  
 public:
-    Page();
-    Page(char* name, char type, int id);
-    Page(char* name, char type, int id, Page parentPage);
-    Page(char* name, std::vector<Page> elementsOfPage, char type, int id);
-    Page(char* name, std::vector<Page> elementsOfPage, char type, int id, Page parentPage);
+
+    Page(const char* name, char type, int id);
+    Page(const char* name, std::vector<Page *> elementsOfPage, char type, int id);
     
-    char * _name;
+    const char * _name;
     char _type; // 't' = test, 's' = folder, 'c' = constant
     int _id;
     int _currentElement;
-    std::vector<Page> _elementsOfPage;
+    std::vector<Page*> _elementsOfPage;
 
     void NextElement();
-    void doElement(Page& currentDisplayPage);
-    void hardwareInterface(Page& CurrentDisplayPage);
+    void doElement(Page * currentDisplayPage);
+    void addParent(Page * parentPage);
 };
 
-
-bool DISPLAY_FLAG_SELECT;
-bool DISPLAY_FLAG_NEXT;

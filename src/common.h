@@ -38,6 +38,7 @@ extern float ANGLE_INIT;
 #include "ClassMotors.hpp"
 #include "GoToPosition.hpp"
 #include "AccelStepper.h"
+#include "menu.hpp"
 
 typedef struct {
     int distance;
@@ -67,5 +68,40 @@ extern bool FLAG_TOF;
 extern bool jaune;
 
 
+extern Page Test_total;
+extern Page Test_Pince;
+extern Page Test_Servo;
+extern Page Test_Pousseur;
+ 
+extern Page Test_actionneurs;
+
+extern Page test_baniere;
+extern Page Test_vox;
+
+extern Page Test;
+
+extern Page PositionX;
+extern Page PositionY;
+extern Page PositionAngle;
+
+extern Page Position;
+
+extern Page Strat_1;
+extern Page Strat_2;
+extern Page Strat_3;
+extern Page Strat_4;
+
+extern Page Strat;
+
+extern Page Tof_1;
+extern Page Tof_2;
+extern Page Tof_3;
+extern Page Tof_4;
+extern Page Tof_5;
+extern Page Tof_6;
+
+extern Page Tof;
+
+extern Page Menu_principal;
 
 #endif
