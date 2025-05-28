@@ -190,7 +190,7 @@ void StopStepper(AccelStepper& moteur1, AccelStepper& moteur2) {
         moteur1.run();
         moteur2.run();
     }
-    vTaskDelay(100); // Pause pour éviter un mouvement trop rapide
+    vTaskDelay(100);
 }
 
 void ClassMotors::GetPosition(float &x, float &y, float &angle) {
