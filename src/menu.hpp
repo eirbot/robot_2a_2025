@@ -1,8 +1,7 @@
-#pragma once
-
+#ifndef MENU_H
+#define MENU_H
 #include <Arduino.h>
 #include <vector>
-
 
 
 
@@ -28,3 +27,5 @@ public:
 
 bool DISPLAY_FLAG_SELECT;
 bool DISPLAY_FLAG_NEXT;
+
+#endif
