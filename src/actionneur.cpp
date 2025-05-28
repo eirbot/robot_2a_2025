@@ -80,6 +80,27 @@ void resetActionneurs(){
   hdServo.write(180);
 }
 
+void baisserBras(){
+  hdServo.write(0);
+  hgServo.write(180);
+}
+
+void monterBras(){
+  hdServo.write(180);
+  hgServo.write(0);
+}
+
+void aimantCanettes(){
+  bgServo.write(0);
+  bdServo.write(170);
+}
+
+void lacherCanettes(){
+  bgServo.write(170);
+  bdServo.write(0);
+}
+
+
 void avancerCanettes() {
   pcf8575.digitalWrite(motorIN1, LOW); 
   pcf8575.digitalWrite(motorIN2, HIGH); 
