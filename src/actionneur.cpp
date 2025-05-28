@@ -38,7 +38,7 @@ void vsetup_actionneurs(void *pvParameters){
 
 void pousserCanettes(){
   hdServo.write(0);
-  hgServo.write(160);
+  hgServo.write(180);
   bgServo.write(0);
   bdServo.write(170);
   vTaskDelay(1200);
@@ -47,7 +47,7 @@ void pousserCanettes(){
   reculerCanettes();
   vTaskDelay(900);
   arreterCanettes();
-  hdServo.write(160);
+  hdServo.write(180);
   hgServo.write(0);
   bgServo.write(170);
   bdServo.write(0);
