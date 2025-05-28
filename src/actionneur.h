@@ -29,6 +29,10 @@ void pousserCanettes();
 void avancerCanettes();
 void reculerCanettes();
 void arreterCanettes();
+void baisserBras();
+void monterBras();
+void aimantCanettes();
+void lacherCanettes();
 
 void DoBanniere();
 
@@ -38,7 +42,7 @@ void hServof(int angle);
 void bServof(int angle);
 void vsetup_actionneurs(void *pvParameters);
 void resetActionneurs();
-bool checkSwitches(int switchNumber);
+// bool checkSwitches(int switchNumber);
 
 #endif
 

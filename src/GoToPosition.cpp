@@ -46,13 +46,13 @@ void GoToPosition::Go(float x_f,float y_f,float cangle_f) {
     
     CalculPolar();
 
-    Params = {0, (int)(abs(pangle)), (pangle > 0) ? 1 : 0, SPEEDMAX/2};
+    Params = {0, (int)(abs(pangle)), (pangle > 0) ? 1 : 0, (int)(SPEEDMAX * 0.7)};
     mot.EnvoyerDonnees(&Params);
 
     Params = {(int)r, 0, 0, SPEEDMAX};
     mot.EnvoyerDonnees(&Params);
 
-    Params = {0, (int)(abs(pangleFin)), (pangleFin > 0) ? 1 : 0, SPEEDMAX/2};
+    Params = {0, (int)(abs(pangleFin)), (pangleFin > 0) ? 1 : 0, (int)(SPEEDMAX * 0.7)};
     mot.EnvoyerDonnees(&Params);
 
     mot.WaitUntilDone();
@@ -114,7 +114,12 @@ bool GoToPosition::Evitement() {
     float theta = cangle_initial * DEG_TO_RAD;
 
     // Recul de 200 mm
-    float dx = 0, dy = -200;
+    float dx, dy;
+    if(r > 0){
+        dx = 0, dy = -250;
+    } else {
+        dx = 0, dy = 250;
+    }
     float x_backup = x_initial + dx * cos(theta) + dy * sin(theta);
     float y_backup = y_initial - dx * sin(theta) + dy * cos(theta);
 
@@ -122,7 +127,7 @@ bool GoToPosition::Evitement() {
     recul.Go(x_backup, y_backup, cangle_initial);
 
     // Décalage gauche (theta - 90°)
-    dx = 250, dy = 0;
+    dx = 350, dy = 0;
     float x_left = x_backup + dx * cos(theta) + dy * sin(theta);
     float y_left = y_backup - dx * sin(theta) + dy * cos(theta);
 
@@ -133,7 +138,11 @@ bool GoToPosition::Evitement() {
         x_initial = x_left;
         y_initial = y_left;
 
-        dx = 0, dy = 200;
+        if (r > 0) {
+            dx = 0, dy = 250;
+        } else {
+            dx = 0, dy = -250;
+        }
         x_left = x_left + dx * cos(theta) + dy * sin(theta);
         y_left = y_left - dx * sin(theta) + dy * cos(theta);
 
@@ -157,7 +166,11 @@ bool GoToPosition::Evitement() {
         x_initial = x_right;
         y_initial = y_right;
 
-        dx = 0, dy = 200;
+        if (r > 0) {
+            dx = 0, dy = 250;
+        } else {
+            dx = 0, dy = -250;
+        }
         x_right = x_right + dx * cos(theta) + dy * sin(theta);
         y_right = y_right - dx * sin(theta) + dy * cos(theta);
         droite.Go(x_right, y_right, cangle_initial);
@@ -172,15 +185,63 @@ bool GoToPosition::Evitement() {
 
 
 // Liste des zones interdites
-std::vector<Zone> forbiddenZones = {
-    {100, 100, 200, 200},
-    {300, 300, 400, 400}
+std::vector<Zone> forbiddenZonesBlue = {
+    {0, 0, 3000, 200}, // bord bas
+    {0, 0, 200, 2000}, // bord gauche
+    {2800, 0, 3000, 2000}, //bord droit
+    {0, 1800, 3000, 2000}, //bord haut
+    {650, 1800, 2350, 2000}, // Zone monter plateforme
+
+    // Zone canettes Bleue
+    {2000, 0, 2450, 150},
+    {1550, 0, 2000, 450},
+    {0, 0, 450, 150},
+    {2550, 650, 3000, 1100},
+    {1050, 1550, 3000, 2000},
+    
+    // Zone canettes Jaune
+    {550, 0, 1000, 150},
+    {1000, 0, 1450, 450},
+    {2550, 0, 3000, 150},
+    {2550, 650, 3000, 1100},
+    {0, 1550, 1950, 2000}
+    
+};
+
+// Liste des zones interdites
+std::vector<Zone> forbiddenZonesYellow = {
+    {0, 0, 3000, 200}, // bord bas
+    {0, 0, 200, 2000}, // bord gauche
+    {2800, 0, 3000, 2000}, //bord droit
+    {0, 1800, 3000, 2000}, //bord haut
+    {650, 1800, 2350, 2000}, // Zone monter plateforme
+
+    // Zone canettes Bleue
+    {2000, 0, 2450, 150},
+    {1550, 0, 2000, 450},
+    {0, 0, 450, 150},
+    {2550, 650, 3000, 1100},
+    {1050, 1550, 3000, 2000},
+
+    // Zone canettes Jaune
+    {550, 0, 1000, 150},
+    {1000, 0, 1450, 450},
+    {2550, 0, 3000, 150},
+    {2550, 650, 3000, 1100},
+    {0, 1550, 1950, 2000}
 };
 
 bool GoToPosition::IsInForbiddenZone(float x, float y) {
-    for (const auto& zone : forbiddenZones) {
-        if (x >= zone.x1 && x <= zone.x2 && y >= zone.y1 && y <= zone.y2)
-            return true;
+    if (jaune) { 
+        for (const auto& zone : forbiddenZonesYellow) {
+            if (x >= zone.x1 && x <= zone.x2 && y >= zone.y1 && y <= zone.y2)
+                return true;
+        }
+    } else {
+        for (const auto& zone : forbiddenZonesBlue) {
+            if (x >= zone.x1 && x <= zone.x2 && y >= zone.y1 && y <= zone.y2)
+                return true;
+        }
     }
     return false;
 }

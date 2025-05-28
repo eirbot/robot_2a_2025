@@ -8,15 +8,15 @@
 #define BTND 39
 #define SWITCH1 34 //Gauche
 #define SWITCH2 35
-#define SWITCH3 P10
-#define SWITCH4 P11 //Droite
+#define SWITCH3 12  
+#define SWITCH4 13 //Droite
 
 #define STEPD 17
 #define DIRD 16 
 #define STEPG 4
 #define DIRG 2
 
-#define SPEEDMAX 500
+#define SPEEDMAX 650
 #define ACCELMAX 3000
 
 
@@ -28,7 +28,7 @@
 #define ecartRoues 253.0
 
 #define vitesse_nominale 100
-#define STOP_DISTANCE 200
+#define STOP_DISTANCE 300
 
 extern float X_POS_INIT;
 extern float Y_POS_INIT;

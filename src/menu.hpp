@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef MENU_H
+#define MENU_H
 #include <Arduino.h>
 #include <vector>
 
@@ -23,3 +23,5 @@ public:
     void addParent(Page * parentPage);
 };
 
+
+#endif

@@ -6,7 +6,6 @@ TaskHandle_t vterminal_bluetoothHandle = NULL;
 int resolution = 8;
 int bloque = 0;
 
-bool modeBluetooth = false;//choix du mode bluetooth ou strategique
 unsigned long startMillis;
 
 bool initial_tbluetooth=true;
@@ -175,9 +174,45 @@ void setup() {
   }
   oled.displayPage(CurrentDisplayPage);
   updateValue(20);
+
+  xTaskCreate(vterminal_bluetooth,"vterminal_bluetooth", 4000, NULL, 1, &vterminal_bluetoothHandle);
 }
 
 void loop() {
+  //commande();
+  TickType_t GoBase = 0;
 
+  FLAG_TIRETTE = false;
+  oled.afficherMenuPrincipal();
+  // oled.displayPage(ptr_TestAct);
+  vTaskDelay(pdMS_TO_TICKS(1000));
+
+  Serial.println("Waiting for tirette In...");
+  while(digitalRead(tirette)){
+    vTaskDelay(pdMS_TO_TICKS(100));
+  }
+
+  oled.afficherScore(88);
+  FLAG_TIRETTE = true;
+
+  Serial.println("Waiting for tirette Out...");
+
+  while(!digitalRead(tirette)){
+    oled.afficherEquipe();
+    vTaskDelay(pdMS_TO_TICKS(100));
+  }
+  FLAG_TIRETTE = false;
+
+  oled.afficherDebug();
+  Serial.println("Tirette Out");
+  GoBase = xTaskGetTickCount();
+
+  Serial.println("On attend la fin du match");
+  while(xTaskGetTickCount() - GoBase < TEMPS_MATCH_ROBOT){
+    vTaskDelay(pdMS_TO_TICKS(100));
+  }
+  Serial.println("Fin du match");
+  StopMatch();
+  // Serial.println(frontClear_tof); // This will now work correctly
   
 }

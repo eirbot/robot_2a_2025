@@ -22,7 +22,7 @@ int strat = 0;
 
 //position bleu par default
 float X_POS_INIT= 1775;
-float Y_POS_INIT= 100;
+float Y_POS_INIT= 220;
 float ANGLE_INIT= 0;
 
 Page Test_total("Test Total", 't', 0);
