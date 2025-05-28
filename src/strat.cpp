@@ -288,9 +288,20 @@ void vstrat4(){ // strat utilisation de la capacité à tirer les canettes
   resetActionneurs();
 
   // bien plaquer les canettes
-  x = 1900; y = 875; angle = 180;
+  x = 1900; y = 900; angle = 91;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
+
+  mot.WaitUntilDone();
+  baisserBras();
+
+  //finir demi tour
+  x = 1900; y = 880; angle = 180;
+  inverseur(&x,&angle);
+  serialGoto.Go(x, y, angle);
+
+  mot.WaitUntilDone();
+  monterBras();
 
   // retour base pour placer l'etage
   x = 1750; y = 400; angle = 180;
@@ -311,22 +322,31 @@ void vstrat4(){ // strat utilisation de la capacité à tirer les canettes
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
+  // Attraper les canettes pour le transport
+  mot.WaitUntilDone();
+  resetActionneurs();
+
   // entamer la marche vers les canettes du depart
-  x = 2230; y = 400; angle = 180;
+  x = 2220; y = 400; angle = 180;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
-  // avancer les canettes
-  x = 2230; y = 380; angle = 180;
-  inverseur(&x,&angle);
-  serialGoto.Go(x, y, angle);
+  // // avancer les canettes
+  // x = 2220; y = 400; angle = 180;
+  // inverseur(&x,&angle);
+  // serialGoto.Go(x, y, angle);
 
   // Action mécanique
   mot.WaitUntilDone();
   pousserCanettes();
 
   // se decoler des canettes
-  x = 2230; y = 442; angle = 180;
+  x = 2230; y = 500; angle = 180;
+  inverseur(&x,&angle);
+  serialGoto.Go(x, y, angle);
+
+  // se placer pour aller chercher canettes suivante
+  x = 2600; y = 400; angle = 90;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
@@ -339,10 +359,10 @@ void vstrat4(){ // strat utilisation de la capacité à tirer les canettes
   mot.WaitUntilDone();
   resetActionneurs();
 
-  // bien plaquer les canettes
-  x = 2843; y = 400; angle = 90;
-  inverseur(&x,&angle);
-  serialGoto.Go(x, y, angle);
+  // // bien plaquer les canettes
+  // x = 2843; y = 400; angle = 90;
+  // inverseur(&x,&angle);
+  // serialGoto.Go(x, y, angle);
 
   // s'éloigner du bord pour retournement
   x = 2600; y = 400; angle = 90;
