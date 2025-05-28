@@ -327,7 +327,7 @@ void vstrat4(){ // strat utilisation de la capacité à tirer les canettes
   resetActionneurs();
 
   // entamer la marche vers les canettes du depart
-  x = 2220; y = 400; angle = 180;
+  x = 2220; y = 330; angle = 180;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
