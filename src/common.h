@@ -66,7 +66,7 @@ extern bool FLAG_DEBUG;
 extern bool FLAG_TOF;
 
 extern bool jaune;
-
+extern int strat;
 
 extern Page Test_total;
 extern Page Test_Pince;

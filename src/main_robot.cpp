@@ -49,16 +49,16 @@ void testing(int id){
         /* code */
         break;
     case 10:
-        /* code */
+        strat = 0;
         break;
     case 11:
-        /* code */
+        strat = 1;
         break;
     case 12:
-        /* code */
+       strat = 2;
         break;
     case 13:
-        /* code */
+        strat = 3;
         break;
     default:
         break;
@@ -139,7 +139,7 @@ void debug(void* param) {
 void setup() {
   esp_task_wdt_init(10,true);
   ComWithRasp comRasp;
-  int *strat = new int(3);
+  int *ptrStrat = &strat;
 
   // Config des vitesses max et accélérations
   moteurGauche.setMaxSpeed(SPEEDMAX);
@@ -163,7 +163,7 @@ void setup() {
 
   xTaskCreate(readTofs,"readTofs", 5000, NULL, 1, NULL);
   xTaskCreate(vsetup_actionneurs,"vsetup_actionneurs", 1000, NULL, 1, NULL);
-  xTaskCreatePinnedToCore(DoStrat, "Strat", 10000, strat, 1, &handleDoStrat, 1);
+  xTaskCreatePinnedToCore(DoStrat, "Strat", 10000, ptrStrat, 1, &handleDoStrat, 1);
 
   mot.StartMotors();
   //comRasp.StartCom();

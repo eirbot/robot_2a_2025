@@ -18,6 +18,7 @@ bool FLAG_TOF = false; // Valeur initiale (1 = TOF actif, 0 = inactif)
 SemaphoreHandle_t xPositionMutex;
 
 bool jaune=true;
+int strat = 0;
 
 //position bleu par default
 float X_POS_INIT= 1775;
@@ -38,18 +39,18 @@ Page Strat_3("Strategie 3", 't', 12);
 Page Strat_4("Strategie 4", 't', 13);
 
 
-Page PositionX("Position X", 'c', 0);
-Page PositionY("Position Y", 'c', 1);
-Page PositionAngle("Position Angle", 'c', 2);
+Page PositionX("Position X :", 'c', 0);
+Page PositionY("Position Y :", 'c', 1);
+Page PositionAngle("Position Angle :", 'c', 2);
 
-Page Tof_1("TOF_1", 'c', 10);
-Page Tof_2("TOF_2", 'c', 11);
-Page Tof_3("TOF_3", 'c', 12);
-Page Tof_4("TOF_4", 'c', 13);
-Page Tof_5("TOF_5", 'c', 14);
-Page Tof_6("TOF_6", 'c', 15);
+Page Tof_1("TOF_1 :", 'c', 10);
+Page Tof_2("TOF_2 :", 'c', 11);
+Page Tof_3("TOF_3 :", 'c', 12);
+Page Tof_4("TOF_4 :", 'c', 13);
+Page Tof_5("TOF_5 :", 'c', 14);
+Page Tof_6("TOF_6 :", 'c', 15);
 
-Page Equipe("Equipe : BLEU", 'c', 20);
+Page Equipe("Equipe : ", 'c', 20);
 Page ScoreBoard("ScoreBoard : ", 'c', 21);
 
 std::vector<Page*> elementsOfTest = {&Test_total, &Test_Pince, &Test_Servo, &Test_Pousseur};
