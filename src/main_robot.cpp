@@ -21,6 +21,83 @@ Page* CurrentDisplayPage = &Menu_principal;
 
 int FLAG_NEXT = false;
 int FLAG_SELECT = false;
+void testing(int id){
+    switch (id)
+    {
+    case 0:
+        /* code */
+        break;
+    case 1:
+        /* code */
+        break;
+    case 2:
+        /* code */
+        break;
+    case 3:
+        /* code */
+        break;
+    case 4:
+        /* code */
+        break;
+    case 5:
+        /* code */
+        break;
+    case 10:
+        /* code */
+        break;
+    case 11:
+        /* code */
+        break;
+    case 12:
+        /* code */
+        break;
+    case 13:
+        /* code */
+        break;
+    default:
+        break;
+    }
+}
+void updateValue(int id){
+    switch (id)
+    {
+    case 0:
+        /* code */
+        break;
+    case 1:
+        /* code */
+        break;
+    case 2:
+        /* code */
+        break;
+
+    case 10:
+        /* code */
+        break;
+    case 11:
+        /* code */
+        break;
+    case 12:
+        /* code */
+        break;
+    case 13:
+        /* code */
+        break;
+    case 15:
+        /* code */
+        break;
+    case 20:
+        if(jaune){
+          CurrentDisplayPage[CurrentDisplayPage->_currentElement]._name = "JAUNE";
+        }
+        else{
+          CurrentDisplayPage[CurrentDisplayPage->_currentElement]._name = "BLEU";
+        }
+        break;
+    default:
+        break;
+    }
+}
 
 void ButtonInteraction(){
   if(FLAG_NEXT){
@@ -93,6 +170,6 @@ void setup() {
 }
 
 void loop() {
-  
+
   
 }
