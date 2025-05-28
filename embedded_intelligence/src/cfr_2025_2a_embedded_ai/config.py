@@ -16,17 +16,16 @@ RobotSerialCommunicationConfig = TypedDict(
     {"protocol": Literal["serial"], "ports": str, "delays": RobotCommunicationDelays},
 )
 
-FifoPortsConfig = TypedDict("FifoPortsConfig", { "input": str, "output": str})
-RobotFifoCommunicationConfig = TypedDict(
-    "RobotFifoCommunicationConfig",
-    {"protocol": Literal["fifo"], "ports": FifoPortsConfig, "delays": RobotCommunicationDelays},
+RobotSocketCommunicationConfig = TypedDict(
+    "RobotSocketCommunicationConfig",
+    {"protocol": Literal["socket"], "ports": str, "delays": RobotCommunicationDelays},
 )
 RobotConfigRoot = TypedDict(
     "RobotConfigRoot",
     {
         "log_level": Literal["info", "debug"],
         "communication": Union[
-            RobotSerialCommunicationConfig, RobotFifoCommunicationConfig
+            RobotSerialCommunicationConfig, RobotSocketCommunicationConfig
         ],
     },
 )

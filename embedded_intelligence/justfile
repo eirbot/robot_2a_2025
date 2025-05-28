@@ -4,11 +4,11 @@ main_loop_for_robot:
 debug_loop_for_robot:
   poetry run test-main-loop --config ./robot_settings/debug.toml
 
-debug_fifo_loop_for_robot:
-  poetry run test-main-loop --config ./robot_settings/fifo_debug.toml
+debug_socket_loop_for_robot:
+  poetry run test-main-loop --config ./robot_settings/socket_debug.toml
 
-mock_fifo_run:
-  poetry run fifo-mock-esp --config ./robot_settings/fifo_debug.toml
+mock_socket_run:
+  poetry run socket-mock-esp --config ./robot_settings/socket_debug.toml
 
 mock_serial_run:
   poetry run serial-mock-esp --config ./robot_settings/debug_mock.toml

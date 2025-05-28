@@ -9,7 +9,7 @@ from .config import RobotConfig
 from .prefixes import CANETTE_ACTION_ANSWER_PREFIX, ESP_REPLY_PREFIX_SET, GOTO_ANSWER_PREFIX, EspReplyPrefix
 
 from .communication.com import Communication, TerminateReadLoop
-from .communication.fifo_com import FifoCom
+from .communication.socket_com import SocketCom
 from .communication.serial_com import SerialCom
 
 from .debug_log import print_debug_log, print_log
@@ -21,8 +21,8 @@ class Robot:
     def __init__(self, position: Position, config:RobotConfig) -> None:
         self._p: Position = position
         self._com: Communication
-        if config["robot"]["communication"]["protocol"] == "fifo":
-            self._com = FifoCom[EspReplyPrefix](
+        if config["robot"]["communication"]["protocol"] == "socket":
+            self._com = SocketCom[EspReplyPrefix](
                 ESP_REPLY_PREFIX_SET,
                 config["robot"]["communication"]
             )
