@@ -47,7 +47,6 @@ class Communication(ABC, Generic[ReplyPrefix]):
         self._reading_thread_sleep_time_after_reading_try = com_settings[
             "read_yielding_delay"
         ]
-        self._reading_timeout = com_settings["read_timeout_before_yield"]
         self._response_timeout = com_settings["response_awaiting"]
 
     """This must be a coroutine which tries to read on the communication
@@ -92,24 +91,7 @@ class Communication(ABC, Generic[ReplyPrefix]):
         self._is_channel_open.set()
         try:
             while True:
-                new_msg: list[str]
-                try:
-                    print_debug_log(
-                        f"reading during the next {self._reading_timeout} seconds",
-                        in_strategy_loop=False,
-                    )
-                    async with asyncio.timeout(self._reading_timeout):
-                        new_msg = (await self._blocking_read()).split("\n")
-                except asyncio.TimeoutError:
-                    print_debug_log(
-                        f"timeout, ready to yield for the next {self._reading_thread_sleep_time_after_reading_try} s",
-                        in_strategy_loop=False,
-                    )
-                    await asyncio.sleep(
-                        self._reading_thread_sleep_time_after_reading_try
-                    )
-                    continue
-
+                new_msg = (await self._blocking_read()).split("\n")
                 print_debug_log(
                     f"have read these messages: {new_msg}", in_strategy_loop=False
                 )
