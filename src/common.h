@@ -28,11 +28,7 @@
 #define ecartRoues 253.0
 
 #define vitesse_nominale 100
-<<<<<<< HEAD
-#define STOP_DISTANCE 350//250
-=======
 #define STOP_DISTANCE 300
->>>>>>> ae5e6ae9a078ccd74b632e41360a73ba48793569
 
 extern float X_POS_INIT;
 extern float Y_POS_INIT;
