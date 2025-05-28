@@ -29,6 +29,10 @@ void pousserCanettes();
 void avancerCanettes();
 void reculerCanettes();
 void arreterCanettes();
+void baisserBras();
+void monterBras();
+void aimantCanettes();
+void lacherCanettes();
 
 void DoBanniere();
 
