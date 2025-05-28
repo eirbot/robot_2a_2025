@@ -17,6 +17,7 @@ def start_debug():
     config = load_config()
     robot = Robot((1, 2), config)
     game = World()
+    game = game
     asyncio.run(robot.connect_and_run(strategy(robot)))
 
 def start():

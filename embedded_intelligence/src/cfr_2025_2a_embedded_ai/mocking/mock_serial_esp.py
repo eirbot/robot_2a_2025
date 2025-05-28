@@ -1,5 +1,5 @@
 import asyncio
-from typing import Callable, Coroutine
+from typing import Callable, Coroutine, Literal
 
 from cfr_2025_2a_embedded_ai.config import load_config
 
@@ -42,6 +42,6 @@ def start():
     config = load_config()["robot"]["communication"]
     if config["protocol"] != "serial":
         raise Exception("Invalid configuration")
-    communicator = SerialCom(("G", "C", "UnavoidableTimeout"),
+    communicator = SerialCom[Literal["G", "C", "UnavoidableTimeout"]]({"G", "C", "UnavoidableTimeout"},
                              config)
     asyncio.run(mock_communication(communicator))
