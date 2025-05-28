@@ -26,7 +26,7 @@ void OLEDInterface::refresh() {
 }
 
 void OLEDInterface::clearLine(int ligne, int colonne) {
-    _display.fillRect(colonne, ligne - 12, 115, 13, BLACK);
+    _display.fillRect(colonne, ligne , 115, 13, BLACK);
 }
 
 void OLEDInterface::afficherTexte(const char* message, int ligne, int colonne) {
@@ -129,17 +129,17 @@ void OLEDInterface::afficherScore(int score) {
 
 #define MAX_ELEMENTS_PER_PAGE 5 // a voir avec l'ecran
 
-void OLEDInterface::displayPage(Page page) {
+void OLEDInterface::displayPage(Page * page) {
     refresh();
     tailleTexte(1);
-    afficherTexte(page._name, 0, 0);
+    afficherTexte(page->_name, 0, 0);
 
-    int startLine = 12;
+    int startLine = 9;
     int lineHeight = 12;
 
-    for (size_t i = 0; i < page._elementsOfPage.size() && i < MAX_ELEMENTS_PER_PAGE; ++i) {
-        const Page& element = page._elementsOfPage[i];
-        afficherTexte(element._name, startLine + i * lineHeight, 0);
+    for (size_t i = 0; i < page->_elementsOfPage.size() && i < MAX_ELEMENTS_PER_PAGE; ++i) {
+        const Page * element = page->_elementsOfPage[i];
+        afficherTexte(element->_name, startLine + i * lineHeight, 0);
     }
 
     _display.display();

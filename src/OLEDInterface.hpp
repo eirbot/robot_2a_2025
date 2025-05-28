@@ -19,7 +19,7 @@ public:
     void afficherErreurCapteur(const char* message);
     void afficherDebug();
     void afficherScore(int score);
-    void displayPage(Page page);
+    void displayPage(Page * page);
 
 private:
     Adafruit_SSD1306 _display;

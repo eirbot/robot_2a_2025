@@ -17,8 +17,21 @@ TaskParams Parameters = {0, 0, 0, 0};
 
 GoToPosition serialGoto {X_POS_INIT,Y_POS_INIT,ANGLE_INIT,1000,1000,0};
 
-Page CurrentDisplayPage = Menu_principal;
+Page* CurrentDisplayPage = &Menu_principal;
 
+int FLAG_NEXT = false;
+int FLAG_SELECT = false;
+
+void ButtonInteraction(){
+  if(FLAG_NEXT){
+    CurrentDisplayPage->NextElement();
+    FLAG_NEXT = false;
+  }
+  else if(FLAG_SELECT){
+    CurrentDisplayPage->doElement(CurrentDisplayPage);
+    FLAG_SELECT = false;
+  }
+}
 
 
 void debug(void* param) {
@@ -76,11 +89,10 @@ void setup() {
     // Serial.println("Erreur init OLED");
     while (true);
   }
+  oled.displayPage(CurrentDisplayPage);
 }
 
 void loop() {
-  oled.displayPage(CurrentDisplayPage);
-  vTaskDelay(pdMS_TO_TICKS(10));
-
+  
   
 }
