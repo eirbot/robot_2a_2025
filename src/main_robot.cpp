@@ -93,7 +93,9 @@ void loop() {
   FLAG_TIRETTE = true;
 
   Serial.println("Waiting for tirette Out...");
+
   while(!digitalRead(tirette)){
+    oled.afficherEquipe();
     vTaskDelay(pdMS_TO_TICKS(100));
   }
   FLAG_TIRETTE = false;

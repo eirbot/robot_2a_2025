@@ -35,14 +35,8 @@ void ClassMotors::vMotors(void* pvParameters){
                 steps = (int)((taskParams.distance / (M_PI * dRoues)) * stepPerRev);
                 instance->stepDid = 0;
 
-                if(taskParams.direction == 1){// On recule, ou on t'encule
-                    moteurGauche.move(-steps);
-                    moteurDroit.move(-steps);
-                }
-                else{// On avance
-                    moteurGauche.move(steps);
-                    moteurDroit.move(steps);
-                }
+                moteurGauche.move(steps); // steps negatif pour reculer
+                moteurDroit.move(steps);
 
                 if(steps > 0){
                     FLAG_CLEAR = &frontClear_tof;

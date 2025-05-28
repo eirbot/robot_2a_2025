@@ -127,6 +127,17 @@ void OLEDInterface::afficherScore(int score) {
     _display.display();
 }
 
+void OLEDInterface::afficherEquipe() {
+    tailleTexte(2);
+    if(jaune){
+      afficherTexte("Jaune", 20, 30);
+    }
+    else{
+      afficherTexte("Bleu", 20, 30);
+    }
+    _display.display();
+}
+
 #define MAX_ELEMENTS_PER_PAGE 5 // a voir avec l'ecran
 
 
