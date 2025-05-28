@@ -116,9 +116,9 @@ bool GoToPosition::Evitement() {
     // Recul de 200 mm
     float dx, dy;
     if(r > 0){
-        float dx = 0, dy = -250;
+        dx = 0, dy = -250;
     } else {
-        float dx = 0, dy = 250;
+        dx = 0, dy = 250;
     }
     float x_backup = x_initial + dx * cos(theta) + dy * sin(theta);
     float y_backup = y_initial - dx * sin(theta) + dy * cos(theta);
