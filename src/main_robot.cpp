@@ -80,8 +80,8 @@ void loop() {
   TickType_t GoBase = 0;
 
   FLAG_TIRETTE = false;
-  //oled.afficherMenuPrincipal();
-  oled.displayPage(ptr_TestAct);
+  oled.afficherMenuPrincipal();
+  // oled.displayPage(ptr_TestAct);
   vTaskDelay(pdMS_TO_TICKS(1000));
 
   Serial.println("Waiting for tirette In...");
@@ -93,7 +93,9 @@ void loop() {
   FLAG_TIRETTE = true;
 
   Serial.println("Waiting for tirette Out...");
+
   while(!digitalRead(tirette)){
+    oled.afficherEquipe();
     vTaskDelay(pdMS_TO_TICKS(100));
   }
   FLAG_TIRETTE = false;

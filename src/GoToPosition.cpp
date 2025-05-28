@@ -114,7 +114,12 @@ bool GoToPosition::Evitement() {
     float theta = cangle_initial * DEG_TO_RAD;
 
     // Recul de 200 mm
-    float dx = 0, dy = -250;
+    float dx, dy;
+    if(r > 0){
+        dx = 0, dy = -250;
+    } else {
+        dx = 0, dy = 250;
+    }
     float x_backup = x_initial + dx * cos(theta) + dy * sin(theta);
     float y_backup = y_initial - dx * sin(theta) + dy * cos(theta);
 
@@ -133,7 +138,11 @@ bool GoToPosition::Evitement() {
         x_initial = x_left;
         y_initial = y_left;
 
-        dx = 0, dy = 250;
+        if (r > 0) {
+            dx = 0, dy = 250;
+        } else {
+            dx = 0, dy = -250;
+        }
         x_left = x_left + dx * cos(theta) + dy * sin(theta);
         y_left = y_left - dx * sin(theta) + dy * cos(theta);
 
@@ -157,7 +166,11 @@ bool GoToPosition::Evitement() {
         x_initial = x_right;
         y_initial = y_right;
 
-        dx = 0, dy = 200;
+        if (r > 0) {
+            dx = 0, dy = 250;
+        } else {
+            dx = 0, dy = -250;
+        }
         x_right = x_right + dx * cos(theta) + dy * sin(theta);
         y_right = y_right - dx * sin(theta) + dy * cos(theta);
         droite.Go(x_right, y_right, cangle_initial);

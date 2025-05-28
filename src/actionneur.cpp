@@ -37,21 +37,21 @@ void vsetup_actionneurs(void *pvParameters){
 }
 
 void pousserCanettes(){
-  hgServo.write(160);
   hdServo.write(0);
+  hgServo.write(180);
   bgServo.write(0);
   bdServo.write(170);
-  vTaskDelay(800);
+  vTaskDelay(1200);
   avancerCanettes();
   vTaskDelay(900);
   reculerCanettes();
   vTaskDelay(900);
   arreterCanettes();
+  hdServo.write(180);
   hgServo.write(0);
-  hdServo.write(160);
   bgServo.write(170);
   bdServo.write(0);
-  vTaskDelay(800);
+  vTaskDelay(1200);
 }
 
 void DoBanniere(){

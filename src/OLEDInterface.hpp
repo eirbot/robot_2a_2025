@@ -22,6 +22,7 @@ public:
     void afficherDebug();
     void afficherScore(int score);
     void displayPage(Page* page);
+    void afficherEquipe();
 
 private:
     Adafruit_SSD1306 _display;
