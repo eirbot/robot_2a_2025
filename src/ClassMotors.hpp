@@ -7,7 +7,7 @@
 #include "common.h"
 #include "AccelStepper.h"
 
-#define DECCEL 9000.0
+#define DECCEL 15000.0
 
 class ClassMotors {
 public:
