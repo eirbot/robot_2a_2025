@@ -150,6 +150,11 @@ poetry run test-main-loop --config ./robot_settings/fifo_debug.toml
 
 ## TODO
 
+Modifier les deux classes de communication avec ces librairies:
+
+- [`aioserial`](https://pypi.org/project/aioserial/)
+- [`aiopipe`](`https://pypi.org/project/aiopipe/`)
+
 Gérer en priorité ces tâches :
 
 - [ ] gérer les canettes pour les gradins

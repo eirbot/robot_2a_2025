@@ -34,7 +34,7 @@ class SerialCom(Communication[ReplyPrefix], Generic[ReplyPrefix]):
                 if not buf:
                     # TODO: if this read is blocking, then add this
                     # to make the coroutine ready to yield sometimes to others
-                    # await asyncio.sleep(0.05)
+                    await asyncio.sleep(0.05)
                     continue
                 else:
                     return buf
