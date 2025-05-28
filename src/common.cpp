@@ -49,7 +49,8 @@ Page Tof_4("TOF_4", 'c', 13);
 Page Tof_5("TOF_5", 'c', 14);
 Page Tof_6("TOF_6", 'c', 15);
 
-Page Equipe("Equipe :", 'c', 20);
+Page Equipe("Equipe : BLEU", 'c', 20);
+Page ScoreBoard("ScoreBoard : ", 'c', 21);
 
 std::vector<Page*> elementsOfTest = {&Test_total, &Test_Pince, &Test_Servo, &Test_Pousseur};
 Page Test_actionneurs("Test Actionneurs", elementsOfTest, 's', 0);
@@ -61,5 +62,5 @@ std::vector<Page*> elementsOfTof = {&Tof_1, &Tof_2, &Tof_3, &Tof_4, &Tof_5, &Tof
 Page Tof("TOF", elementsOfTof, 's', 0);
 std::vector<Page*> elementsOfPosition = {&PositionX, &PositionY, &PositionAngle};
 Page Position("Position", elementsOfPosition, 's', 0);
-std::vector<Page*> elementsOfPage = {&Test, &Position, &Strat, &Tof};
+std::vector<Page*> elementsOfPage = {&Equipe, &ScoreBoard,&Test, &Position, &Strat, &Tof};
 Page Menu_principal("Menu Principal", elementsOfPage, 's', 0);

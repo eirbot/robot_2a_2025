@@ -1,5 +1,7 @@
 #include "menu.hpp"
  
+void testing(int id);
+void updateValue(int id);
 
 Page::Page(const char* name, char type, int id) {
     _name = name;

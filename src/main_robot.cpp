@@ -25,19 +25,25 @@ void testing(int id){
     switch (id)
     {
     case 0:
-        /* code */
+        pousserCanettes();
         break;
     case 1:
-        /* code */
+        baisserBras();
+        monterBras();
         break;
     case 2:
-        /* code */
+        aimantCanettes();
+        lacherCanettes();
         break;
     case 3:
-        /* code */
+         avancerCanettes();
+        vTaskDelay(900);
+        reculerCanettes();
+        vTaskDelay(900);
+        arreterCanettes();
         break;
     case 4:
-        /* code */
+        DoBanniere();
         break;
     case 5:
         /* code */
@@ -88,10 +94,11 @@ void updateValue(int id){
         break;
     case 20:
         if(jaune){
-          CurrentDisplayPage[CurrentDisplayPage->_currentElement]._name = "JAUNE";
+          CurrentDisplayPage[CurrentDisplayPage->_currentElement]._name = "Equipe : JAUNE";
         }
         else{
-          CurrentDisplayPage[CurrentDisplayPage->_currentElement]._name = "BLEU";
+
+          CurrentDisplayPage[CurrentDisplayPage->_currentElement]._name = "Equipe : BLEU";
         }
         break;
     default:
@@ -167,6 +174,7 @@ void setup() {
     while (true);
   }
   oled.displayPage(CurrentDisplayPage);
+  updateValue(20);
 }
 
 void loop() {
