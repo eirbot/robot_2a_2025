@@ -43,9 +43,9 @@ void pousserCanettes(){
   bdServo.write(170);
   vTaskDelay(1200);
   avancerCanettes();
-  vTaskDelay(900);
+  vTaskDelay(840);
   reculerCanettes();
-  vTaskDelay(900);
+  vTaskDelay(840);
   arreterCanettes();
   hdServo.write(180);
   hgServo.write(0);
