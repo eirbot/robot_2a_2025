@@ -8,8 +8,8 @@
 #define BTND 39
 #define SWITCH1 34 //Gauche
 #define SWITCH2 35
-#define SWITCH3 12  
-#define SWITCH4 13 //Droite
+#define SWITCH3 P10
+#define SWITCH4 P11 //Droite
 
 #define STEPD 17
 #define DIRD 16 
@@ -38,7 +38,6 @@ extern float ANGLE_INIT;
 #include "ClassMotors.hpp"
 #include "GoToPosition.hpp"
 #include "AccelStepper.h"
-#include "menu.hpp"
 
 typedef struct {
     int distance;
@@ -66,37 +65,6 @@ extern bool FLAG_DEBUG;
 extern bool FLAG_TOF;
 
 extern bool jaune;
-
-
-extern Page Test_Total;
-extern Page Test_Pince;
-extern Page Test_Servo;
-extern Page Test_Pousseur;
-
-extern Page Test_Actionneur_Avant;
-
-extern Page Test_Baniere;
-extern Page Test_Vox;
-extern Page Test;
-
-extern Page PositionX;
-extern Page PositionY;
-extern Page PositionAngle;
-extern Page Position;
-
-extern Page Strategy1;
-extern Page Strategy2;
-extern Page Strategie;
-
-extern Page Tof1;
-extern Page Tof2;
-extern Page Tof3;
-extern Page Tof4;
-extern Page Tof5;
-extern Page Tof6;
-extern Page Tof7;
-extern Page Tof;
-extern Page Menu;
 
 
 

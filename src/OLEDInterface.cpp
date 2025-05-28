@@ -26,7 +26,7 @@ void OLEDInterface::refresh() {
 }
 
 void OLEDInterface::clearLine(int ligne, int colonne) {
-    _display.fillRect(colonne, ligne, 115, 9, BLACK);
+    _display.fillRect(colonne, ligne - 12, 115, 13, BLACK);
 }
 
 void OLEDInterface::afficherTexte(const char* message, int ligne, int colonne) {
