@@ -24,12 +24,12 @@ void retourBase(){
 
 
   // se placer pour aller chercher canettes de fin
-  x = 2600; y = 1325; angle = 90;
+  x = 2600; y = 1435; angle = 90;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
   // aller chercher canettes de fin
-  x = 2796; y = 1325; angle = 90;
+  x = 2800; y = 1435; angle = 90;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
@@ -38,16 +38,22 @@ void retourBase(){
   resetActionneurs();
 
   // s'éloigner du bord pour retournement
-  x = 2600; y = 1325; angle = 90;
+  x = 2500; y = 1435; angle = 90;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
   // Retour a la base
-  x = 2700; y = 1600; angle = 0;
+  x = 2500; y = 1630; angle = 0;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
+  // Action mécanique
   mot.WaitUntilDone();
+  vTaskDelay(1000);
+  pousserCanettes();
+
+  mot.WaitUntilDone();
+  baisserBras();
   Serial.println("Retour à la base terminé.");
 }
 
@@ -299,7 +305,7 @@ void vstrat4(){ // strat utilisation de la capacité à tirer les canettes
   serialGoto.Go(x, y, angle);
 
   // canettes centre
-  x = 1900; y = 825; angle = 0;
+  x = 1899; y = 825; angle = 0;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
@@ -308,7 +314,7 @@ void vstrat4(){ // strat utilisation de la capacité à tirer les canettes
   resetActionneurs();
 
   // bien plaquer les canettes
-  x = 1900; y = 900; angle = 91;
+  x = 1899; y = 930; angle = 91;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
@@ -347,7 +353,7 @@ void vstrat4(){ // strat utilisation de la capacité à tirer les canettes
   resetActionneurs();
 
   // entamer la marche vers les canettes du depart
-  x = 2220; y = 350; angle = 180;
+  x = 2220; y = 340; angle = 180;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
@@ -366,12 +372,12 @@ void vstrat4(){ // strat utilisation de la capacité à tirer les canettes
   serialGoto.Go(x, y, angle);
 
   // se placer pour aller chercher canettes suivante
-  x = 2600; y = 400; angle = 90;
+  x = 2600; y = 520; angle = 90;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
   // aller chercher canettes suivante
-  x = 2796; y = 400; angle = 90;
+  x = 2850; y = 520; angle = 90;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
@@ -384,19 +390,32 @@ void vstrat4(){ // strat utilisation de la capacité à tirer les canettes
   // inverseur(&x,&angle);
   // serialGoto.Go(x, y, angle);
 
+  mot.WaitUntilDone();
+  baisserBras();
+
   // s'éloigner du bord pour retournement
-  x = 2600; y = 400; angle = 90;
+  x = 2600; y = 470; angle = 90;
+  inverseur(&x,&angle);
+  serialGoto.Go(x, y, angle);
+
+  // retour devant la grande zone
+  x = 1776; y = 800; angle = 180;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
   // retour zone de pose
-  x = 1776; y = 552; angle = 180;
+  x = 1776; y = 600; angle = 180;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
   // Action mécanique
   mot.WaitUntilDone();
   pousserCanettes();
+
+  // recul a la fin pour faire chier le monde
+  x = 1776; y = 900; angle = 180;
+  inverseur(&x,&angle);
+  serialGoto.Go(x, y, angle);  
 }
 
 void vstrat5(){ // Aller Retour
