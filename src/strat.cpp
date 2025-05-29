@@ -53,7 +53,7 @@ void retourBase(){
   pousserCanettes();
 
   mot.WaitUntilDone();
-  baisserBras();
+  demiBras();
   Serial.println("Retour à la base terminé.");
 }
 
@@ -372,12 +372,12 @@ void vstrat4(){ // strat utilisation de la capacité à tirer les canettes
   serialGoto.Go(x, y, angle);
 
   // se placer pour aller chercher canettes suivante
-  x = 2600; y = 520; angle = 90;
+  x = 2600; y = 450; angle = 90;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
   // aller chercher canettes suivante
-  x = 2850; y = 520; angle = 90;
+  x = 2820; y = 450; angle = 90;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
@@ -403,7 +403,7 @@ void vstrat4(){ // strat utilisation de la capacité à tirer les canettes
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
-  // retour zone de pose
+  // avance zone de pose
   x = 1776; y = 600; angle = 180;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);

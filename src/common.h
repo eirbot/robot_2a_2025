@@ -2,7 +2,7 @@
 #define COMMON_H
 
 
-#define TEMPS_MATCH_ROBOT 85000
+#define TEMPS_MATCH_ROBOT 60000
 
 #define BTNG 36
 #define BTND 39

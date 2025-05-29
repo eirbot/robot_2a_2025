@@ -31,6 +31,7 @@ void reculerCanettes();
 void arreterCanettes();
 void baisserBras();
 void monterBras();
+void demiBras();
 void aimantCanettes();
 void lacherCanettes();
 

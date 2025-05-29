@@ -43,9 +43,9 @@ void pousserCanettes(){
   bdServo.write(170);
   vTaskDelay(1200);
   avancerCanettes();
-  vTaskDelay(840);
+  vTaskDelay(800);
   reculerCanettes();
-  vTaskDelay(840);
+  vTaskDelay(800);
   arreterCanettes();
   hdServo.write(180);
   hgServo.write(0);
@@ -88,6 +88,11 @@ void baisserBras(){
 void monterBras(){
   hdServo.write(180);
   hgServo.write(0);
+}
+
+void demiBras(){
+  hdServo.write(60);
+  hgServo.write(120);
 }
 
 void aimantCanettes(){
