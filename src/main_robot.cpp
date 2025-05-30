@@ -65,14 +65,14 @@ void setup() {
 
   mot.StartMotors();
   //comRasp.StartCom();
-  xTaskCreate(debug,"debug", 8192, NULL, 1, NULL);
+  // xTaskCreate(debug,"debug", 8192, NULL, 1, NULL);
   
   if (!oled.begin()) {
     // Serial.println("Erreur init OLED");
     while (true);
   }
 
-  xTaskCreate(vterminal_bluetooth,"vterminal_bluetooth", 4000, NULL, 1, &vterminal_bluetoothHandle);
+  // xTaskCreate(vterminal_bluetooth,"vterminal_bluetooth", 4000, NULL, 1, &vterminal_bluetoothHandle);
 }
 
 void loop() {

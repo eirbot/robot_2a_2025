@@ -9,10 +9,10 @@ int xshutPins[6] = {0, 1, 4, 5, 6, 7}; // GPIO reliés aux XSHUT
 bool checkClear(int start, int end, int stop_distance) {
     for (int i = start; i <= end; i++) {
         int distance = sensor[i].readRangeContinuousMillimeters();
-        Serial.print("Tof ");
-        Serial.print(i);
-        Serial.print(": ");
-        Serial.println(distance);
+        // Serial.print("Tof ");
+        // Serial.print(i);
+        // Serial.print(": ");
+        // Serial.println(distance);
         if (distance < STOP_DISTANCE) {
             return false;
         }
@@ -21,7 +21,9 @@ bool checkClear(int start, int end, int stop_distance) {
 }
 
 void readTofs(void *Parameters_temp){
-    Wire.begin();
+    Wire.begin(-1, -1, 400000);
+
+    // Serial.println("Tofs initialisation demaree");
 
     // Désactiver tous les capteurs
     for (int i = 0; i < NB_TOFS; i++) {
@@ -33,7 +35,7 @@ void readTofs(void *Parameters_temp){
 
     for (int i = 0; i < NB_TOFS; i++) {
         pcf8575.digitalWrite(xshutPins[i], HIGH);
-        delay(10);
+        vTaskDelay(10);
         sensor[i].init();
         sensor[i].setAddress(0x31 + i);
     }
@@ -41,6 +43,8 @@ void readTofs(void *Parameters_temp){
     for (int i = 0; i < NB_TOFS; i++) {
         sensor[i].startContinuous(); // ou prepare pour single-shot
     }
+
+    // Serial.println("Tofs initialisation finie");
 
     while(1){
         if(FLAG_TOF){

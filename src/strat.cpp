@@ -7,38 +7,38 @@ void retourBase(){
   float angle = 0;
 
   // Point intermédiaire si nécessaire
-  mot.GetPosition(x, y, angle);
-  if(y < 1000 || y > 0){
-    x = 2000; y = 1000; angle = 0;
-    inverseur(&x,&angle);
-    serialGoto.Go(x, y, angle);
-  }
+  // mot.GetPosition(x, y, angle);
+  // if(y < 1000 || y > 0){
+  //   x = 2000; y = 1000; angle = 0;
+  //   inverseur(&x,&angle);
+  //   serialGoto.Go(x, y, angle);
+  // }
 
-  // Va devant la base
-  x = 2500; y = 1325; angle = 0;
-  inverseur(&x,&angle);
-  serialGoto.Go(x, y, angle);
+  // // Va devant la base
+  // x = 2500; y = 1325; angle = 0;
+  // inverseur(&x,&angle);
+  // serialGoto.Go(x, y, angle);
 
-  mot.WaitUntilDone();
-  vTaskDelay(pdMS_TO_TICKS(1000)); // Attente pour stabilisation
+  // mot.WaitUntilDone();
+  // vTaskDelay(pdMS_TO_TICKS(1000)); // Attente pour stabilisation
 
 
-  // se placer pour aller chercher canettes de fin
-  x = 2600; y = 1435; angle = 90;
-  inverseur(&x,&angle);
-  serialGoto.Go(x, y, angle);
+  // // se placer pour aller chercher canettes de fin
+  // x = 2600; y = 1435; angle = 90;
+  // inverseur(&x,&angle);
+  // serialGoto.Go(x, y, angle);
 
-  // aller chercher canettes de fin
-  x = 2800; y = 1435; angle = 90;
-  inverseur(&x,&angle);
-  serialGoto.Go(x, y, angle);
+  // // aller chercher canettes de fin
+  // x = 2800; y = 1435; angle = 90;
+  // inverseur(&x,&angle);
+  // serialGoto.Go(x, y, angle);
 
-  // Attraper les canettes pour le transport
-  mot.WaitUntilDone();
-  resetActionneurs();
+  // // Attraper les canettes pour le transport
+  // mot.WaitUntilDone();
+  // resetActionneurs();
 
   // s'éloigner du bord pour retournement
-  x = 2500; y = 1435; angle = 90;
+  x = 2500; y = 1435; angle = 0;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
@@ -47,10 +47,12 @@ void retourBase(){
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);
 
-  // Action mécanique
-  mot.WaitUntilDone();
-  vTaskDelay(1000);
-  pousserCanettes();
+  // // Action mécanique
+  // mot.WaitUntilDone();
+  // // vTaskDelay(1000);
+  //  FLAG_TOF = false;
+  // pousserCanettes();
+  // FLAG_TOF = true;
 
   mot.WaitUntilDone();
   demiBras();
@@ -290,19 +292,19 @@ void vstrat4(){ // strat utilisation de la capacité à tirer les canettes
   float x = 0, y = 0;
   float angle = 0;
 
-  // Postion pour bannière
-  x = 1775; y = 155; angle = 0;
-  inverseur(&x,&angle);
-  serialGoto.Go(x, y, angle);
+  // // Postion pour bannière
+  // x = 1775; y = 155; angle = 0;
+  // inverseur(&x,&angle);
+  // serialGoto.Go(x, y, angle);
 
-  mot.WaitUntilDone();
-  //Met en position la bannière
-  DoBanniere();
+  // mot.WaitUntilDone();
+  // //Met en position la bannière
+  // DoBanniere();
 
-   // s'écarter de la bannière
-  x = 1775; y = 200; angle = 0;
-  inverseur(&x,&angle);
-  serialGoto.Go(x, y, angle);
+  //  // s'écarter de la bannière
+  // x = 1775; y = 200; angle = 0;
+  // inverseur(&x,&angle);
+  // serialGoto.Go(x, y, angle);
 
   // canettes centre
   x = 1899; y = 825; angle = 0;
@@ -336,7 +338,10 @@ void vstrat4(){ // strat utilisation de la capacité à tirer les canettes
 
   // Action mécanique
   mot.WaitUntilDone();
+
+  FLAG_TOF = false;
   pousserCanettes();
+  FLAG_TOF = true;
 
   // s'éloigner de l'etage
   x = 1750; y = 800; angle = 180;
@@ -364,7 +369,9 @@ void vstrat4(){ // strat utilisation de la capacité à tirer les canettes
 
   // Action mécanique
   mot.WaitUntilDone();
+  FLAG_TOF = false;
   pousserCanettes();
+  FLAG_TOF = true;
 
   // se decoler des canettes
   x = 2230; y = 500; angle = 180;
@@ -410,12 +417,59 @@ void vstrat4(){ // strat utilisation de la capacité à tirer les canettes
 
   // Action mécanique
   mot.WaitUntilDone();
+  FLAG_TOF = false;
   pousserCanettes();
+  FLAG_TOF = true;
 
   // recul a la fin pour faire chier le monde
   x = 1776; y = 900; angle = 180;
   inverseur(&x,&angle);
   serialGoto.Go(x, y, angle);  
+
+  //   // Va devant la base
+  // x = 2500; y = 1325; angle = 0;
+  // inverseur(&x,&angle);
+  // serialGoto.Go(x, y, angle);
+
+  // mot.WaitUntilDone();
+  // vTaskDelay(pdMS_TO_TICKS(1000)); // Attente pour stabilisation
+
+
+  // // se placer pour aller chercher canettes de fin
+  // x = 2600; y = 1390; angle = 90;
+  // inverseur(&x,&angle);
+  // serialGoto.Go(x, y, angle);
+
+  // // aller chercher canettes de fin
+  // x = 2800; y = 1390; angle = 90;
+  // inverseur(&x,&angle);
+  // serialGoto.Go(x, y, angle);
+
+  // // Attraper les canettes pour le transport
+  // mot.WaitUntilDone();
+  // resetActionneurs();
+  // baisserBras();
+
+  // // s'éloigner du bord pour retournement
+  // x = 2500; y = 1390; angle = 90;
+  // inverseur(&x,&angle);
+  // serialGoto.Go(x, y, angle);
+
+  // // Retour a la base
+  // x = 2500; y = 1630; angle = 0;
+  // inverseur(&x,&angle);
+  // serialGoto.Go(x, y, angle);
+
+  // // Action mécanique
+  // mot.WaitUntilDone();
+  // // vTaskDelay(1000);
+  //  FLAG_TOF = false;
+  // pousserCanettes();
+  // FLAG_TOF = true;
+
+  // mot.WaitUntilDone();
+  // demiBras();
+  Serial.println("Retour à la base terminé.");
 }
 
 void vstrat5(){ // Aller Retour
